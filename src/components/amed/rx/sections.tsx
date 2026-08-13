@@ -465,28 +465,18 @@ export function RxFocusCards() {
   }, [active]);
 
   return (
-    <section style={{ background: "var(--rx-dark)", color: "rgba(255,255,255,0.72)" }}>
-      <div
-        className="rx-frame px-6 py-16 md:px-10 md:py-24"
-        style={{ borderColor: "var(--rx-dark-line)" }}
-      >
+    <section className="rx-sep">
+      <div className="rx-frame px-6 py-16 md:px-10 md:py-24">
         <div className="mx-auto max-w-[44rem] text-center">
           <FadeUp>
-            <span
-              className="rx-chip"
-              style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}
-            >
-              {RX_FOCUS.chip}
-            </span>
+            <span className="rx-chip">{RX_FOCUS.chip}</span>
           </FadeUp>
           <SlideIn className="rx-h2 mt-6">
-            <span style={{ color: "#fff" }}>
-              {RX_FOCUS.title.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </span>
+            {RX_FOCUS.title.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
           </SlideIn>
           <FadeUp delay={0.1}>
             <p className="mt-6">{RX_FOCUS.intro}</p>
@@ -507,18 +497,18 @@ export function RxFocusCards() {
                   type="button"
                   onClick={() => setActive(i)}
                   className="flex w-full items-center gap-6 py-8 text-left md:gap-10"
-                  style={{ borderTop: "1px solid var(--rx-dark-line)" }}
+                  style={{ borderTop: "1px dashed var(--rx-line)" }}
                 >
                   <span
                     className="text-sm font-bold transition-colors duration-300"
-                    style={{ color: isActive ? "var(--rx-accent)" : "rgba(255,255,255,0.45)" }}
+                    style={{ color: isActive ? "var(--rx-accent)" : "rgba(20,19,26,0.4)" }}
                   >
                     {row.index}
                   </span>
                   <span className="flex-1">
                     <span
                       className="rx-serif block text-3xl transition-colors duration-300 md:text-5xl"
-                      style={{ color: isActive ? "var(--rx-accent)" : "#fff" }}
+                      style={{ color: isActive ? "var(--rx-accent)" : "var(--rx-ink)" }}
                     >
                       {row.title}
                     </span>
@@ -549,7 +539,7 @@ export function RxFocusCards() {
               </div>
             );
           })}
-          <div style={{ borderTop: "1px solid var(--rx-dark-line)" }} />
+          <div style={{ borderTop: "1px dashed var(--rx-line)" }} />
         </div>
       </div>
     </section>
