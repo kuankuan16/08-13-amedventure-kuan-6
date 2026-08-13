@@ -227,7 +227,7 @@ export const PORTFOLIO = {
   companies: [
     {
       name: "Adona Medical",
-      logo: asset("/amed/logos/Adona_Medical.svg"),
+      logo: asset("/amed/logos/adona-medical.svg"),
       sector: "Heart failure · Structural heart",
       location: "Los Gatos, CA",
       year: "2017",
@@ -235,7 +235,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Akura Medical",
-      logo: asset("/amed/logos/Akura_Medical.svg"),
+      logo: asset("/amed/logos/akura-medical.svg"),
       sector: "Vascular · VTE",
       location: "Los Gatos, CA",
       year: "2019",
@@ -243,7 +243,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Atia Vision",
-      logo: asset("/amed/logos/Atia_Vision.svg"),
+      logo: asset("/amed/logos/atia-vision.svg"),
       sector: "Ophthalmology",
       location: "Campbell, CA",
       year: "2014",
@@ -251,7 +251,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Benthic Genomics",
-      logo: asset("/amed/logos/Benthic_Genomics.png"),
+      logo: asset("/amed/logos/benthic-genomics.png"),
       sector: "Genomic analysis",
       location: "Mountain View, CA",
       year: "2018",
@@ -259,6 +259,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Dynaflex Technologies",
+      logo: asset("/amed/logos/dynaflex-technologies.png"),
       sector: "CDMO",
       location: "California & Taiwan",
       year: "2016",
@@ -266,7 +267,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Imperative Care",
-      logo: asset("/amed/logos/Imperative_Care.svg"),
+      logo: asset("/amed/logos/imperative-care.svg"),
       sector: "Neurovascular · Stroke",
       location: "Campbell, CA",
       year: "2016",
@@ -274,7 +275,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Instylla",
-      logo: asset("/amed/logos/Instylla.svg"),
+      logo: asset("/amed/logos/instylla.svg"),
       sector: "Embolization · IR",
       location: "Bedford, MA",
       year: "2017",
@@ -282,7 +283,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Kandu Health",
-      logo: asset("/amed/logos/Kandu.svg"),
+      logo: asset("/amed/logos/kandu.svg"),
       sector: "Digital health · Stroke recovery",
       location: "Campbell, CA",
       year: "2025",
@@ -290,7 +291,7 @@ export const PORTFOLIO = {
     },
     {
       name: "KT Medical",
-      logo: asset("/amed/logos/KT_Medical.png"),
+      logo: asset("/amed/logos/kt-medical.png"),
       sector: "Clinical-grade wires · OEM",
       location: "Kaohsiung, Taiwan",
       year: "2017",
@@ -298,8 +299,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Rejoni",
-      logo: asset("/amed/logos/Rejoni.jpeg"),
-      reversed: true,
+      logo: asset("/amed/logos/rejoni.png"),
       sector: "Women's health",
       location: "Bedford, MA",
       year: "2020",
@@ -307,7 +307,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Sealonix",
-      logo: asset("/amed/logos/Sealonix.png"),
+      logo: asset("/amed/logos/sealonix.png"),
       sector: "Surgical sealants · Biomaterials",
       location: "Bedford, MA",
       year: "2023",
@@ -315,7 +315,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Supira Medical",
-      logo: asset("/amed/logos/Supira_Medical.svg"),
+      logo: asset("/amed/logos/supira-medical.svg"),
       sector: "Mechanical circulatory support",
       location: "Los Gatos, CA",
       year: "2017",
@@ -323,7 +323,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Tioga Cardiovascular",
-      logo: asset("/amed/logos/Tioga.jpeg"),
+      logo: asset("/amed/logos/tioga-medical.png"),
       sector: "Structural heart · Valve",
       location: "Campbell, CA",
       year: "2018",
@@ -331,7 +331,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Tulavi Therapeutics",
-      logo: asset("/amed/logos/Tulavi_Therapeutics.svg"),
+      logo: asset("/amed/logos/tulavi-therapeutics.svg"),
       sector: "Peripheral nerve surgery",
       location: "Los Gatos, CA",
       year: "2018",
@@ -339,7 +339,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Verge Medical",
-      logo: asset("/amed/logos/Verge_Medical.png"),
+      logo: asset("/amed/logos/verge-medical.png"),
       sector: "Coronary · Peripheral vascular",
       location: "Campbell, CA",
       year: "2025",
@@ -347,13 +347,13 @@ export const PORTFOLIO = {
     },
     {
       name: "Wiltrom",
-      logo: asset("/amed/logos/Wiltrom.png"),
+      logo: asset("/amed/logos/wiltrom.png"),
       sector: "Spine implants",
       location: "Zhubei, Taiwan",
       year: "2009",
       group: "surgical",
     },
-  ] satisfies PortfolioCompany[],
+  ] as PortfolioCompany[],
   exited: ["Neuvera", "Truvic", "Crossfire", "LightningCath"],
 } as const;
 

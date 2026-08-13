@@ -27,6 +27,26 @@ export const RX_HERO = {
   image: asset("/amed/images/hero-stage.jpg"),
   imageAlt: "A physician and a young engineer in warm conversation in a bright atrium",
   ticker: ["01 Healthcare", "02 Therapeutics", "03 Applied AI", "04 Partnership"],
+  slides: [
+    {
+      image: asset("/amed/images/hero-vc-01.jpg"),
+      alt: "A founder presenting a medical device prototype to investors in a bright boardroom",
+      cardTitle: "Partnering from the first cheque",
+      cardDesc: "High-conviction, from early-stage through growth.",
+    },
+    {
+      image: asset("/amed/images/hero-vc-02.jpg"),
+      alt: "An investor and a young founder shaking hands in a bright studio office",
+      cardTitle: "Beyond capital",
+      cardDesc: "A long-term partner throughout each company's growth journey.",
+    },
+    {
+      image: asset("/amed/images/hero-vc-03.jpg"),
+      alt: "Investors and founders reviewing growth charts in a sunlit conference room",
+      cardTitle: "Evidence, execution, endurance",
+      cardDesc: "Turning possibility into practice.",
+    },
+  ],
 } as const;
 
 export const RX_ABOUT = {

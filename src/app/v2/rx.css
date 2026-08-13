@@ -10,10 +10,13 @@
   --rx-ink: #14131a;
   --rx-body: #494852;
   --rx-line: rgba(20, 19, 26, 0.14);
-  --rx-dark: #161616;
+  --rx-dark: #23252c;
+  --rx-blue: #c5d7f1;
+  --rx-blue-soft: #eaf0f9;
+  --rx-sand: #f3efe7;
   --rx-dark-line: rgba(255, 255, 255, 0.14);
   --rx-paper: #ffffff;
-  --rx-grey: #f5f5f7;
+  --rx-grey: #eaf0f9;
   --rx-accent: var(--cyan);
   font-family: "Satoshi", var(--font-instrument), ui-sans-serif, sans-serif;
   background: var(--rx-paper);
@@ -60,7 +63,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--rx-grey);
+  background: var(--rx-blue);
   color: var(--rx-ink);
   border-radius: 999px;
   padding: 0.45rem 1rem;

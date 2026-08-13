@@ -49,6 +49,20 @@ export function RxHero() {
             .to(item, { autoAlpha: 0, y: -18, duration: 0.4, ease: "quint.in" });
         });
       }
+      // hero photo carousel: image + caption crossfade together
+      const slides = gsap.utils.toArray<HTMLElement>("[data-rx-slide]");
+      if (slides.length > 1) {
+        gsap.set(slides, { autoAlpha: 0 });
+        gsap.set(slides[0], { autoAlpha: 1 });
+        const ctl = gsap.timeline({ repeat: -1, delay: 1.2 });
+        slides.forEach((slide, i) => {
+          const next = slides[(i + 1) % slides.length];
+          ctl
+            .to({}, { duration: 4.2 })
+            .to(slide, { autoAlpha: 0, duration: 0.9, ease: "quint.inOut" }, ">")
+            .to(next, { autoAlpha: 1, duration: 0.9, ease: "quint.inOut" }, "<");
+        });
+      }
     }, root);
     return () => ctx.revert();
   }, []);
@@ -100,26 +114,40 @@ export function RxHero() {
         </div>
 
         <div data-rx-hero-photo className="relative">
-          <div className="rx-photo aspect-[5/4]">
-            <Image
-              src={RX_HERO.image}
-              alt={RX_HERO.imageAlt}
-              fill
-              priority
-              sizes="(min-width: 768px) 46vw, 100vw"
-              className="object-cover"
-            />
-          </div>
-          <div
-            className="absolute bottom-5 left-5 max-w-[16rem] rounded-xl bg-white/95 px-5 py-4 shadow-lg"
-            style={{ backdropFilter: "blur(6px)" }}
-          >
-            <p className="rx-serif text-lg" style={{ color: "var(--rx-ink)" }}>
-              Beyond capital
-            </p>
-            <p className="text-sm">
-              A long-term partner from early-stage through growth.
-            </p>
+          <div className="relative aspect-[5/4]">
+            {RX_HERO.slides.map((slide, i) => (
+              <div key={slide.image} data-rx-slide className="absolute inset-0">
+                <div className="rx-photo h-full w-full">
+                  <Image
+                    src={slide.image}
+                    alt={slide.alt}
+                    fill
+                    priority
+                    sizes="(min-width: 768px) 46vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div
+                  className="absolute bottom-5 left-5 max-w-[17rem] rounded-xl bg-white/95 px-5 py-4 shadow-lg"
+                  style={{ backdropFilter: "blur(6px)" }}
+                >
+                  <p className="rx-serif text-lg" style={{ color: "var(--rx-ink)" }}>
+                    {slide.cardTitle}
+                  </p>
+                  <p className="text-sm">{slide.cardDesc}</p>
+                </div>
+              </div>
+            ))}
+            {/* progress dots */}
+            <div className="absolute bottom-5 right-5 flex gap-1.5" aria-hidden>
+              {RX_HERO.slides.map((s) => (
+                <span
+                  key={s.image}
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "rgba(255,255,255,0.85)" }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -131,8 +159,31 @@ export function RxHero() {
    Logo band (home)
    ------------------------------------------------------------------ */
 
+/**
+ * Per-logo display height (px) tuned from each mark's aspect ratio so every
+ * logo carries a similar visual mass in the band; width follows the ratio.
+ */
+const LOGO_BAND_SIZE: Record<string, { h: number; r: number }> = {
+  "Adona Medical": { h: 30, r: 2.53 },
+  "Akura Medical": { h: 27, r: 3.53 },
+  "Atia Vision": { h: 28, r: 3.27 },
+  "Benthic Genomics": { h: 40, r: 0.6 },
+  "Dynaflex Technologies": { h: 27, r: 3.44 },
+  "Imperative Care": { h: 17, r: 8.26 },
+  Instylla: { h: 34, r: 2.1 },
+  "Kandu Health": { h: 26, r: 3.74 },
+  "KT Medical": { h: 15, r: 9.81 },
+  Rejoni: { h: 28, r: 3.31 },
+  Sealonix: { h: 23, r: 4.77 },
+  "Supira Medical": { h: 31, r: 2.65 },
+  "Tioga Cardiovascular": { h: 26, r: 3.87 },
+  "Tulavi Therapeutics": { h: 30, r: 2.89 },
+  "Verge Medical": { h: 30, r: 2.76 },
+  Wiltrom: { h: 28, r: 3.23 },
+};
+
 export function RxLogoBand() {
-  const logos = PORTFOLIO.companies.filter((c) => c.logo && !c.reversed);
+  const logos = PORTFOLIO.companies.filter((c) => c.logo);
   return (
     <div className="rx-sep relative">
       <div
@@ -142,27 +193,34 @@ export function RxLogoBand() {
         <span className="rx-chip">The companies we back</span>
       </div>
       <div className="rx-frame overflow-hidden px-0 py-12">
-        <div className="marquee-track items-center" style={{ animationDuration: "50s" }}>
+        <div className="marquee-track items-center" style={{ animationDuration: "55s" }}>
           {[0, 1].map((copy) => (
             <div key={copy} className="flex items-center">
-              {logos.map((c) => (
-                <span key={`${copy}-${c.name}`} className="flex items-center">
-                  <span className="relative mx-10 inline-block h-9 w-32">
-                    <Image
-                      src={c.logo!}
-                      alt={c.name}
-                      fill
-                      sizes="10vw"
-                      className="object-contain opacity-70 grayscale"
+              {logos.map((c) => {
+                const size = LOGO_BAND_SIZE[c.name] ?? { h: 28, r: 3.2 };
+                const w = Math.min(Math.round(size.h * size.r), 170);
+                return (
+                  <span key={`${copy}-${c.name}`} className="flex items-center">
+                    <span
+                      className="relative mx-10 inline-block"
+                      style={{ height: size.h, width: w }}
+                    >
+                      <Image
+                        src={c.logo!}
+                        alt={c.name}
+                        fill
+                        sizes="12vw"
+                        className="object-contain opacity-60 grayscale"
+                      />
+                    </span>
+                    <span
+                      className="inline-block h-1.5 w-1.5 rounded-full"
+                      style={{ background: "var(--rx-line)" }}
+                      aria-hidden
                     />
                   </span>
-                  <span
-                    className="inline-block h-1.5 w-1.5 rounded-full"
-                    style={{ background: "var(--rx-line)" }}
-                    aria-hidden
-                  />
-                </span>
-              ))}
+                );
+              })}
             </div>
           ))}
         </div>
@@ -405,7 +463,7 @@ export function RxFocusCards() {
                 href="/v2/focus"
                 className="rx-row group block h-full rounded-2xl p-7 transition-transform duration-500 hover:-translate-y-1"
                 style={{
-                  background: "var(--rx-grey)",
+                  background: i % 2 === 0 ? "var(--rx-blue-soft)" : "var(--rx-sand)",
                   transitionTimingFunction: "var(--ease-quint)",
                 }}
               >
@@ -623,7 +681,7 @@ export function RxStoryList({
 
 export function RxProcess() {
   return (
-    <section className="rx-sep" style={{ background: "var(--rx-grey)" }}>
+    <section className="rx-sep" style={{ background: "var(--rx-sand)" }}>
       <div className="rx-frame grid gap-12 px-6 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <div className="md:sticky md:top-28">
@@ -679,7 +737,7 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
     filter === "all"
       ? [...PORTFOLIO.companies]
       : PORTFOLIO.companies.filter((c) => c.group === filter);
-  if (featured) companies = PORTFOLIO.companies.filter((c) => c.logo && !c.reversed).slice(0, 8);
+  if (featured) companies = PORTFOLIO.companies.filter((c) => c.logo).slice(0, 8);
 
   const applyFilter = (key: string) => {
     if (key === filter) return;
@@ -863,7 +921,7 @@ function RxMonogram({ name, dark = false }: { name: string; dark?: boolean }) {
 export function RxTeamStrip() {
   const leaders = [...TEAM.leadership];
   return (
-    <section className="rx-sep" style={{ background: "var(--rx-grey)" }}>
+    <section className="rx-sep" style={{ background: "var(--rx-blue-soft)" }}>
       <div className="rx-frame flex flex-wrap items-center justify-between gap-8 px-6 py-14 md:px-10">
         <div>
           <FadeUp>
