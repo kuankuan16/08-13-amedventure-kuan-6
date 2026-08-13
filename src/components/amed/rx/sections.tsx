@@ -523,18 +523,6 @@ export function RxFocusCards() {
                       {row.title}
                     </span>
                   </span>
-                  <span
-                    className="rx-circle shrink-0 transition-all duration-500"
-                    style={{
-                      borderColor: isActive ? "var(--rx-accent)" : "var(--rx-dark-line)",
-                      background: isActive ? "var(--rx-accent)" : "transparent",
-                      color: "#fff",
-                      transform: isActive ? "rotate(45deg)" : "none",
-                    }}
-                    aria-hidden
-                  >
-                    <Arrow />
-                  </span>
                 </button>
                 <div
                   ref={(el) => {
@@ -545,11 +533,11 @@ export function RxFocusCards() {
                 >
                   <p className="max-w-[34rem] pb-10 pl-10 md:pl-16">{row.detail}</p>
                 </div>
-                {/* tilted floating photo over the active row */}
+                {/* tilted floating photo aligned with its row */}
                 <div
-                  className="pointer-events-none absolute right-[16%] top-1/2 z-10 hidden w-[15rem] -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-700 lg:block"
+                  className="pointer-events-none absolute right-[12%] top-4 z-10 hidden w-[15rem] overflow-hidden rounded-2xl transition-all duration-700 lg:block"
                   style={{
-                    transform: `translateY(-50%) rotate(8deg) scale(${isActive ? 1 : 0.85})`,
+                    transform: `rotate(8deg) scale(${isActive ? 1 : 0.85})`,
                     opacity: isActive ? 1 : 0,
                     transitionTimingFunction: "var(--ease-quint)",
                     aspectRatio: "1 / 1",
@@ -989,13 +977,35 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
    Philosophy split — stacked full-bleed photos beside large statements
    ------------------------------------------------------------------ */
 
+/** Per-card palette: photo backdrop tone ≈ text panel tone (reference look). */
+const PHILOSOPHY_CARDS = [
+  {
+    photo: "/amed/images/philosophy-01.jpg",
+    panel: "#e6edf8",
+    ink: "var(--rx-ink)",
+    muted: "var(--rx-body)",
+  },
+  {
+    photo: "/amed/images/philosophy-02.jpg",
+    panel: "#ede5d3",
+    ink: "var(--rx-ink)",
+    muted: "#5c554a",
+  },
+  {
+    photo: "/amed/images/philosophy-03.jpg",
+    panel: "#e3eae0",
+    ink: "var(--rx-ink)",
+    muted: "#4f584c",
+  },
+  {
+    photo: "/amed/images/philosophy-04.jpg",
+    panel: "#282b34",
+    ink: "#ffffff",
+    muted: "rgba(255,255,255,0.65)",
+  },
+];
+
 export function RxPhilosophySplit() {
-  const photos = [
-    asset("/amed/images/practice-a-capital.jpg"),
-    asset("/amed/images/thesis-02-founders.jpg"),
-    asset("/amed/images/approach-sketch.jpg"),
-    asset("/amed/images/thesis-03-outcome.jpg"),
-  ];
   return (
     <section className="rx-sep">
       <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
@@ -1007,47 +1017,51 @@ export function RxPhilosophySplit() {
         {/* sticky stacking cards: each card pins at the same offset and the
             next one scrolls up over it (reference mechanism) */}
         <div className="mt-12">
-          {RX_PHILOSOPHY.items.map((item, i) => (
-            <div
-              key={item.index}
-              className="md:sticky"
-              style={{ top: "5.5rem", zIndex: i + 1, marginBottom: i === RX_PHILOSOPHY.items.length - 1 ? 0 : "2rem" }}
-            >
+          {RX_PHILOSOPHY.items.map((item, i) => {
+            const c = PHILOSOPHY_CARDS[i];
+            return (
               <div
-                className="grid overflow-hidden rounded-2xl bg-white shadow-xl md:h-[76vh] md:max-h-[52rem] md:min-h-[30rem] md:grid-cols-2"
-                style={{ boxShadow: "0 -12px 40px rgba(20,19,26,0.10)" }}
+                key={item.index}
+                className="md:sticky"
+                style={{
+                  top: "6rem",
+                  zIndex: i + 1,
+                  marginBottom: i === RX_PHILOSOPHY.items.length - 1 ? 0 : "1.5rem",
+                }}
               >
-                <div className="relative min-h-[16rem]">
-                  <Image
-                    src={photos[i]}
-                    alt={item.title}
-                    fill
-                    sizes="(min-width: 768px) 48vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
                 <div
-                  className="flex flex-col justify-center gap-10 p-10 md:p-16"
-                  style={{ background: "var(--rx-blue-soft)" }}
+                  className="grid overflow-hidden rounded-2xl md:h-[60vh] md:max-h-[42rem] md:min-h-[24rem] md:grid-cols-2"
+                  style={{ background: c.panel }}
                 >
-                  <p
-                    className="rx-serif text-2xl leading-snug md:text-3xl"
-                    style={{ color: "var(--rx-ink)" }}
-                  >
-                    {item.desc}
-                  </p>
-                  <div>
-                    <p className="font-bold" style={{ color: "var(--rx-ink)" }}>
-                      {item.title}
+                  <div className="relative min-h-[16rem]">
+                    <Image
+                      src={asset(c.photo)}
+                      alt={item.title}
+                      fill
+                      sizes="(min-width: 768px) 48vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center gap-8 p-10 md:p-14">
+                    <p
+                      className="rx-serif text-2xl leading-snug md:text-3xl"
+                      style={{ color: c.ink }}
+                    >
+                      {item.desc}
                     </p>
-                    <p className="mt-1 text-sm">
-                      {RX_PHILOSOPHY.chip} · {item.index}
-                    </p>
+                    <div>
+                      <p className="font-bold" style={{ color: c.ink }}>
+                        {item.title}
+                      </p>
+                      <p className="mt-1 text-sm" style={{ color: c.muted }}>
+                        {RX_PHILOSOPHY.chip} · {item.index}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
