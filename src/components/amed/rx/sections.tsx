@@ -526,7 +526,10 @@ export function RxFocusCards() {
                   <span className="flex-1">
                     <span
                       className="rx-serif block text-3xl transition-colors duration-300 md:text-5xl"
-                      style={{ color: isActive ? "var(--rx-accent)" : "var(--rx-ink)" }}
+                      style={{
+                        color: isActive ? "var(--rx-accent)" : "var(--rx-ink)",
+                        fontWeight: 400,
+                      }}
                     >
                       {row.title}
                     </span>
