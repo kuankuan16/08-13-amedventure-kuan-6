@@ -1,5 +1,6 @@
 import { SmoothScroll } from "@/components/amed/motion";
 import { RxNav, RxFooter } from "@/components/amed/rx/ui";
+import "./rx.css";
 
 export default function V2Layout({ children }: { children: React.ReactNode }) {
   return (
