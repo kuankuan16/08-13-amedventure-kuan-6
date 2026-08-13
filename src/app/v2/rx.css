@@ -40,13 +40,12 @@
 }
 
 .rx-frame {
-  border-inline: 1px dashed var(--rx-line);
   max-width: 96rem;
   margin-inline: auto;
 }
 
 .rx-sep {
-  border-top: 1px dashed var(--rx-line);
+  border-top: none;
 }
 
 /* --- type scale ------------------------------------------------- */

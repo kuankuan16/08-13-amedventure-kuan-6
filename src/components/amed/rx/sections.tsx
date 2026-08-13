@@ -27,19 +27,28 @@ export function RxHero() {
   useIsomorphicLayoutEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
-      // opening: a giant "Capital" fills the screen, then shrinks precisely
-      // onto the first word of the hero headline (reference behavior)
+      // opening: the giant AMED wordmark appears centred, then glides into
+      // its permanent full-bleed seat at the top of the hero (reference
+      // behaviour: the brand word stays as part of the hero)
       const intro = root.current?.querySelector<HTMLElement>("[data-rx-intro]");
       const word = root.current?.querySelector<HTMLElement>("[data-rx-intro-word]");
-      const h1 = root.current?.querySelector<HTMLElement>("[data-rx-hero-h1]");
-      const target = root.current?.querySelector<HTMLElement>("[data-rx-hero-capital]");
+      const brand = root.current?.querySelector<HTMLElement>("[data-rx-hero-brand-inner]");
+      // fit both wordmarks edge-to-edge
+      const fit = (el: HTMLElement | null | undefined) => {
+        if (!el) return;
+        el.style.fontSize = "20vw";
+        const w = el.getBoundingClientRect().width;
+        if (w > 0) el.style.fontSize = `${((20 * window.innerWidth) / w) * 0.96}vw`;
+      };
       let INTRO = 0;
-      if (intro && word && h1 && target && !reduced) {
-        INTRO = 1.9;
-        gsap.set(h1, { autoAlpha: 0 });
+      if (intro && word && brand && !reduced) {
+        INTRO = 1.75;
+        gsap.set(brand, { autoAlpha: 0 });
         const play = () => {
+          fit(brand);
+          fit(word);
           const w = word.getBoundingClientRect();
-          const t = target.getBoundingClientRect();
+          const t = brand.getBoundingClientRect();
           const scale = t.height / w.height;
           const dx = t.left - w.left;
           const dy = t.top - w.top;
@@ -55,16 +64,16 @@ export function RxHero() {
               x: dx,
               y: dy,
               scale,
-              duration: 1.0,
+              duration: 0.95,
               ease: "quint.inOut",
-              delay: 0.3,
+              delay: 0.25,
             })
-            // hand off: headline appears beneath the landed word
-            .to(h1, { autoAlpha: 1, duration: 0.3, ease: "quint.out" }, ">-0.05")
-            .to(intro, { autoAlpha: 0, duration: 0.35, ease: "quint.out" }, "<")
+            // hand off: the hero wordmark takes over in place
+            .set(brand, { autoAlpha: 1 })
+            .set(word, { autoAlpha: 0 })
+            .to(intro, { autoAlpha: 0, duration: 0.35, ease: "quint.out" })
             .set(intro, { display: "none" });
         };
-        // wait for the serif font so the measured shrink lands precisely
         if (document.fonts?.ready) {
           document.fonts.ready.then(play);
         } else {
@@ -72,7 +81,7 @@ export function RxHero() {
         }
       } else {
         if (intro) gsap.set(intro, { display: "none" });
-        if (h1) gsap.set(h1, { autoAlpha: 1 });
+        if (brand) fit(brand);
       }
 
       gsap.fromTo(
@@ -145,26 +154,44 @@ export function RxHero() {
           data-rx-intro-word
           className="rx-serif select-none opacity-0"
           style={{
-            fontSize: "min(18vw, 17rem)",
-            lineHeight: 1.08,
+            fontSize: "20vw",
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
             color: "var(--rx-ink)",
             willChange: "transform",
           }}
         >
-          Capital
+          AMED
         </span>
       </div>
-      <div className="rx-frame grid items-center gap-12 px-6 py-16 md:grid-cols-2 md:px-10 md:py-24">
+
+      {/* full-bleed brand wordmark (reference behaviour) */}
+      <div className="overflow-hidden pt-10 text-center md:pt-14" aria-hidden>
+        <span
+          data-rx-hero-brand-inner
+          className="rx-serif inline-block whitespace-nowrap select-none"
+          style={{
+            fontSize: "20vw",
+            lineHeight: 0.92,
+            letterSpacing: "-0.02em",
+            color: "var(--rx-ink)",
+          }}
+        >
+          AMED
+        </span>
+      </div>
+
+      <div className="rx-frame relative z-10 grid items-center gap-12 px-6 py-12 md:grid-cols-2 md:px-10 md:py-16">
         <div>
           <div data-rx-hero-item>
             <span className="rx-chip">{RX_HERO.chip}</span>
           </div>
-          <h1 className="rx-h1 mt-6" data-rx-hero-h1>
-            <span className="block">
-              <span data-rx-hero-capital>{RX_HERO.title[0].split(" ")[0]}</span>
-              {" " + RX_HERO.title[0].split(" ").slice(1).join(" ")}
-            </span>
-            <span className="block">{RX_HERO.title[1]}</span>
+          <h1 className="rx-h1 mt-6" data-rx-hero-item>
+            {RX_HERO.title.map((line) => (
+              <span key={line} className="block">
+                {line}
+              </span>
+            ))}
           </h1>
           <p className="rx-lead mt-6 max-w-[30rem]" data-rx-hero-item>
             {RX_HERO.support}
