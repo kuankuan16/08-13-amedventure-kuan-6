@@ -250,6 +250,26 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
             }),
         });
       }
+      // photo enters with the same vertical mask reveal as the hero
+      const photo = root.current?.querySelector<HTMLElement>("[data-rx-glance-photo]");
+      const photoImg = root.current?.querySelector<HTMLElement>("[data-rx-glance-img]");
+      if (photo && photoImg) {
+        gsap.set(photo, { clipPath: "inset(100% 0% 0% 0%)" });
+        gsap.set(photoImg, { scale: 1.25 });
+        ScrollTrigger.create({
+          trigger: photo,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            gsap.to(photo, {
+              clipPath: "inset(0% 0% 0% 0%)",
+              duration: 1.2,
+              ease: "quint.out",
+            });
+            gsap.to(photoImg, { scale: 1.1, duration: 1.6, ease: "quint.out" });
+          },
+        });
+      }
     }, root);
     return () => ctx.revert();
   }, []);
@@ -274,9 +294,9 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
         </div>
 
         <div className="mt-16 grid items-center gap-12 md:grid-cols-2">
-          <FadeUp>
+          <div data-rx-glance-photo>
             <div className="rx-clip" style={{ aspectRatio: "631 / 590" }}>
-              <div className="h-full w-full" style={{ transform: "scale(1.1)" }}>
+              <div data-rx-glance-img className="h-full w-full">
                 <Image
                   src={RX_ABOUT.image}
                   alt={RX_ABOUT.imageAlt}
@@ -286,7 +306,7 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
                 />
               </div>
             </div>
-          </FadeUp>
+          </div>
           <div>
             <div className="grid gap-3 sm:grid-cols-2">
               {RX_ABOUT.highlights.map((item, i) => (
