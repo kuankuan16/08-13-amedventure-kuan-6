@@ -291,3 +291,141 @@ button:hover .roll > span,
   .marquee-track { animation: none; }
   html.lenis, html.lenis body { scroll-behavior: auto; }
 }
+
+/* ============================================================
+   RX — /v2 variant (ritovex-style transposition, AMED brand)
+   Light ground, dashed hairline grid, Satoshi, alternating
+   near-black sections, chip labels, counters, marquees.
+   ============================================================ */
+
+.rx-root {
+  --rx-ink: #14131a;
+  --rx-body: #494852;
+  --rx-line: rgba(20, 19, 26, 0.14);
+  --rx-dark: #161616;
+  --rx-dark-line: rgba(255, 255, 255, 0.14);
+  --rx-paper: #ffffff;
+  --rx-grey: #f5f5f7;
+  --rx-accent: var(--cyan);
+  font-family: "Satoshi", var(--font-instrument), ui-sans-serif, sans-serif;
+  background: var(--rx-paper);
+  color: var(--rx-body);
+}
+
+.rx-root h1,
+.rx-root h2,
+.rx-root h3 {
+  color: var(--rx-ink);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.rx-frame {
+  border-inline: 1px dashed var(--rx-line);
+  max-width: 96rem;
+  margin-inline: auto;
+}
+
+.rx-sep {
+  border-top: 1px dashed var(--rx-line);
+}
+
+.rx-h1 {
+  font-size: clamp(2.4rem, 4.6vw, 4.4rem);
+  line-height: 1.16;
+}
+
+.rx-h2 {
+  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+  line-height: 1.2;
+}
+
+.rx-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--rx-grey);
+  color: var(--rx-ink);
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.rx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--rx-dark);
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1.6rem;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background-color 0.3s var(--ease-quint), transform 0.3s var(--ease-quint);
+}
+.rx-btn:hover {
+  background: var(--rx-accent);
+  transform: translateY(-2px);
+}
+.rx-btn--light {
+  background: #fff;
+  color: var(--rx-ink);
+}
+.rx-btn--light:hover {
+  background: var(--rx-accent);
+  color: #fff;
+}
+
+.rx-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  border: 1px solid var(--rx-line);
+  transition: background-color 0.4s var(--ease-quint), color 0.4s var(--ease-quint),
+    transform 0.4s var(--ease-quint), border-color 0.4s var(--ease-quint);
+}
+
+.rx-row:hover .rx-circle {
+  background: var(--rx-accent);
+  border-color: var(--rx-accent);
+  color: #fff;
+  transform: rotate(45deg);
+}
+
+.rx-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--rx-dark-line);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.8rem 1.7rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+/* photo with a "folded tab" corner like the reference template */
+.rx-photo {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+.rx-photo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4.5rem;
+  height: 4.5rem;
+  background: var(--rx-paper);
+  border-bottom-left-radius: 1.5rem;
+}
+
+.rx-root ::selection {
+  background: var(--rx-accent);
+  color: #fff;
+}
