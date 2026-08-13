@@ -293,17 +293,15 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
                 <div
                   key={item.title}
                   data-rx-spread={i}
-                  className="flex flex-col gap-2 rounded-2xl p-7"
+                  className="rounded-2xl p-7"
                   style={{
-                    background:
-                      i === 0 || i === 3 ? "var(--rx-blue-soft)" : "var(--rx-sand)",
+                    background: ["#e6edf8", "#ede5d3", "#e3eae0", "#ece7f0"][i % 4],
                   }}
                 >
-                  <Sparkle />
-                  <p className="rx-serif text-xl" style={{ color: "var(--rx-ink)" }}>
+                  <p className="rx-serif text-2xl" style={{ color: "var(--rx-ink)" }}>
                     {item.title}
                   </p>
-                  <p className="text-sm">{item.desc}</p>
+                  <p className="mt-4 text-base leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
