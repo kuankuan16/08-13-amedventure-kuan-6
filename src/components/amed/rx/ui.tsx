@@ -158,9 +158,7 @@ export function RxNav() {
         <div className="hidden items-center gap-3 lg:flex">
           <MailBadge />
           <div style={{ lineHeight: 1.25 }}>
-            <p className="text-xs" style={{ color: "var(--rx-body)" }}>
-              Write any time
-            </p>
+            <p className="rx-label">Write any time</p>
             <a
               href={RX_MAILTO}
               className="u-sweep text-sm font-bold"
@@ -212,7 +210,7 @@ export function RxPageHeader({
           </span>
         ))}
       </SlideIn>
-      {lead ? <p className="mt-6 max-w-[34rem] text-lg">{lead}</p> : null}
+      {lead ? <p className="rx-lead mt-6 max-w-[34rem]">{lead}</p> : null}
     </div>
   );
 }
@@ -251,13 +249,13 @@ export function RxCta() {
             {RX_CTA.cta}
           </a>
           <div>
-            <p className="text-xs">Email</p>
+            <p className="rx-label">Email</p>
             <a href={RX_MAILTO} className="u-sweep font-bold" style={{ color: "#fff" }}>
               {RX_CTA.email}
             </a>
           </div>
           <div>
-            <p className="text-xs">Offices</p>
+            <p className="rx-label">Offices</p>
             {RX_CTA.offices.map((o) => (
               <p key={o} className="font-bold" style={{ color: "#fff" }}>
                 {o}

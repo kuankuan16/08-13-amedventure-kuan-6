@@ -90,7 +90,7 @@ export function RxHero() {
               </span>
             ))}
           </h1>
-          <p className="mt-6 max-w-[30rem] text-lg" data-rx-hero-item>
+          <p className="rx-lead mt-6 max-w-[30rem]" data-rx-hero-item>
             {RX_HERO.support}
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-6" data-rx-hero-item>
@@ -269,7 +269,7 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
             ))}
           </SlideIn>
           <FadeUp delay={0.15}>
-            <p className="max-w-[26rem] text-lg">{RX_ABOUT.body}</p>
+            <p className="rx-lead max-w-[26rem]">{RX_ABOUT.body}</p>
           </FadeUp>
         </div>
 
@@ -479,7 +479,7 @@ export function RxFocusCards() {
             ))}
           </SlideIn>
           <FadeUp delay={0.1}>
-            <p className="mt-6">{RX_FOCUS.intro}</p>
+            <p className="rx-lead mt-6">{RX_FOCUS.intro}</p>
           </FadeUp>
         </div>
 
@@ -575,7 +575,7 @@ export function RxPhilosophy() {
                 <p className="text-sm font-bold" style={{ color: "var(--rx-accent)" }}>
                   {item.index}
                 </p>
-                <h3 className="mt-4 text-xl" style={{ color: "#fff" }}>
+                <h3 className="mt-4 text-2xl" style={{ color: "#fff" }}>
                   {item.title}
                 </h3>
                 <p className="mt-3 text-sm">{item.desc}</p>
@@ -712,7 +712,7 @@ export function RxStoryList({
                 >
                   {m.title}
                 </span>
-                <span className="mt-1 block text-xs">{m.source}</span>
+                <span className="rx-label mt-1 block">{m.source}</span>
               </span>
               <span className="text-sm font-bold" style={{ color: "var(--rx-ink)" }}>
                 {m.company}
@@ -1033,17 +1033,14 @@ export function RxPhilosophySplit() {
                     />
                   </div>
                   <div className="flex flex-col justify-center gap-8 p-10 md:p-14">
-                    <p
-                      className="rx-serif text-2xl leading-snug md:text-3xl"
-                      style={{ color: c.ink }}
-                    >
+                    <p className="rx-quote" style={{ color: c.ink }}>
                       {item.desc}
                     </p>
                     <div>
                       <p className="font-bold" style={{ color: c.ink }}>
                         {item.title}
                       </p>
-                      <p className="mt-1 text-sm" style={{ color: c.muted }}>
+                      <p className="rx-label mt-1" style={{ color: c.muted }}>
                         {RX_PHILOSOPHY.chip} · {item.index}
                       </p>
                     </div>
@@ -1258,7 +1255,7 @@ export function RxTeamBlocks() {
     <section className="rx-sep">
       <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
         <FadeUp>
-          <p className="max-w-[44rem] text-lg">{TEAM.intro}</p>
+          <p className="rx-lead max-w-[44rem]">{TEAM.intro}</p>
         </FadeUp>
 
         <RxTeamGroup label="Managing Partners" members={TEAM.leadership} />

@@ -15,6 +15,7 @@
   --rx-blue-soft: #eaf0f9;
   --rx-sand: #f3efe7;
   --rx-grey-neutral: #f4f4f6;
+  --rx-muted: rgba(20, 19, 26, 0.55);
   --rx-dark-line: rgba(255, 255, 255, 0.14);
   --rx-paper: #ffffff;
   --rx-grey: #eaf0f9;
@@ -25,6 +26,10 @@
 }
 
 /* Headings use the humanist serif (client: 人文味); UI/body stay Satoshi */
+.rx-root {
+  line-height: 1.65;
+}
+
 .rx-root h1,
 .rx-root h2,
 .rx-root h3 {
@@ -44,14 +49,43 @@
   border-top: 1px dashed var(--rx-line);
 }
 
+/* --- type scale ------------------------------------------------- */
+
+/* 主標 h1 */
 .rx-h1 {
   font-size: clamp(2.4rem, 4.6vw, 4.4rem);
-  line-height: 1.12;
+  line-height: 1.08;
 }
 
+/* 區塊主標 h2 */
 .rx-h2 {
   font-size: clamp(1.9rem, 3.4vw, 3.1rem);
-  line-height: 1.18;
+  line-height: 1.15;
+}
+
+/* 卡片標題 h3：預設 1.5rem，特例可用 utility 覆寫 */
+
+/* 副標／引言（顏色繼承所在區塊） */
+.rx-lead {
+  font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+  line-height: 1.65;
+}
+
+/* 大字引文（襯線） */
+.rx-quote {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+  line-height: 1.42;
+}
+
+/* 小標／輔助標籤 */
+.rx-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--rx-muted);
 }
 
 .rx-serif {
