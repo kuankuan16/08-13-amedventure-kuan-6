@@ -27,20 +27,23 @@ export function RxHero() {
   useIsomorphicLayoutEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
-      // opening: a giant wordmark fills the screen, then shrinks into the
-      // nav logo position before the page reveals (reference behavior)
+      // opening: a giant "Capital" fills the screen, then shrinks precisely
+      // onto the first word of the hero headline (reference behavior)
       const intro = root.current?.querySelector<HTMLElement>("[data-rx-intro]");
       const word = root.current?.querySelector<HTMLElement>("[data-rx-intro-word]");
+      const h1 = root.current?.querySelector<HTMLElement>("[data-rx-hero-h1]");
+      const target = root.current?.querySelector<HTMLElement>("[data-rx-hero-capital]");
       let INTRO = 0;
-      if (intro && word && !reduced) {
+      if (intro && word && h1 && target && !reduced) {
         INTRO = 1.9;
+        gsap.set(h1, { autoAlpha: 0 });
         const play = () => {
-          const logo = document.querySelector<HTMLElement>("header img");
           const w = word.getBoundingClientRect();
-          const l = logo?.getBoundingClientRect();
-          const scale = l ? l.height / w.height : 0.08;
-          const dx = l ? l.left + l.width / 2 - (w.left + w.width / 2) : -w.width / 2;
-          const dy = l ? l.top + l.height / 2 - (w.top + w.height / 2) : -w.height / 2;
+          const t = target.getBoundingClientRect();
+          const scale = t.height / w.height;
+          const dx = t.left - w.left;
+          const dy = t.top - w.top;
+          gsap.set(word, { transformOrigin: "left top" });
           gsap
             .timeline()
             .fromTo(
@@ -56,8 +59,9 @@ export function RxHero() {
               ease: "quint.inOut",
               delay: 0.3,
             })
-            .to(word, { autoAlpha: 0, duration: 0.25, ease: "quint.out" }, ">-0.22")
-            .to(intro, { autoAlpha: 0, duration: 0.4, ease: "quint.out" }, "<")
+            // hand off: headline appears beneath the landed word
+            .to(h1, { autoAlpha: 1, duration: 0.3, ease: "quint.out" }, ">-0.05")
+            .to(intro, { autoAlpha: 0, duration: 0.35, ease: "quint.out" }, "<")
             .set(intro, { display: "none" });
         };
         // wait for the serif font so the measured shrink lands precisely
@@ -66,8 +70,9 @@ export function RxHero() {
         } else {
           play();
         }
-      } else if (intro) {
-        gsap.set(intro, { display: "none" });
+      } else {
+        if (intro) gsap.set(intro, { display: "none" });
+        if (h1) gsap.set(h1, { autoAlpha: 1 });
       }
 
       gsap.fromTo(
@@ -140,14 +145,13 @@ export function RxHero() {
           data-rx-intro-word
           className="rx-serif select-none opacity-0"
           style={{
-            fontSize: "min(26vw, 24rem)",
-            lineHeight: 1,
-            letterSpacing: "-0.02em",
+            fontSize: "min(18vw, 17rem)",
+            lineHeight: 1.08,
             color: "var(--rx-ink)",
             willChange: "transform",
           }}
         >
-          AMED
+          Capital
         </span>
       </div>
       <div className="rx-frame grid items-center gap-12 px-6 py-16 md:grid-cols-2 md:px-10 md:py-24">
@@ -155,12 +159,12 @@ export function RxHero() {
           <div data-rx-hero-item>
             <span className="rx-chip">{RX_HERO.chip}</span>
           </div>
-          <h1 className="rx-h1 mt-6" data-rx-hero-item>
-            {RX_HERO.title.map((line) => (
-              <span key={line} className="block">
-                {line}
-              </span>
-            ))}
+          <h1 className="rx-h1 mt-6" data-rx-hero-h1>
+            <span className="block">
+              <span data-rx-hero-capital>{RX_HERO.title[0].split(" ")[0]}</span>
+              {" " + RX_HERO.title[0].split(" ").slice(1).join(" ")}
+            </span>
+            <span className="block">{RX_HERO.title[1]}</span>
           </h1>
           <p className="rx-lead mt-6 max-w-[30rem]" data-rx-hero-item>
             {RX_HERO.support}
