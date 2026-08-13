@@ -117,7 +117,7 @@ export function RxNav() {
     <header
       className="sticky top-0 z-[100]"
       style={{
-        background: "rgba(255,255,255,0.92)",
+        background: "rgba(250,248,243,0.92)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
         borderBottom: "1px dashed var(--rx-line)",

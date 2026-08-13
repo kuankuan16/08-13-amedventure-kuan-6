@@ -17,7 +17,7 @@
   --rx-grey-neutral: #f4f4f6;
   --rx-muted: rgba(20, 19, 26, 0.55);
   --rx-dark-line: rgba(255, 255, 255, 0.14);
-  --rx-paper: #ffffff;
+  --rx-paper: #faf8f3;
   --rx-grey: #eaf0f9;
   --rx-accent: var(--cyan);
   font-family: "Satoshi", var(--font-instrument), ui-sans-serif, sans-serif;
