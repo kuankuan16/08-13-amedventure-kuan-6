@@ -25,17 +25,68 @@ export function RxHero() {
   const root = useRef<HTMLDivElement | null>(null);
 
   useIsomorphicLayoutEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const ctx = gsap.context(() => {
+      // opening: a giant wordmark fills the screen, then shrinks into the
+      // nav logo position before the page reveals (reference behavior)
+      const intro = root.current?.querySelector<HTMLElement>("[data-rx-intro]");
+      const word = root.current?.querySelector<HTMLElement>("[data-rx-intro-word]");
+      let INTRO = 0;
+      if (intro && word && !reduced) {
+        INTRO = 1.9;
+        const play = () => {
+          const logo = document.querySelector<HTMLElement>("header img");
+          const w = word.getBoundingClientRect();
+          const l = logo?.getBoundingClientRect();
+          const scale = l ? l.height / w.height : 0.08;
+          const dx = l ? l.left + l.width / 2 - (w.left + w.width / 2) : -w.width / 2;
+          const dy = l ? l.top + l.height / 2 - (w.top + w.height / 2) : -w.height / 2;
+          gsap
+            .timeline()
+            .fromTo(
+              word,
+              { autoAlpha: 0, yPercent: 14 },
+              { autoAlpha: 1, yPercent: 0, duration: 0.55, ease: "quint.out", delay: 0.1 }
+            )
+            .to(word, {
+              x: dx,
+              y: dy,
+              scale,
+              duration: 1.0,
+              ease: "quint.inOut",
+              delay: 0.3,
+            })
+            .to(word, { autoAlpha: 0, duration: 0.25, ease: "quint.out" }, ">-0.22")
+            .to(intro, { autoAlpha: 0, duration: 0.4, ease: "quint.out" }, "<")
+            .set(intro, { display: "none" });
+        };
+        // wait for the serif font so the measured shrink lands precisely
+        if (document.fonts?.ready) {
+          document.fonts.ready.then(play);
+        } else {
+          play();
+        }
+      } else if (intro) {
+        gsap.set(intro, { display: "none" });
+      }
+
       gsap.fromTo(
         "[data-rx-hero-item]",
         { autoAlpha: 0, y: 34 },
-        { autoAlpha: 1, y: 0, duration: 1, ease: "quint.out", stagger: 0.12, delay: 0.15 }
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: 1,
+          ease: "quint.out",
+          stagger: 0.12,
+          delay: INTRO + 0.15,
+        }
       );
       // photo settles from 1.25 to a persistent 1.1 zoom (reference behavior)
       gsap.fromTo(
         "[data-rx-hero-img]",
         { scale: 1.25 },
-        { scale: 1.1, duration: 1.6, ease: "quint.out", delay: 0.5 }
+        { scale: 1.1, duration: 1.6, ease: "quint.out", delay: INTRO + 0.5 }
       );
       // hero photo: vertical mask reveal on load and between slides —
       // the incoming slide wipes up over the previous one, with the image
@@ -50,11 +101,11 @@ export function RxHero() {
         clipPath: SHOWN,
         duration: 1.2,
         ease: "quint.out",
-        delay: 0.45,
+        delay: INTRO + 0.45,
       });
       if (slides.length > 1) {
         const zc = { z: 3 };
-        const ctl = gsap.timeline({ repeat: -1, delay: 1.65 });
+        const ctl = gsap.timeline({ repeat: -1, delay: INTRO + 1.65 });
         slides.forEach((slide, i) => {
           const next = slides[(i + 1) % slides.length];
           const img = next.querySelector<HTMLElement>("[data-rx-hero-img]");
@@ -78,6 +129,27 @@ export function RxHero() {
 
   return (
     <div id="rx-top" ref={root}>
+      {/* opening overlay: giant wordmark shrinking into the nav logo */}
+      <div
+        data-rx-intro
+        className="fixed inset-0 z-[200] flex items-center justify-center"
+        style={{ background: "var(--rx-paper)" }}
+        aria-hidden
+      >
+        <span
+          data-rx-intro-word
+          className="rx-serif select-none opacity-0"
+          style={{
+            fontSize: "min(26vw, 24rem)",
+            lineHeight: 1,
+            letterSpacing: "-0.02em",
+            color: "var(--rx-ink)",
+            willChange: "transform",
+          }}
+        >
+          AMED
+        </span>
+      </div>
       <div className="rx-frame grid items-center gap-12 px-6 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <div data-rx-hero-item>
