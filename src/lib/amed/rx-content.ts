@@ -7,7 +7,6 @@ import { asset } from "./content";
 
 export const RX_NAV = [
   { label: "About", href: "/v2/about" },
-  { label: "Focus", href: "/v2/focus" },
   { label: "Portfolio", href: "/v2/portfolio" },
   { label: "Story", href: "/v2/story" },
   { label: "Team", href: "/v2/team" },
@@ -85,29 +84,39 @@ export const RX_FOCUS = {
     "From cardiovascular and neurovascular platforms to surgical, vision and connected care, we look for ideas with a clear clinical purpose.",
     "Across Asia and the United States, we support teams turning technical insight into solutions that can earn trust in real care settings.",
   ],
+  intro:
+    "From cardiovascular and neurovascular platforms to surgical, vision and connected care — we look for ideas with a clear clinical purpose.",
   rows: [
     {
       index: "01",
       title: "Neurovascular Technologies",
       desc: "Stroke and neurovascular platforms across the continuum of care",
+      detail:
+        "Stroke and neurovascular platforms across the continuum of care — from intervention to recovery. We back teams turning technical insight into solutions that can earn trust in real care settings.",
       image: asset("/amed/images/thesis-01-intervention.jpg"),
     },
     {
       index: "02",
       title: "Cardiovascular Technologies",
       desc: "Structural heart, circulatory support and vascular intervention",
+      detail:
+        "Structural heart, circulatory support and vascular intervention — innovative solutions with the potential to improve patient outcomes and healthcare delivery.",
       image: asset("/amed/images/thesis-02-founders.jpg"),
     },
     {
       index: "03",
       title: "Surgical Technologies",
       desc: "Biomaterials, implants and devices for the operating room",
+      detail:
+        "Biomaterials, implants and devices for the operating room — the long work between a promising idea and trusted care, where evidence, execution and endurance turn possibility into practice.",
       image: asset("/amed/images/practice-b-operating.jpg"),
     },
     {
       index: "04",
       title: "Digital Health",
       desc: "Software and connected care that extends treatment beyond the hospital",
+      detail:
+        "Software and connected care that extends treatment beyond the hospital — supporting patients and clinicians across Asia and the United States.",
       image: asset("/amed/images/thesis-03-outcome.jpg"),
     },
   ],

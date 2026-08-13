@@ -125,15 +125,6 @@ export function RxHero() {
                     className="object-cover"
                   />
                 </div>
-                <div
-                  className="absolute bottom-5 left-5 max-w-[17rem] rounded-xl bg-white/95 px-5 py-4 shadow-lg"
-                  style={{ backdropFilter: "blur(6px)" }}
-                >
-                  <p className="rx-serif text-lg" style={{ color: "var(--rx-ink)" }}>
-                    {slide.cardTitle}
-                  </p>
-                  <p className="text-sm">{slide.cardDesc}</p>
-                </div>
               </div>
             ))}
             {/* progress dots */}
@@ -316,7 +307,7 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
                 </div>
               ))}
             </div>
-            <div className="mt-8 flex flex-wrap items-center gap-6">
+            <div className="mt-8">
               {cta ? (
                 <Link href={cta.href} className="rx-btn">
                   {cta.label}
@@ -326,16 +317,6 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
                   Send us your deck
                 </a>
               )}
-              <div style={{ lineHeight: 1.3 }}>
-                <p className="text-xs">Write any time</p>
-                <a
-                  href={RX_MAILTO}
-                  className="u-sweep font-bold"
-                  style={{ color: "var(--rx-ink)" }}
-                >
-                  {RX_ABOUT.email}
-                </a>
-              </div>
             </div>
           </div>
         </div>
@@ -460,55 +441,127 @@ export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
   );
 }
 
-/** Compact focus cards for the homepage, linking to the Focus page. */
+/**
+ * Homepage focus: dark expandable service rows (reference interaction) —
+ * the active row expands its copy, the title takes the accent colour, and a
+ * tilted photo floats over the row; hover switches rows.
+ */
 export function RxFocusCards() {
+  const [active, setActive] = useState(0);
+  const detailRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useIsomorphicLayoutEffect(() => {
+    detailRefs.current.forEach((el, i) => {
+      if (!el) return;
+      gsap.to(el, {
+        height: i === active ? "auto" : 0,
+        autoAlpha: i === active ? 1 : 0,
+        duration: 0.7,
+        ease: "quint.out",
+        overwrite: "auto",
+        onComplete: () => ScrollTrigger.refresh(),
+      });
+    });
+  }, [active]);
+
   return (
-    <section className="rx-sep">
-      <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
-        <FadeUp>
-          <span className="rx-chip">{RX_FOCUS.chip}</span>
-        </FadeUp>
-        <div className="mt-6 flex flex-wrap items-end justify-between gap-6">
-          <SlideIn className="rx-h2 max-w-[34rem]">
-            {RX_FOCUS.title.map((line) => (
-              <span key={line} className="block">
-                {line}
-              </span>
-            ))}
-          </SlideIn>
+    <section style={{ background: "var(--rx-dark)", color: "rgba(255,255,255,0.72)" }}>
+      <div
+        className="rx-frame px-6 py-16 md:px-10 md:py-24"
+        style={{ borderColor: "var(--rx-dark-line)" }}
+      >
+        <div className="mx-auto max-w-[44rem] text-center">
           <FadeUp>
-            <Link href="/v2/focus" className="group inline-flex items-center gap-3 font-bold" style={{ color: "var(--rx-ink)" }}>
-              <span className="rx-circle group-hover:rotate-45" aria-hidden>
-                <Arrow />
-              </span>
-              Explore our focus
-            </Link>
+            <span
+              className="rx-chip"
+              style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}
+            >
+              {RX_FOCUS.chip}
+            </span>
+          </FadeUp>
+          <SlideIn className="rx-h2 mt-6">
+            <span style={{ color: "#fff" }}>
+              {RX_FOCUS.title.map((line) => (
+                <span key={line} className="block">
+                  {line}
+                </span>
+              ))}
+            </span>
+          </SlideIn>
+          <FadeUp delay={0.1}>
+            <p className="mt-6">{RX_FOCUS.intro}</p>
           </FadeUp>
         </div>
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {RX_FOCUS.rows.map((row, i) => (
-            <FadeUp key={row.index} delay={i * 0.08}>
-              <Link
-                href="/v2/focus"
-                className="rx-row group block h-full rounded-2xl p-7 transition-transform duration-500 hover:-translate-y-1"
-                style={{
-                  background: i % 2 === 0 ? "var(--rx-blue-soft)" : "var(--rx-sand)",
-                  transitionTimingFunction: "var(--ease-quint)",
-                }}
+
+        <div className="mt-16">
+          {RX_FOCUS.rows.map((row, i) => {
+            const isActive = active === i;
+            return (
+              <div
+                key={row.index}
+                className="relative"
+                onMouseEnter={() => setActive(i)}
+                onFocus={() => setActive(i)}
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold" style={{ color: "var(--rx-accent)" }}>
+                <button
+                  type="button"
+                  onClick={() => setActive(i)}
+                  className="flex w-full items-center gap-6 py-8 text-left md:gap-10"
+                  style={{ borderTop: "1px solid var(--rx-dark-line)" }}
+                >
+                  <span
+                    className="text-sm font-bold transition-colors duration-300"
+                    style={{ color: isActive ? "var(--rx-accent)" : "rgba(255,255,255,0.45)" }}
+                  >
                     {row.index}
                   </span>
-                  <span className="rx-circle !h-10 !w-10" aria-hidden>
+                  <span className="flex-1">
+                    <span
+                      className="rx-serif block text-3xl transition-colors duration-300 md:text-5xl"
+                      style={{ color: isActive ? "var(--rx-accent)" : "#fff" }}
+                    >
+                      {row.title}
+                    </span>
+                  </span>
+                  <span
+                    className="rx-circle shrink-0 transition-all duration-500"
+                    style={{
+                      borderColor: isActive ? "var(--rx-accent)" : "var(--rx-dark-line)",
+                      background: isActive ? "var(--rx-accent)" : "transparent",
+                      color: "#fff",
+                      transform: isActive ? "rotate(45deg)" : "none",
+                    }}
+                    aria-hidden
+                  >
                     <Arrow />
                   </span>
+                </button>
+                <div
+                  ref={(el) => {
+                    detailRefs.current[i] = el;
+                  }}
+                  className="overflow-hidden"
+                  style={{ height: i === 0 ? "auto" : 0, opacity: i === 0 ? 1 : 0 }}
+                >
+                  <p className="max-w-[34rem] pb-10 pl-10 md:pl-16">{row.detail}</p>
                 </div>
-                <h3 className="mt-6 text-2xl">{row.title}</h3>
-                <p className="mt-3 text-sm">{row.desc}</p>
-              </Link>
-            </FadeUp>
-          ))}
+                {/* tilted floating photo over the active row */}
+                <div
+                  className="pointer-events-none absolute right-[16%] top-1/2 z-10 hidden w-[15rem] -translate-y-1/2 overflow-hidden rounded-2xl shadow-2xl transition-all duration-700 lg:block"
+                  style={{
+                    transform: `translateY(-50%) rotate(8deg) scale(${isActive ? 1 : 0.85})`,
+                    opacity: isActive ? 1 : 0,
+                    transitionTimingFunction: "var(--ease-quint)",
+                    aspectRatio: "1 / 1",
+                  }}
+                  aria-hidden
+                >
+                  <Image src={row.image} alt="" fill sizes="15rem" className="object-cover" />
+                </div>
+              </div>
+            );
+          })}
+          <div style={{ borderTop: "1px solid var(--rx-dark-line)" }} />
         </div>
       </div>
     </section>
