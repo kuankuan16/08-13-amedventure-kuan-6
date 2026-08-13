@@ -6,10 +6,12 @@ import { asset } from "./content";
  */
 
 export const RX_NAV = [
-  { label: "About", href: "#rx-about" },
-  { label: "Focus", href: "#rx-focus" },
-  { label: "Story", href: "#rx-story" },
-  { label: "Contact", href: "#rx-contact" },
+  { label: "About", href: "/v2/about" },
+  { label: "Focus", href: "/v2/focus" },
+  { label: "Portfolio", href: "/v2/portfolio" },
+  { label: "Story", href: "/v2/story" },
+  { label: "Team", href: "/v2/team" },
+  { label: "Contact", href: "/v2/contact" },
 ] as const;
 
 export const RX_MAILTO =
@@ -33,11 +35,24 @@ export const RX_ABOUT = {
   body: "We invest in the long work between a promising idea and trusted care — where evidence, execution and endurance turn possibility into practice.",
   image: asset("/amed/images/firm-studio.jpg"),
   imageAlt: "A team around an oak table examining a device prototype",
-  stats: [
-    { value: 16, suffix: "", label: "Active portfolio companies" },
-    { value: 8, suffix: "", label: "Investment focus areas" },
-    { value: 2, suffix: "", label: "Offices — Taipei & San Francisco" },
-    { value: 4, suffix: "", label: "Companies exited" },
+  /** Qualitative firm highlights (client PDF) — numbers deliberately not emphasized. */
+  highlights: [
+    {
+      title: "MedTech-focused",
+      desc: "A MedTech & Healthcare-focused venture capital firm.",
+    },
+    {
+      title: "Global portfolio",
+      desc: "A global investment portfolio across North America and Asia.",
+    },
+    {
+      title: "Early through growth",
+      desc: "Active investments from early-stage through growth-stage companies.",
+    },
+    {
+      title: "Beyond capital",
+      desc: "A long-term investment partner providing strategic support beyond capital.",
+    },
   ],
   cta: "More about AMED",
   email: "info@amedventures.com",
@@ -213,6 +228,52 @@ export const RX_CTA = {
   cta: "Send us your deck",
   email: "info@amedventures.com",
   offices: ["Taipei, Taiwan", "San Francisco, USA"],
+} as const;
+
+/** Investment philosophy — verbatim pillars from the client PDF. */
+export const RX_PHILOSOPHY = {
+  chip: "Investment Philosophy",
+  title: ["What we believe in."],
+  items: [
+    {
+      index: "01",
+      title: "Long-term partnership",
+      desc: "We partner closely with founders throughout each company's growth journey — strategic support well beyond capital.",
+    },
+    {
+      index: "02",
+      title: "High-conviction investing",
+      desc: "Active investments from early-stage through growth-stage companies, across North America and Asia.",
+    },
+    {
+      index: "03",
+      title: "Supporting exceptional entrepreneurs",
+      desc: "Strategic guidance, industry expertise, operational support, and access to a global network.",
+    },
+    {
+      index: "04",
+      title: "Building companies that create meaningful impact",
+      desc: "With the right support, today's pioneering idea becomes tomorrow's global impact.",
+    },
+  ],
+} as const;
+
+/** Firm highlights — verbatim from the client PDF. */
+export const RX_HIGHLIGHTS = [
+  "MedTech & Healthcare-focused venture capital firm",
+  "Global investment portfolio across North America and Asia",
+  "Active investments from early-stage through growth-stage companies",
+  "Long-term investment partner providing strategic support beyond capital",
+] as const;
+
+export const RX_CONTACT_PAGE = {
+  chip: "Contact",
+  title: ["Building something that", "belongs in a hospital?"],
+  body: "We read everything. If you are early, technical and serious about the clinical bar, we would like to hear from you.",
+  deckLabel: "Send us your deck",
+  emailLabel: "Email",
+  email: "info@amedventures.com",
+  officesLabel: "Offices",
 } as const;
 
 export const RX_FOOTER = {

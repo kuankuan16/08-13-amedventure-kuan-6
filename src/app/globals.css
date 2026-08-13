@@ -181,31 +181,36 @@ body {
   font-weight: 500;
 }
 
+/* Headings site-wide use the humanist serif (client: 人文味) */
 .t-display-xl {
-  font-size: clamp(2.4rem, calc(96 / 1440 * 100vw), 8rem);
-  line-height: 0.97;
-  letter-spacing: -0.035em;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(2.4rem, calc(94 / 1440 * 100vw), 7.75rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   font-weight: 500;
 }
 
 .t-display-l {
-  font-size: clamp(2rem, calc(72 / 1440 * 100vw), 6rem);
-  line-height: 1;
-  letter-spacing: -0.03em;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(2rem, calc(70 / 1440 * 100vw), 5.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.018em;
   font-weight: 500;
 }
 
 .t-display-m {
-  font-size: clamp(1.75rem, calc(56 / 1440 * 100vw), 4.5rem);
-  line-height: 1.04;
-  letter-spacing: -0.025em;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.75rem, calc(54 / 1440 * 100vw), 4.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
   font-weight: 500;
 }
 
 .t-title {
-  font-size: clamp(1.25rem, calc(28 / 1440 * 100vw), 2.25rem);
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-size: clamp(1.25rem, calc(27 / 1440 * 100vw), 2.125rem);
+  line-height: 1.3;
+  letter-spacing: -0.008em;
   font-weight: 500;
 }
 
@@ -312,12 +317,14 @@ button:hover .roll > span,
   color: var(--rx-body);
 }
 
+/* Headings use the humanist serif (client: 人文味); UI/body stay Satoshi */
 .rx-root h1,
 .rx-root h2,
 .rx-root h3 {
   color: var(--rx-ink);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.012em;
 }
 
 .rx-frame {
@@ -332,12 +339,18 @@ button:hover .roll > span,
 
 .rx-h1 {
   font-size: clamp(2.4rem, 4.6vw, 4.4rem);
-  line-height: 1.16;
+  line-height: 1.12;
 }
 
 .rx-h2 {
   font-size: clamp(1.9rem, 3.4vw, 3.1rem);
-  line-height: 1.2;
+  line-height: 1.18;
+}
+
+.rx-serif {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-weight: 500;
+  letter-spacing: -0.012em;
 }
 
 .rx-chip {

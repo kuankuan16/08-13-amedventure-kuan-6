@@ -12,7 +12,7 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   style: ["italic", "normal"],
-  weight: ["300", "400"],
+  weight: ["300", "400", "500", "600"],
 });
 
 export const metadata: Metadata = {
