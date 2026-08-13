@@ -25,21 +25,6 @@ export function RxHero() {
   const root = useRef<HTMLDivElement | null>(null);
 
   useIsomorphicLayoutEffect(() => {
-    // full-bleed brand wordmark: static, fitted edge-to-edge after fonts load
-    const brand = root.current?.querySelector<HTMLElement>("[data-rx-hero-brand-inner]");
-    const fit = () => {
-      if (!brand) return;
-      brand.style.fontSize = "20vw";
-      const w = brand.getBoundingClientRect().width;
-      if (w > 0) brand.style.fontSize = `${((20 * window.innerWidth) / w) * 0.96}vw`;
-    };
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(fit);
-    } else {
-      fit();
-    }
-    window.addEventListener("resize", fit);
-
     const ctx = gsap.context(() => {
       const INTRO = 0;
 
@@ -97,31 +82,12 @@ export function RxHero() {
         });
       }
     }, root);
-    return () => {
-      window.removeEventListener("resize", fit);
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <div id="rx-top" ref={root}>
-      {/* full-bleed brand wordmark (reference behaviour) */}
-      <div className="overflow-hidden pt-10 text-center md:pt-14" aria-hidden>
-        <span
-          data-rx-hero-brand-inner
-          className="rx-serif inline-block whitespace-nowrap select-none"
-          style={{
-            fontSize: "20vw",
-            lineHeight: 0.92,
-            letterSpacing: "-0.02em",
-            color: "var(--rx-ink)",
-          }}
-        >
-          AMED
-        </span>
-      </div>
-
-      <div className="rx-frame relative z-10 grid items-center gap-12 px-6 py-12 md:grid-cols-2 md:px-10 md:py-16">
+      <div className="rx-frame grid items-center gap-12 px-6 py-16 md:grid-cols-2 md:px-10 md:py-24">
         <div>
           <div data-rx-hero-item>
             <span className="rx-chip">{RX_HERO.chip}</span>
