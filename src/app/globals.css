@@ -128,3 +128,166 @@
     @apply font-sans;
   }
 }
+
+/* ============================================================
+   AMED VENTURES — design system
+   Motion vocabulary transposed from sakazuki.io (see docs/research/DESIGN_SYSTEM.md)
+   Palette from the AMED Ventures brand lockup.
+   ============================================================ */
+
+:root {
+  --navy-950: #050b23;
+  --navy-900: #10163c;
+  --indigo: #3f3f80;
+  --cyan: #00a8d0;
+  --cyan-hot: #7fd6ea;
+  --ice: #f7f9fc;
+  --mist: #eef2f7;
+  --chalk: #ffffff;
+  --ink: #071022;
+  --ink-60: rgba(7, 16, 34, 0.6);
+  --chalk-60: rgba(255, 255, 255, 0.6);
+
+  --ease-quint: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  --pad: clamp(1.25rem, 4.5vw, 4rem);
+  --header-h: 4.5rem;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(7, 16, 34, 0.35) transparent;
+}
+
+body {
+  background: var(--ice);
+  color: var(--ink);
+  font-feature-settings: "ss01" on;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--cyan);
+  color: var(--chalk);
+}
+
+/* ---- type scale (1440 artboard, vw-proportional on desktop) ---- */
+
+.t-eyebrow {
+  font-size: clamp(0.6875rem, calc(12 / 1440 * 100vw), 0.875rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.t-display-xl {
+  font-size: clamp(2.4rem, calc(96 / 1440 * 100vw), 8rem);
+  line-height: 0.97;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+
+.t-display-l {
+  font-size: clamp(2rem, calc(72 / 1440 * 100vw), 6rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.t-display-m {
+  font-size: clamp(1.75rem, calc(56 / 1440 * 100vw), 4.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+}
+
+.t-title {
+  font-size: clamp(1.25rem, calc(28 / 1440 * 100vw), 2.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  font-weight: 500;
+}
+
+.t-body-l {
+  font-size: clamp(1.0625rem, calc(19 / 1440 * 100vw), 1.5rem);
+  line-height: 1.55;
+  font-weight: 400;
+}
+
+.t-body {
+  font-size: clamp(0.9375rem, calc(16 / 1440 * 100vw), 1.25rem);
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.t-small {
+  font-size: clamp(0.8125rem, calc(13.5 / 1440 * 100vw), 1.0625rem);
+  line-height: 1.5;
+}
+
+.font-serif-accent {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* ---- line-mask reveal (M4) ---- */
+.line-mask .split-line {
+  overflow: hidden;
+  padding-block: 0.06em;
+  margin-block: -0.06em;
+}
+
+/* ---- hover roll text (M5) ---- */
+.roll {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  overflow: hidden;
+  vertical-align: top;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.6s var(--ease-quint);
+}
+.roll > span:nth-child(2) {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+a:hover .roll > span,
+button:hover .roll > span,
+.roll-trigger:hover .roll > span {
+  transform: translateY(-100%);
+}
+
+/* ---- marquee (M10) ---- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 42s linear infinite;
+}
+
+/* ---- underline sweep for inline links ---- */
+.u-sweep {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-quint);
+}
+.u-sweep:hover {
+  background-size: 100% 1px;
+}
+
+/* ---- reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  html.lenis, html.lenis body { scroll-behavior: auto; }
+}

@@ -1,8 +1,12 @@
 import type { NextConfig } from "next";
 
+const isExport = process.env.EXPORT_BUILD === "1";
+
 const nextConfig: NextConfig = {
-  /* config options here */
-  output: "standalone",
+  output: isExport ? "export" : "standalone",
+  basePath: isExport ? "/amed-preview" : "",
+  images: { unoptimized: isExport },
+  allowedDevOrigins: ["192.168.0.148"],
 };
 
 export default nextConfig;
