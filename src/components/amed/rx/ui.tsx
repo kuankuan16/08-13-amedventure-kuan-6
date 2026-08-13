@@ -28,6 +28,21 @@ export function Sparkle() {
   );
 }
 
+export function MailBadge() {
+  return (
+    <span
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+      style={{ background: "var(--rx-blue-soft)", color: "var(--rx-ink)" }}
+      aria-hidden
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="5.5" width="18" height="13" rx="2.5" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M4 7l8 6 8-6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </span>
+  );
+}
+
 /** Number that counts up when it enters the viewport. */
 export function Counter({ value, suffix = "" }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement | null>(null);
@@ -141,9 +156,7 @@ export function RxNav() {
           })}
         </nav>
         <div className="hidden items-center gap-3 lg:flex">
-          <span className="rx-chip" style={{ background: "var(--rx-grey)" }} aria-hidden>
-            ✆
-          </span>
+          <MailBadge />
           <div style={{ lineHeight: 1.25 }}>
             <p className="text-xs" style={{ color: "var(--rx-body)" }}>
               Write any time

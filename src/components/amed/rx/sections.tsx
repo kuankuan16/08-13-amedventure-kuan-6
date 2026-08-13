@@ -31,29 +31,45 @@ export function RxHero() {
         { autoAlpha: 0, y: 34 },
         { autoAlpha: 1, y: 0, duration: 1, ease: "quint.out", stagger: 0.12, delay: 0.15 }
       );
-      gsap.fromTo(
-        "[data-rx-hero-photo]",
-        { autoAlpha: 0, x: 60 },
-        { autoAlpha: 1, x: 0, duration: 1.2, ease: "quint.out", delay: 0.45 }
-      );
       // photo settles from 1.25 to a persistent 1.1 zoom (reference behavior)
       gsap.fromTo(
         "[data-rx-hero-img]",
         { scale: 1.25 },
         { scale: 1.1, duration: 1.6, ease: "quint.out", delay: 0.5 }
       );
-      // hero photo carousel: image + caption crossfade together
+      // hero photo: vertical mask reveal on load and between slides —
+      // the incoming slide wipes up over the previous one, with the image
+      // counter-drifting for depth (reference behavior)
       const slides = gsap.utils.toArray<HTMLElement>("[data-rx-slide]");
+      const HIDDEN = "inset(100% 0% 0% 0%)";
+      const SHOWN = "inset(0% 0% 0% 0%)";
+      gsap.set(slides, { clipPath: HIDDEN, zIndex: 1 });
+      // entrance: first slide revealed by the mask sliding open
+      gsap.set(slides[0], { zIndex: 2 });
+      gsap.to(slides[0], {
+        clipPath: SHOWN,
+        duration: 1.2,
+        ease: "quint.out",
+        delay: 0.45,
+      });
       if (slides.length > 1) {
-        gsap.set(slides, { autoAlpha: 0 });
-        gsap.set(slides[0], { autoAlpha: 1 });
-        const ctl = gsap.timeline({ repeat: -1, delay: 1.2 });
+        const zc = { z: 3 };
+        const ctl = gsap.timeline({ repeat: -1, delay: 1.65 });
         slides.forEach((slide, i) => {
           const next = slides[(i + 1) % slides.length];
+          const img = next.querySelector<HTMLElement>("[data-rx-hero-img]");
           ctl
             .to({}, { duration: 4.2 })
-            .to(slide, { autoAlpha: 0, duration: 0.9, ease: "quint.inOut" }, ">")
-            .to(next, { autoAlpha: 1, duration: 0.9, ease: "quint.inOut" }, "<");
+            .call(() => {
+              gsap.set(next, { zIndex: zc.z++, clipPath: HIDDEN });
+            })
+            .to(next, { clipPath: SHOWN, duration: 1.0, ease: "quint.inOut" })
+            .fromTo(
+              img,
+              { yPercent: 8, scale: 1.1 },
+              { yPercent: 0, scale: 1.1, duration: 1.0, ease: "quint.inOut" },
+              "<"
+            );
         });
       }
     }, root);
@@ -288,7 +304,8 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
                   data-rx-spread={i}
                   className="flex flex-col gap-2 rounded-2xl p-7"
                   style={{
-                    background: i % 3 === 0 ? "var(--rx-blue-soft)" : i % 3 === 1 ? "var(--rx-sand)" : "var(--rx-grey)",
+                    background:
+                      i === 0 || i === 3 ? "var(--rx-blue-soft)" : "var(--rx-sand)",
                   }}
                 >
                   <Sparkle />
@@ -934,31 +951,38 @@ export function RxPhilosophySplit() {
         </FadeUp>
         <SlideIn className="rx-h2 mt-6">{RX_PHILOSOPHY.title[0]}</SlideIn>
 
-        <div className="mt-12 grid overflow-hidden rounded-2xl md:grid-cols-2">
+        {/* sticky stacking cards: each card pins at the same offset and the
+            next one scrolls up over it (reference mechanism) */}
+        <div className="mt-12">
           {RX_PHILOSOPHY.items.map((item, i) => (
-            <div key={item.index} className="contents">
-              <div className={`relative min-h-[20rem] md:min-h-[26rem] ${i % 2 === 1 ? "md:order-last" : ""}`}>
-                <Image
-                  src={photos[i]}
-                  alt={item.title}
-                  fill
-                  sizes="(min-width: 768px) 48vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
+            <div
+              key={item.index}
+              className="md:sticky"
+              style={{ top: "5.5rem", zIndex: i + 1, marginBottom: i === RX_PHILOSOPHY.items.length - 1 ? 0 : "2rem" }}
+            >
               <div
-                className="flex flex-col justify-center gap-8 p-10 md:p-14"
-                style={{ background: "var(--rx-blue-soft)" }}
+                className="grid overflow-hidden rounded-2xl bg-white shadow-xl md:h-[76vh] md:max-h-[52rem] md:min-h-[30rem] md:grid-cols-2"
+                style={{ boxShadow: "0 -12px 40px rgba(20,19,26,0.10)" }}
               >
-                <FadeUp>
+                <div className="relative min-h-[16rem]">
+                  <Image
+                    src={photos[i]}
+                    alt={item.title}
+                    fill
+                    sizes="(min-width: 768px) 48vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div
+                  className="flex flex-col justify-center gap-10 p-10 md:p-16"
+                  style={{ background: "var(--rx-blue-soft)" }}
+                >
                   <p
                     className="rx-serif text-2xl leading-snug md:text-3xl"
                     style={{ color: "var(--rx-ink)" }}
                   >
                     {item.desc}
                   </p>
-                </FadeUp>
-                <FadeUp delay={0.1}>
                   <div>
                     <p className="font-bold" style={{ color: "var(--rx-ink)" }}>
                       {item.title}
@@ -967,7 +991,7 @@ export function RxPhilosophySplit() {
                       {RX_PHILOSOPHY.chip} · {item.index}
                     </p>
                   </div>
-                </FadeUp>
+                </div>
               </div>
             </div>
           ))}
