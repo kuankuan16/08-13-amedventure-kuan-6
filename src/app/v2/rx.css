@@ -14,6 +14,7 @@
   --rx-blue: #c5d7f1;
   --rx-blue-soft: #eaf0f9;
   --rx-sand: #f3efe7;
+  --rx-grey-neutral: #f4f4f6;
   --rx-dark-line: rgba(255, 255, 255, 0.14);
   --rx-paper: #ffffff;
   --rx-grey: #eaf0f9;
@@ -63,7 +64,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--rx-blue);
+  background: var(--rx-grey-neutral);
   color: var(--rx-ink);
   border-radius: 999px;
   padding: 0.45rem 1rem;
@@ -127,21 +128,16 @@
   white-space: nowrap;
 }
 
-/* photo with a "folded tab" corner like the reference template */
+/* photo masked to the notched-corner shape (see #rx-photo-clip in the layout) */
 .rx-photo {
   position: relative;
   border-radius: 1.5rem;
   overflow: hidden;
 }
-.rx-photo::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4.5rem;
-  height: 4.5rem;
-  background: var(--rx-paper);
-  border-bottom-left-radius: 1.5rem;
+.rx-clip {
+  position: relative;
+  overflow: hidden;
+  clip-path: url(#rx-photo-clip);
 }
 
 .rx-root ::selection {

@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { PORTFOLIO, PORTFOLIO_FILTERS, TEAM, type TeamMember } from "@/lib/amed/content";
+import { asset, PORTFOLIO, PORTFOLIO_FILTERS, TEAM, type TeamMember } from "@/lib/amed/content";
 import {
   RX_MAILTO,
   RX_HERO,
@@ -36,19 +36,12 @@ export function RxHero() {
         { autoAlpha: 0, x: 60 },
         { autoAlpha: 1, x: 0, duration: 1.2, ease: "quint.out", delay: 0.45 }
       );
-      const items = gsap.utils.toArray<HTMLElement>("[data-rx-tick]");
-      if (items.length > 1) {
-        const tl = gsap.timeline({ repeat: -1 });
-        items.forEach((item) => {
-          tl.fromTo(
-            item,
-            { autoAlpha: 0, y: 18 },
-            { autoAlpha: 1, y: 0, duration: 0.5, ease: "quint.out" }
-          )
-            .to(item, { autoAlpha: 1, duration: 1.8 })
-            .to(item, { autoAlpha: 0, y: -18, duration: 0.4, ease: "quint.in" });
-        });
-      }
+      // photo settles from 1.25 to a persistent 1.1 zoom (reference behavior)
+      gsap.fromTo(
+        "[data-rx-hero-img]",
+        { scale: 1.25 },
+        { scale: 1.1, duration: 1.6, ease: "quint.out", delay: 0.5 }
+      );
       // hero photo carousel: image + caption crossfade together
       const slides = gsap.utils.toArray<HTMLElement>("[data-rx-slide]");
       if (slides.length > 1) {
@@ -99,26 +92,15 @@ export function RxHero() {
               {RX_HERO.ctaSecondary}
             </Link>
           </div>
-          <div className="relative mt-10 h-7 overflow-hidden" data-rx-hero-item aria-hidden>
-            {RX_HERO.ticker.map((t) => (
-              <p
-                key={t}
-                data-rx-tick
-                className="absolute font-bold tracking-wide opacity-0"
-                style={{ color: "var(--rx-accent)" }}
-              >
-                {t}
-              </p>
-            ))}
-          </div>
         </div>
 
         <div data-rx-hero-photo className="relative">
-          <div className="relative aspect-[5/4]">
+          <div className="relative" style={{ aspectRatio: "631 / 590" }}>
             {RX_HERO.slides.map((slide, i) => (
               <div key={slide.image} data-rx-slide className="absolute inset-0">
-                <div className="rx-photo h-full w-full">
+                <div className="rx-clip h-full w-full">
                   <Image
+                    data-rx-hero-img
                     src={slide.image}
                     alt={slide.alt}
                     fill
@@ -186,12 +168,6 @@ export function RxLogoBand() {
   const logos = PORTFOLIO.companies.filter((c) => c.logo);
   return (
     <div className="rx-sep relative">
-      <div
-        className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2"
-        style={{ background: "var(--rx-paper)", padding: "0 0.75rem" }}
-      >
-        <span className="rx-chip">The companies we back</span>
-      </div>
       <div className="rx-frame overflow-hidden px-0 py-12">
         <div className="marquee-track items-center" style={{ animationDuration: "55s" }}>
           {[0, 1].map((copy) => (
@@ -234,8 +210,45 @@ export function RxLogoBand() {
    ------------------------------------------------------------------ */
 
 export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
+  const root = useRef<HTMLElement | null>(null);
+
+  useIsomorphicLayoutEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+    const ctx = gsap.context(() => {
+      // 4 highlight cards converge from the grid centre outward (reference offsets)
+      const offsets = [
+        { x: 150, y: 80 },
+        { x: -150, y: 80 },
+        { x: 150, y: -80 },
+        { x: -150, y: -80 },
+      ];
+      const cards = gsap.utils.toArray<HTMLElement>("[data-rx-spread]");
+      cards.forEach((card, i) => {
+        const o = offsets[i % offsets.length];
+        gsap.set(card, { x: o.x, y: o.y, autoAlpha: 0 });
+      });
+      if (cards.length) {
+        ScrollTrigger.create({
+          trigger: cards[0].parentElement,
+          start: "top 78%",
+          once: true,
+          onEnter: () =>
+            gsap.to(cards, {
+              x: 0,
+              y: 0,
+              autoAlpha: 1,
+              duration: 1.1,
+              ease: "quint.out",
+            }),
+        });
+      }
+    }, root);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section className="rx-sep">
+    <section className="rx-sep" ref={root}>
       <div className="rx-frame px-6 py-16 md:px-10 md:py-24">
         <FadeUp>
           <span className="rx-chip">{RX_ABOUT.chip}</span>
@@ -255,28 +268,27 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
 
         <div className="mt-16 grid items-center gap-12 md:grid-cols-2">
           <FadeUp>
-            <div className="rx-photo aspect-[5/4]">
-              <Image
-                src={RX_ABOUT.image}
-                alt={RX_ABOUT.imageAlt}
-                fill
-                sizes="(min-width: 768px) 46vw, 100vw"
-                className="object-cover"
-              />
+            <div className="rx-clip" style={{ aspectRatio: "631 / 590" }}>
+              <div className="h-full w-full" style={{ transform: "scale(1.1)" }}>
+                <Image
+                  src={RX_ABOUT.image}
+                  alt={RX_ABOUT.imageAlt}
+                  fill
+                  sizes="(min-width: 768px) 46vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
           </FadeUp>
           <div>
-            <div
-              className="grid overflow-hidden rounded-2xl sm:grid-cols-2"
-              style={{ background: "var(--rx-grey)" }}
-            >
+            <div className="grid gap-3 sm:grid-cols-2">
               {RX_ABOUT.highlights.map((item, i) => (
                 <div
                   key={item.title}
-                  className="flex flex-col gap-2 p-7"
+                  data-rx-spread={i}
+                  className="flex flex-col gap-2 rounded-2xl p-7"
                   style={{
-                    borderLeft: i % 2 === 1 ? "1px dashed var(--rx-line)" : undefined,
-                    borderTop: i > 1 ? "1px dashed var(--rx-line)" : undefined,
+                    background: i % 3 === 0 ? "var(--rx-blue-soft)" : i % 3 === 1 ? "var(--rx-sand)" : "var(--rx-grey)",
                   }}
                 >
                   <Sparkle />
@@ -766,29 +778,43 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
   };
 
   return (
-    <section className="rx-sep">
-      <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
+    <section style={{ background: "var(--rx-dark)", color: "rgba(255,255,255,0.72)" }}>
+      <div
+        className="rx-frame px-6 py-16 md:px-10 md:py-20"
+        style={{ borderColor: "var(--rx-dark-line)" }}
+      >
         {featured ? (
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <FadeUp>
-                <span className="rx-chip">Portfolio</span>
+                <span
+                  className="rx-chip"
+                  style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}
+                >
+                  Portfolio
+                </span>
               </FadeUp>
               <SlideIn className="rx-h2 mt-6 max-w-[36rem]">
-                {PORTFOLIO.statement.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
+                <span style={{ color: "#fff" }}>
+                  {PORTFOLIO.statement.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </span>
               </SlideIn>
             </div>
             <FadeUp>
               <Link
                 href="/v2/portfolio"
                 className="group inline-flex items-center gap-3 font-bold"
-                style={{ color: "var(--rx-ink)" }}
+                style={{ color: "#fff" }}
               >
-                <span className="rx-circle group-hover:rotate-45" aria-hidden>
+                <span
+                  className="rx-circle group-hover:rotate-45"
+                  style={{ borderColor: "var(--rx-dark-line)" }}
+                  aria-hidden
+                >
                   <Arrow />
                 </span>
                 View all companies
@@ -808,9 +834,9 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
                     onClick={() => applyFilter(f.key)}
                     className="rounded-full border px-5 py-2 text-sm font-bold transition-colors duration-300"
                     style={{
-                      background: active ? "var(--rx-dark)" : "transparent",
-                      color: active ? "#fff" : "var(--rx-ink)",
-                      borderColor: active ? "var(--rx-dark)" : "var(--rx-line)",
+                      background: active ? "#fff" : "transparent",
+                      color: active ? "var(--rx-ink)" : "#fff",
+                      borderColor: active ? "#fff" : "var(--rx-dark-line)",
                     }}
                   >
                     {f.label}
@@ -828,11 +854,8 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
           {companies.map((company) => (
             <li
               key={company.name}
-              className="group relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-2xl p-6 transition-transform duration-500 hover:-translate-y-1"
-              style={{
-                background: company.reversed ? "var(--rx-dark)" : "var(--rx-grey)",
-                transitionTimingFunction: "var(--ease-quint)",
-              }}
+              className="group relative flex aspect-[4/3] flex-col items-center justify-center overflow-hidden rounded-2xl bg-white p-6 transition-transform duration-500 hover:-translate-y-1"
+              style={{ transitionTimingFunction: "var(--ease-quint)" }}
             >
               <div className="relative flex h-12 w-full items-center justify-center md:h-14">
                 {company.logo ? (
@@ -841,11 +864,11 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
                     alt={company.name}
                     fill
                     sizes="22vw"
-                    className="object-contain opacity-75 grayscale transition-[filter,opacity] duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+                    className="object-contain opacity-80 grayscale transition-[filter,opacity] duration-500 group-hover:opacity-100 group-hover:grayscale-0"
                   />
                 ) : (
                   <span
-                    className="rx-serif text-2xl opacity-75 transition-opacity duration-500 group-hover:opacity-100"
+                    className="rx-serif text-2xl opacity-80 transition-opacity duration-500 group-hover:opacity-100"
                     style={{ color: "var(--rx-ink)" }}
                   >
                     {company.name.split(" ")[0]}
@@ -856,16 +879,10 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
                 className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 p-4 text-center opacity-0 transition-[opacity,transform] duration-500 group-hover:translate-y-0 group-hover:opacity-100"
                 style={{ transitionTimingFunction: "var(--ease-quint)" }}
               >
-                <p
-                  className="text-sm font-bold"
-                  style={{ color: company.reversed ? "#fff" : "var(--rx-ink)" }}
-                >
+                <p className="text-sm font-bold" style={{ color: "var(--rx-ink)" }}>
                   {company.name}
                 </p>
-                <p
-                  className="text-xs"
-                  style={{ color: company.reversed ? "rgba(255,255,255,0.6)" : "var(--rx-body)" }}
-                >
+                <p className="text-xs" style={{ color: "var(--rx-body)" }}>
                   {company.sector} · {company.location} · {company.year}
                 </p>
               </div>
@@ -877,9 +894,14 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
           <FadeUp className="mt-12">
             <div
               className="flex flex-wrap items-baseline gap-x-8 gap-y-2 pt-8"
-              style={{ borderTop: "1px dashed var(--rx-line)" }}
+              style={{ borderTop: "1px solid var(--rx-dark-line)" }}
             >
-              <span className="rx-chip !py-1.5 text-xs">Exited</span>
+              <span
+                className="rx-chip !py-1.5 text-xs"
+                style={{ background: "rgba(255,255,255,0.1)", color: "#fff" }}
+              >
+                Exited
+              </span>
               {PORTFOLIO.exited.map((name) => (
                 <span key={name} className="text-sm">
                   {name}
@@ -888,6 +910,68 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
             </div>
           </FadeUp>
         ) : null}
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------
+   Philosophy split — stacked full-bleed photos beside large statements
+   ------------------------------------------------------------------ */
+
+export function RxPhilosophySplit() {
+  const photos = [
+    asset("/amed/images/practice-a-capital.jpg"),
+    asset("/amed/images/thesis-02-founders.jpg"),
+    asset("/amed/images/approach-sketch.jpg"),
+    asset("/amed/images/thesis-03-outcome.jpg"),
+  ];
+  return (
+    <section className="rx-sep">
+      <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
+        <FadeUp>
+          <span className="rx-chip">{RX_PHILOSOPHY.chip}</span>
+        </FadeUp>
+        <SlideIn className="rx-h2 mt-6">{RX_PHILOSOPHY.title[0]}</SlideIn>
+
+        <div className="mt-12 grid overflow-hidden rounded-2xl md:grid-cols-2">
+          {RX_PHILOSOPHY.items.map((item, i) => (
+            <div key={item.index} className="contents">
+              <div className={`relative min-h-[20rem] md:min-h-[26rem] ${i % 2 === 1 ? "md:order-last" : ""}`}>
+                <Image
+                  src={photos[i]}
+                  alt={item.title}
+                  fill
+                  sizes="(min-width: 768px) 48vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div
+                className="flex flex-col justify-center gap-8 p-10 md:p-14"
+                style={{ background: "var(--rx-blue-soft)" }}
+              >
+                <FadeUp>
+                  <p
+                    className="rx-serif text-2xl leading-snug md:text-3xl"
+                    style={{ color: "var(--rx-ink)" }}
+                  >
+                    {item.desc}
+                  </p>
+                </FadeUp>
+                <FadeUp delay={0.1}>
+                  <div>
+                    <p className="font-bold" style={{ color: "var(--rx-ink)" }}>
+                      {item.title}
+                    </p>
+                    <p className="mt-1 text-sm">
+                      {RX_PHILOSOPHY.chip} · {item.index}
+                    </p>
+                  </div>
+                </FadeUp>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
@@ -918,6 +1002,19 @@ function RxMonogram({ name, dark = false }: { name: string; dark?: boolean }) {
   );
 }
 
+/** Circular avatar — real photo when available, monogram fallback. */
+function RxAvatar({ member, size = 44 }: { member: TeamMember; size?: number }) {
+  if (!member.photo) return <RxMonogram name={member.name} dark />;
+  return (
+    <span
+      className="relative inline-block shrink-0 overflow-hidden rounded-full"
+      style={{ width: size, height: size }}
+    >
+      <Image src={member.photo} alt={member.name} fill sizes={`${size}px`} className="object-cover" />
+    </span>
+  );
+}
+
 export function RxTeamStrip() {
   const leaders = [...TEAM.leadership];
   return (
@@ -935,7 +1032,7 @@ export function RxTeamStrip() {
           {leaders.map((m) => (
             <FadeUp key={m.name}>
               <div className="flex items-center gap-4">
-                <RxMonogram name={m.name} dark />
+                <RxAvatar member={m} size={48} />
                 <div style={{ lineHeight: 1.3 }}>
                   <p className="font-bold" style={{ color: "var(--rx-ink)" }}>
                     {m.name}
@@ -968,14 +1065,31 @@ function RxMemberCard({ member, delay = 0 }: { member: TeamMember; delay?: numbe
   return (
     <FadeUp delay={delay} className="h-full">
       <div
-        className="flex h-full flex-col gap-5 rounded-2xl p-7 transition-transform duration-500 hover:-translate-y-1"
+        className="flex h-full flex-col gap-5 rounded-2xl p-5 transition-transform duration-500 hover:-translate-y-1"
         style={{
           background: "var(--rx-grey)",
           transitionTimingFunction: "var(--ease-quint)",
         }}
       >
-        <RxMonogram name={member.name} dark />
-        <div>
+        {member.photo ? (
+          <span className="relative block aspect-square w-full overflow-hidden rounded-xl">
+            <Image
+              src={member.photo}
+              alt={member.name}
+              fill
+              sizes="(min-width: 1024px) 22vw, 45vw"
+              className="object-cover"
+            />
+          </span>
+        ) : (
+          <span
+            className="flex aspect-square w-full items-center justify-center rounded-xl"
+            style={{ background: "var(--rx-blue)" }}
+          >
+            <RxMonogram name={member.name} dark />
+          </span>
+        )}
+        <div className="px-2 pb-2">
           <p className="rx-serif text-2xl" style={{ color: "var(--rx-ink)" }}>
             {member.name}
           </p>
@@ -1016,8 +1130,20 @@ function RxProfile({ member, index }: { member: TeamMember; index: string }) {
     >
       <div>
         <div className="md:sticky md:top-32">
-          <div className="flex items-center justify-between">
-            <RxMonogram name={member.name} dark />
+          <div className="flex items-start justify-between gap-6">
+            {member.photo ? (
+              <span className="relative block aspect-square w-full max-w-[14rem] overflow-hidden rounded-2xl">
+                <Image
+                  src={member.photo}
+                  alt={member.name}
+                  fill
+                  sizes="14rem"
+                  className="object-cover"
+                />
+              </span>
+            ) : (
+              <RxMonogram name={member.name} dark />
+            )}
             <span className="text-sm font-bold" style={{ color: "var(--rx-accent)" }}>
               {index}
             </span>

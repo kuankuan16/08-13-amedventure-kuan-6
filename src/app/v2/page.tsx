@@ -4,7 +4,7 @@ import {
   RxLogoBand,
   RxGlance,
   RxFocusCards,
-  RxPhilosophy,
+  RxPhilosophySplit,
   RxPortfolioGrid,
   RxStoryList,
   RxTeamStrip,
@@ -24,7 +24,7 @@ export default function V2Home() {
       <RxLogoBand />
       <RxGlance cta={{ label: "More about AMED", href: "/v2/about" }} />
       <RxFocusCards />
-      <RxPhilosophy />
+      <RxPhilosophySplit />
       <RxPortfolioGrid featured />
       <RxStoryList limit={3} />
       <RxTeamStrip />
