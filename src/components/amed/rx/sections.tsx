@@ -25,64 +25,23 @@ export function RxHero() {
   const root = useRef<HTMLDivElement | null>(null);
 
   useIsomorphicLayoutEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // full-bleed brand wordmark: static, fitted edge-to-edge after fonts load
+    const brand = root.current?.querySelector<HTMLElement>("[data-rx-hero-brand-inner]");
+    const fit = () => {
+      if (!brand) return;
+      brand.style.fontSize = "20vw";
+      const w = brand.getBoundingClientRect().width;
+      if (w > 0) brand.style.fontSize = `${((20 * window.innerWidth) / w) * 0.96}vw`;
+    };
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(fit);
+    } else {
+      fit();
+    }
+    window.addEventListener("resize", fit);
+
     const ctx = gsap.context(() => {
-      // opening: the giant AMED wordmark appears centred, then glides into
-      // its permanent full-bleed seat at the top of the hero (reference
-      // behaviour: the brand word stays as part of the hero)
-      const intro = root.current?.querySelector<HTMLElement>("[data-rx-intro]");
-      const word = root.current?.querySelector<HTMLElement>("[data-rx-intro-word]");
-      const brand = root.current?.querySelector<HTMLElement>("[data-rx-hero-brand-inner]");
-      // fit both wordmarks edge-to-edge
-      const fit = (el: HTMLElement | null | undefined) => {
-        if (!el) return;
-        el.style.fontSize = "20vw";
-        const w = el.getBoundingClientRect().width;
-        if (w > 0) el.style.fontSize = `${((20 * window.innerWidth) / w) * 0.96}vw`;
-      };
-      let INTRO = 0;
-      if (intro && word && brand && !reduced) {
-        INTRO = 1.75;
-        gsap.set(brand, { autoAlpha: 0 });
-        const play = () => {
-          fit(brand);
-          fit(word);
-          const w = word.getBoundingClientRect();
-          const t = brand.getBoundingClientRect();
-          const scale = t.height / w.height;
-          const dx = t.left - w.left;
-          const dy = t.top - w.top;
-          gsap.set(word, { transformOrigin: "left top" });
-          gsap
-            .timeline()
-            .fromTo(
-              word,
-              { autoAlpha: 0, yPercent: 14 },
-              { autoAlpha: 1, yPercent: 0, duration: 0.55, ease: "quint.out", delay: 0.1 }
-            )
-            .to(word, {
-              x: dx,
-              y: dy,
-              scale,
-              duration: 0.95,
-              ease: "quint.inOut",
-              delay: 0.25,
-            })
-            // hand off: the hero wordmark takes over in place
-            .set(brand, { autoAlpha: 1 })
-            .set(word, { autoAlpha: 0 })
-            .to(intro, { autoAlpha: 0, duration: 0.35, ease: "quint.out" })
-            .set(intro, { display: "none" });
-        };
-        if (document.fonts?.ready) {
-          document.fonts.ready.then(play);
-        } else {
-          play();
-        }
-      } else {
-        if (intro) gsap.set(intro, { display: "none" });
-        if (brand) fit(brand);
-      }
+      const INTRO = 0;
 
       gsap.fromTo(
         "[data-rx-hero-item]",
@@ -138,33 +97,14 @@ export function RxHero() {
         });
       }
     }, root);
-    return () => ctx.revert();
+    return () => {
+      window.removeEventListener("resize", fit);
+      ctx.revert();
+    };
   }, []);
 
   return (
     <div id="rx-top" ref={root}>
-      {/* opening overlay: giant wordmark shrinking into the nav logo */}
-      <div
-        data-rx-intro
-        className="fixed inset-0 z-[200] flex items-center justify-center"
-        style={{ background: "var(--rx-paper)" }}
-        aria-hidden
-      >
-        <span
-          data-rx-intro-word
-          className="rx-serif select-none opacity-0"
-          style={{
-            fontSize: "20vw",
-            lineHeight: 0.92,
-            letterSpacing: "-0.02em",
-            color: "var(--rx-ink)",
-            willChange: "transform",
-          }}
-        >
-          AMED
-        </span>
-      </div>
-
       {/* full-bleed brand wordmark (reference behaviour) */}
       <div className="overflow-hidden pt-10 text-center md:pt-14" aria-hidden>
         <span
