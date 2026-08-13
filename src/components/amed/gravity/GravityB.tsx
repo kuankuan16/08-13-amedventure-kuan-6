@@ -1,18 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import Link from "next/link";
-import Image from "next/image";
-import { asset } from "@/lib/amed/content";
+import { RX_HERO, RX_ABOUT } from "@/lib/amed/rx-content";
 import {
-  RX_NAV,
-  RX_MAILTO,
-  RX_HERO,
-  RX_ABOUT,
-  RX_CTA,
-  RX_FOOTER,
-} from "@/lib/amed/rx-content";
+  MONO,
+  SERIF,
+  ACCENT,
+  Reveal,
+  GravityHeader,
+  GravityFooter,
+  useSmoothScroll,
+} from "./shared";
+import { getDynamicColors, ROLES, type Role } from "./palette";
 
 /* ------------------------------------------------------------------
    Version B — "Gravity" proposal.
@@ -21,10 +21,6 @@ import {
    AMED palette morph: cyan → royal blue → rose.
    ------------------------------------------------------------------ */
 
-const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
-const SERIF = "var(--font-fraunces), Georgia, serif";
-const ACCENT = "#0E7FA5";
-
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 const smoothstep = (a: number, b: number, x: number) => {
   const t = clamp01((x - a) / (b - a));
@@ -32,94 +28,6 @@ const smoothstep = (a: number, b: number, x: number) => {
 };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-
-/* ---------------- Reveal (IntersectionObserver, once, 45%) -------- */
-
-function Reveal({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-}) {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [seen, setSeen] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setSeen(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.45 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: seen ? 1 : 0,
-        transform: seen ? "translateY(0)" : "translateY(42px)",
-        filter: seen ? "blur(0)" : "blur(8px)",
-        transition: `opacity 1.5s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 1.5s cubic-bezier(0.16,1,0.3,1) ${delay}s, filter 1.5s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* ---------------- palette helpers (per spec, AMED-tuned) ---------- */
-
-function getDynamicColors(baseColor: string) {
-  const hex = baseColor.toLowerCase();
-  if (hex === "#00a8d0") {
-    return {
-      pastel: new THREE.Color("#EAF7FB"),
-      light: new THREE.Color("#9FE0F0"),
-      medium: new THREE.Color("#00A8D0"),
-      deep: new THREE.Color("#006E92"),
-      glass: new THREE.Color("#33C0E2"),
-    };
-  }
-  if (hex === "#2f69ff") {
-    return {
-      pastel: new THREE.Color("#ECEFFF"),
-      light: new THREE.Color("#A8C1FF"),
-      medium: new THREE.Color("#2F69FF"),
-      deep: new THREE.Color("#0A33BF"),
-      glass: new THREE.Color("#4D80FF"),
-    };
-  }
-  if (hex === "#ffc5c2") {
-    return {
-      pastel: new THREE.Color("#FFF5F4"),
-      light: new THREE.Color("#FFECEB"),
-      medium: new THREE.Color("#FFA6B3"),
-      deep: new THREE.Color("#FF4D6D"),
-      glass: new THREE.Color("#FFA6B3"),
-    };
-  }
-  const c = new THREE.Color(baseColor);
-  return {
-    pastel: c.clone().offsetHSL(0, -0.15, 0.25),
-    light: c.clone().offsetHSL(0, -0.05, 0.12),
-    medium: c.clone(),
-    deep: c.clone().offsetHSL(0.01, 0.1, -0.12),
-    glass: c.clone(),
-  };
-}
-
-type Role = "pastel" | "light" | "medium" | "deep" | "glass";
-const ROLES: Role[] = ["pastel", "light", "medium", "deep", "glass"];
 
 /* ---------------- main component ---------------------------------- */
 
@@ -136,42 +44,15 @@ export function GravityB() {
   const [loaderGone, setLoaderGone] = useState(false);
   const [pageIn, setPageIn] = useState(false);
 
-  /* ---- smooth scroll + progress + pointer ---- */
+  /* ---- smooth scroll + progress ---- */
+  const onScrollFrame = useCallback((progress: number) => {
+    controlRef.current.progress = progress;
+    setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
+  }, []);
+  useSmoothScroll(onScrollFrame);
+
+  /* ---- pointer tracking for the repulsion field ---- */
   useEffect(() => {
-    let target = window.scrollY;
-    let current = window.scrollY;
-    let raf = 0;
-
-    const maxScroll = () =>
-      Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      target = Math.max(0, Math.min(maxScroll(), target + e.deltaY));
-    };
-    window.addEventListener("wheel", onWheel, { passive: false });
-
-    const onNativeScroll = () => {
-      // keep in sync if scrolled by other means (keyboard, drag)
-      if (Math.abs(window.scrollY - current) > 2) {
-        target = current = window.scrollY;
-      }
-    };
-    window.addEventListener("scroll", onNativeScroll, { passive: true });
-
-    const tick = () => {
-      raf = requestAnimationFrame(tick);
-      current += (target - current) * 0.09;
-      if (Math.abs(target - current) > 0.1) {
-        window.scrollTo(0, current);
-      }
-      const vh = window.innerHeight || 1;
-      const progress = window.scrollY / vh;
-      controlRef.current.progress = progress;
-      setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
-    };
-    raf = requestAnimationFrame(tick);
-
     const onMove = (e: PointerEvent) => {
       mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -181,11 +62,7 @@ export function GravityB() {
     window.addEventListener("pointermove", onMove);
     window.addEventListener("mousedown", onDown);
     window.addEventListener("mouseup", onUp);
-
     return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("scroll", onNativeScroll);
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
@@ -732,23 +609,8 @@ export function GravityB() {
       transition: `opacity 1s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 1s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
     }) as const;
 
-  const marqueeWords = [
-    "Capital that reaches the bedside",
-    "Beyond capital",
-    "Lives that will be touched",
-    "Evidence, execution, endurance",
-  ];
-
   return (
     <div style={{ color: "#1a1a1a" }}>
-      {/* fontshare for Satoshi (UI) */}
-      <link rel="preconnect" href="https://api.fontshare.com" />
-      <link
-        rel="stylesheet"
-        precedence="default"
-        href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
-      />
-
       {/* background gradient */}
       <div
         style={{
@@ -802,8 +664,7 @@ export function GravityB() {
                 width: `${loaderValue}%`,
                 height: "100%",
                 borderRadius: 99,
-                background: "linear-gradient(90deg, #33c0e2 0%, #0e7fa5 100%)",
-                boxShadow: "0 0 14px rgba(0,168,208,0.55)",
+                background: ACCENT,
                 transition: "width 0.45s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
@@ -824,70 +685,7 @@ export function GravityB() {
       )}
 
       {/* header */}
-      <header
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 flex h-20 items-center justify-between px-6 md:h-24 md:px-12"
-        style={{
-          opacity: pageIn ? 1 : 0,
-          transform: pageIn ? "translateY(0)" : "translateY(-16px)",
-          transition:
-            "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
-        }}
-      >
-        <Link href="/v2" className="pointer-events-auto">
-          <Image
-            src={asset("/amed/brand/amed-logo-light.png")}
-            alt="AMED Ventures"
-            width={1999}
-            height={452}
-            priority
-            className="h-6 w-auto md:h-7"
-          />
-        </Link>
-        <nav className="pointer-events-auto hidden items-center gap-10 md:flex">
-          {RX_NAV.slice(0, 5).map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium transition-opacity hover:opacity-60"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <a
-          href={RX_MAILTO}
-          className="group pointer-events-auto flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 md:pl-6"
-          style={{
-            background: "rgba(255,255,255,0.12)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            borderTop: "1px solid rgba(255,255,255,0.9)",
-            borderBottom: "1px solid rgba(255,255,255,0.85)",
-            borderLeft: "1px solid rgba(255,255,255,0.1)",
-            borderRight: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "inset 0 1.5px 2px rgba(255,255,255,0.7), 0 8px 30px rgba(0,0,0,0.04)",
-          }}
-        >
-          <span className="text-[13px] font-medium md:text-sm">Contact us</span>
-          <span
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-transform group-hover:scale-105"
-            style={{
-              background:
-                "radial-gradient(circle at 50% 30%, #33c0e2 0%, #0e7fa5 55%, #043243 100%)",
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path
-                d="M9 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </span>
-        </a>
-      </header>
+      <GravityHeader visible={pageIn} />
 
       {/* 01 — HERO */}
       <section className="pointer-events-none relative z-10 flex min-h-[100svh] items-end">
@@ -1000,11 +798,7 @@ export function GravityB() {
                         </span>
                         <span
                           className="h-2 w-2 rounded-full"
-                          style={{
-                            background:
-                              "radial-gradient(circle at 35% 30%, #33c0e2, #0e7fa5)",
-                            boxShadow: "0 0 8px rgba(0,168,208,0.6)",
-                          }}
+                          style={{ background: ACCENT }}
                         />
                       </div>
                       <p className="mt-3 text-lg font-semibold" style={{ fontFamily: SERIF }}>
@@ -1114,160 +908,7 @@ export function GravityB() {
         </div>
       </section>
 
-      {/* footer */}
-      <footer className="relative z-10 overflow-hidden rounded-t-[2.5rem] bg-neutral-950 text-white md:rounded-t-[4rem]">
-        <div
-          className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full blur-2xl"
-          style={{ background: "radial-gradient(circle, #33c0e266 0%, transparent 65%)" }}
-        />
-        <div
-          className="pointer-events-none absolute -bottom-48 -left-48 h-[32rem] w-[32rem] rounded-full blur-2xl"
-          style={{ background: "radial-gradient(circle, #0e7fa544 0%, transparent 65%)" }}
-        />
-
-        {/* marquee */}
-        <div className="overflow-hidden border-b border-white/10 py-5">
-          <div
-            className="inline-flex whitespace-nowrap"
-            style={{ animation: "gravity-marquee 26s linear infinite" }}
-          >
-            {[0, 1].map((copy) => (
-              <span key={copy} className="inline-flex items-center">
-                {marqueeWords.map((w) => (
-                  <span key={`${copy}-${w}`} className="inline-flex items-center">
-                    <span
-                      className="px-8 text-white/90"
-                      style={{
-                        fontFamily: SERIF,
-                        fontWeight: 500,
-                        fontSize: "clamp(28px, 6vw, 64px)",
-                      }}
-                    >
-                      {w}
-                    </span>
-                    <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#33c0e2" }} />
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="px-6 pb-10 pt-16 md:px-12 md:pt-24">
-          <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-            <div className="lg:col-span-5">
-              <Reveal>
-                <p
-                  className="uppercase text-white/40"
-                  style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.25em" }}
-                >
-                  [ {RX_CTA.chip} ]
-                </p>
-                <h2
-                  className="mt-6 text-4xl leading-[0.98] md:text-6xl"
-                  style={{ fontFamily: SERIF, fontWeight: 500 }}
-                >
-                  {RX_CTA.title[0]}
-                  <br />
-                  {RX_CTA.title[1]}
-                </h2>
-                <a
-                  href={RX_MAILTO}
-                  className="group mt-8 inline-flex items-center gap-4 rounded-full border border-white/15 bg-white/5 py-2 pl-7 pr-2 transition-colors hover:bg-white/10"
-                >
-                  <span className="text-base font-medium md:text-lg">{RX_CTA.email}</span>
-                  <span
-                    className="flex h-10 w-10 items-center justify-center rounded-full text-white"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 30%, #33c0e2 0%, #0e7fa5 55%, #043243 100%)",
-                    }}
-                  >
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      className="transition-transform duration-300 group-hover:rotate-45"
-                      aria-hidden
-                    >
-                      <path
-                        d="M7 17L17 7M17 7H9M17 7v8"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </a>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-7">
-              <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-                {[
-                  { title: "Studio", links: RX_NAV.slice(0, 4) },
-                  {
-                    title: "Offices",
-                    links: [
-                      { label: RX_CTA.offices[0], href: RX_MAILTO },
-                      { label: RX_CTA.offices[1], href: RX_MAILTO },
-                      { label: "Contact", href: "/v2/contact" },
-                    ],
-                  },
-                  {
-                    title: "Versions",
-                    links: [
-                      { label: "Proposal A", href: "/v2" },
-                      { label: "Proposal B", href: "/b" },
-                    ],
-                  },
-                ].map((col, i) => (
-                  <Reveal key={col.title} delay={i * 0.08}>
-                    <p
-                      className="uppercase text-white/40"
-                      style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.25em" }}
-                    >
-                      {col.title}
-                    </p>
-                    <ul className="mt-4 space-y-3">
-                      {col.links.map((l) => (
-                        <li key={l.label}>
-                          <Link
-                            href={l.href}
-                            className="text-[15px] text-white/75 transition-colors hover:text-white"
-                          >
-                            {l.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-white/10 pt-7 md:mt-28 md:flex-row md:items-center">
-            <div className="flex items-center gap-3">
-              <Image
-                src={asset("/amed/brand/amed-logo-dark.png")}
-                alt="AMED Ventures"
-                width={1999}
-                height={452}
-                className="h-6 w-auto"
-              />
-              <span className="h-2 w-2 rounded-full" style={{ background: "#33c0e2" }} />
-              <span
-                className="text-white/40"
-                style={{ fontFamily: MONO, fontSize: 11 }}
-              >
-                {RX_FOOTER.copyright} — {RX_FOOTER.tagline}
-              </span>
-            </div>
-          </div>
-        </div>
-        <style>{`@keyframes gravity-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
-      </footer>
+      <GravityFooter />
     </div>
   );
 }
