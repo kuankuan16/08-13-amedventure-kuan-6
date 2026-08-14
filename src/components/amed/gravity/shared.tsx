@@ -460,7 +460,15 @@ export function GravityHeader({
         </nav>
         <a
           href={RX_MAILTO}
-          className="group pointer-events-auto flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 md:pl-6"
+          className="group pointer-events-auto flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 transition-colors duration-300 md:pl-6"
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = reversed ? "#ffffff" : INK;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = reversed
+              ? "rgba(255,255,255,0.10)"
+              : "rgba(255,255,255,0.55)";
+          }}
           style={{
             // flat: one uniform hairline, no bevel or inset highlight
             background: reversed ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.55)",
@@ -469,14 +477,22 @@ export function GravityHeader({
             border: `1px solid ${reversed ? "rgba(255,255,255,0.45)" : "rgba(20,19,26,0.12)"}`,
           }}
         >
-          <span
-            className="text-[13px] font-medium md:text-sm"
-            style={{ color: reversed ? "#ffffff" : undefined }}
-          >
-            Contact us
+          <span className="text-[13px] font-medium md:text-sm">
+            <span
+              className="group-hover:hidden"
+              style={{ color: reversed ? "#ffffff" : INK }}
+            >
+              Contact us
+            </span>
+            <span
+              className="hidden group-hover:inline"
+              style={{ color: reversed ? INK : "#ffffff" }}
+            >
+              Contact us
+            </span>
           </span>
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+            className="flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-0.5"
             style={{
               background: reversed ? "#ffffff" : INK,
               color: reversed ? INK : "#ffffff",

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { asset } from "@/lib/amed/content";
-import { RX_MAILTO } from "@/lib/amed/rx-content";
 import {
   RxLogoBand,
   RxGlance,
@@ -13,10 +12,8 @@ import {
   SERIF,
   WHITE_BG,
   RX_WHITE,
-  INK,
   SANS,
   LABEL,
-  PillButton,
   Reveal,
   ScrollDial,
   GravityHeader,
@@ -59,6 +56,8 @@ export function GravityB() {
   const wordRightRef = useRef<HTMLSpanElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const wordBoxRef = useRef<HTMLDivElement>(null);
+  const lineRef = useRef<HTMLSpanElement>(null);
 
   const [bgStage, setBgStage] = useState(0);
   const [loaderValue, setLoaderValue] = useState(0);
@@ -93,6 +92,16 @@ export function GravityB() {
     // once the scale settles the rows counter-drift: outer right, centre left
     // at twice the rate. Divide by g so the travel reads 1:1 on screen.
     const drift = Math.max(0, progress - 1.47) / g;
+    if (wordBoxRef.current) {
+      // descends while the field contracts, holds, then releases with the page
+      const descend = 28.6 + 43 * clamp01(progress / 1.48);
+      const release = Math.max(0, progress - 2.04) * 100;
+      wordBoxRef.current.style.transform = `translateY(${(descend - release).toFixed(2)}vh)`;
+    }
+    if (lineRef.current) {
+      const grow = clamp01((progress - 1.42) / 0.31) * 205;
+      lineRef.current.style.width = `${grow.toFixed(1)}px`;
+    }
     rowRefs.current.forEach((row, r) => {
       if (!row) return;
       const dx = r === 1 ? -drift * 280 : drift * 140;
@@ -289,7 +298,8 @@ export function GravityB() {
                 ? "pointer-events-none absolute inset-0 flex flex-col justify-between px-5 py-24"
                 : "pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
             }
-            style={compact ? heroIn(0.2) : { top: "56%", ...heroIn(0.2) }}
+            ref={wordBoxRef}
+            style={compact ? heroIn(0.2) : { top: 0, ...heroIn(0.2) }}
           >
             <h1
               ref={wordLeftRef}
@@ -326,6 +336,19 @@ export function GravityB() {
             >
               VENTURES
             </span>
+            {!compact ? (
+              <span
+                ref={lineRef}
+                aria-hidden
+                className="pointer-events-none absolute left-1/2 top-1/2"
+                style={{
+                  height: 3,
+                  width: 0,
+                  background: "#ffffff",
+                  transform: "translate(-50%, -50%)",
+                }}
+              />
+            ) : null}
           </div>
 
           <div
@@ -353,9 +376,7 @@ export function GravityB() {
               do, on an ordinary Tuesday morning, in a real hospital.
             </p>
           </Reveal>
-          <Reveal delay={0.26}>
-<PillButton className="mt-12" href={RX_MAILTO} label="Let's talk" external />
-          </Reveal>
+          
         </div>
       </section>
 

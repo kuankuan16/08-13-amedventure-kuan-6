@@ -195,7 +195,8 @@ export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
             <div key={copy} className="flex items-center">
               {logos.map((c) => {
                 const size = LOGO_BAND_SIZE[c.name] ?? { h: 28, r: 3.2 };
-                const w = Math.min(Math.round(size.h * size.r), 170);
+                const h = Math.round(size.h * 1.4);
+                const w = Math.min(Math.round(h * size.r), 238);
                 return (
                   <span key={`${copy}-${c.name}`} className="flex items-center">
                     {PLATED_LOGOS.has(c.name) ? (
@@ -208,7 +209,7 @@ export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
                     ) : (
                       <span
                         className="relative mx-10 inline-block"
-                        style={{ height: size.h, width: w }}
+                        style={{ height: h, width: w }}
                       >
                         <Image
                           src={c.logo!}
