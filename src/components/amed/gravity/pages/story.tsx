@@ -19,7 +19,7 @@ export function StoryB() {
         imageAlt="Investors and founders reviewing growth charts in a sunlit conference room"
       />
       {/* /v2 milestone list: filters, hairline rows, hover detail */}
-      <RxStoryList showFilters showHeader={false} />
+      <RxStoryList showFilters showHeader={false} serifTitles roomBelow />
     </PageShell>
   );
 }

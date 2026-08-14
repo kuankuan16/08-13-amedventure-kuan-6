@@ -721,10 +721,16 @@ export function RxStoryList({
   limit,
   showFilters = false,
   showHeader = true,
+  serifTitles = false,
+  roomBelow = false,
 }: {
   limit?: number;
   showFilters?: boolean;
   showHeader?: boolean;
+  /** milestone headlines in the humanist serif (/b) */
+  serifTitles?: boolean;
+  /** extra air before whatever follows (/b) */
+  roomBelow?: boolean;
 }) {
   const [filter, setFilter] = useState("All");
   const listRef = useRef<HTMLDivElement | null>(null);
@@ -763,7 +769,11 @@ export function RxStoryList({
 
   return (
     <section className="rx-sep">
-      <div className="rx-frame px-6 py-16 md:px-10 md:py-20">
+      <div
+        className={`rx-frame px-6 py-16 md:px-10 md:py-20 ${
+          roomBelow ? "pb-28 md:pb-40" : ""
+        }`}
+      >
         {showHeader ? (
           <>
             <FadeUp>
@@ -832,7 +842,9 @@ export function RxStoryList({
               </span>
               <span>
                 <span
-                  className="block font-bold leading-snug transition-colors duration-300 group-hover:underline"
+                  className={`block leading-snug transition-colors duration-300 group-hover:underline ${
+                    serifTitles ? "rx-serif text-[1.15rem] md:text-[1.35rem]" : "font-bold"
+                  }`}
                   style={{ color: "var(--rx-ink)" }}
                 >
                   {m.title}

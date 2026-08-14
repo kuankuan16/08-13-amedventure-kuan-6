@@ -441,7 +441,7 @@ export function GravityB() {
           <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
           <RxFocusCards />
           <PhilosophyStack />
-          <RxStoryList limit={3} />
+          <RxStoryList limit={3} serifTitles roomBelow />
         </div>
       </div>
 
