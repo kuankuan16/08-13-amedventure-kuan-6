@@ -5,7 +5,7 @@ import Image from "next/image";
 import { asset, PORTFOLIO, type PortfolioCompany } from "@/lib/amed/content";
 import { B_PORTFOLIO, B_COMPANY_NOTES } from "@/lib/amed/b-content";
 import { SERIF, INK, LABEL, META, PALETTES, Reveal } from "../shared";
-import { PageShell, PageHero, SectionHead } from "../PageShell";
+import { PageShell, PageHero } from "../PageShell";
 
 const pal = PALETTES.rose;
 const GROUND = "#f4f4f5";
@@ -142,7 +142,8 @@ function CompanyCard({
 }) {
   const [hover, setHover] = useState(false);
   const size = LOGO_SIZE[company.name] ?? { h: 28, r: 3.2 };
-  const w = Math.min(Math.round(size.h * size.r), 190);
+  const h = Math.round(size.h * 1.6);
+  const w = Math.min(Math.round(h * size.r), 300);
 
   const body = (
     <>
@@ -166,7 +167,7 @@ function CompanyCard({
         }}
       >
         {company.logo && !PLATED.has(company.name) ? (
-          <span className="relative block" style={{ height: size.h, width: w }}>
+          <span className="relative block" style={{ height: h, width: w }}>
             <Image
               src={company.logo}
               alt={company.name}
@@ -285,17 +286,10 @@ export function PortfolioB() {
 
       <div style={{ background: GROUND }}>
         <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
-          <SectionHead
-            index="01"
-            label="Active portfolio"
-            title={["The companies", "we back today."]}
-            lead={B_PORTFOLIO.leadRest}
-            palette="rose"
-          />
 
           {/* filters */}
           <Reveal delay={0.12} className="relative z-30">
-            <div className="mt-12 flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <Dropdown label="Focus area" options={FOCUS} value={focus} onChange={setFocus} />
               <Dropdown label="Region" options={REGIONS} value={region} onChange={setRegion} />
               <Dropdown label="Status" options={STATUS} value={status} onChange={setStatus} />

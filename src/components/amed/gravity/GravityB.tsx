@@ -94,7 +94,7 @@ export function GravityB() {
     const drift = Math.max(0, progress - 1.47) / g;
     if (wordBoxRef.current) {
       // descends while the field contracts, holds, then releases with the page
-      const descend = 28.6 + 43 * clamp01(progress / 1.48);
+      const descend = 54 + 18 * clamp01(progress / 1.48);
       const release = Math.max(0, progress - 2.04) * 100;
       wordBoxRef.current.style.transform = `translateY(${(descend - release).toFixed(2)}vh)`;
     }

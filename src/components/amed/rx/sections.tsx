@@ -545,8 +545,10 @@ export function RxFocusRows({
                   onFocus={() => setActive(i)}
                   className="rx-row flex w-full items-center gap-6 py-7 text-left transition-opacity duration-300"
                   style={{
+                    background: active === i ? (sky ? "#ffffff" : "rgba(255,255,255,0.07)") : "transparent",
+                    transition: "background 0.4s cubic-bezier(0.16,1,0.3,1)",
                     borderTop: `1px solid ${line}`,
-                    opacity: active === i ? 1 : 0.55,
+                    opacity: 1,
                   }}
                 >
                   <span className="text-sm font-bold" style={{ color: sky ? "#0E7FA5" : "var(--rx-accent)" }}>
