@@ -19,10 +19,11 @@ import {
   Reveal,
   ScrollDial,
   GravityHeader,
-  GravityFooter,
+  B_NAV_ALL,
   useSmoothScroll,
   BRAND_BLUE,
 } from "./shared";
+import { RxCta, RxFooter } from "@/components/amed/rx/ui";
 import { PhilosophyStack } from "./PhilosophyStack";
 
 /* ------------------------------------------------------------------
@@ -41,9 +42,9 @@ const RATIO_CENTRE = "1465 / 820";
 const RATIO_OUTER = "2216 / 820";
 /** Three rows of medical-venture frames; the centre of row 2 is the hero. */
 const HERO_GRID = [
-  ["/amed/images/grid-01.jpg", "/amed/images/grid-02.jpg"],
-  ["/amed/images/grid-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/grid-04.jpg"],
-  ["/amed/images/grid-05.jpg", "/amed/images/grid-06.jpg"],
+  ["/amed/images/focus-01.jpg", "/amed/images/focus-02.jpg"],
+  ["/amed/images/focus-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/grid-04.jpg"],
+  ["/amed/images/focus-04.jpg", "/amed/images/grid-06.jpg"],
 ];
 
 /* ---------------- main component ---------------------------------- */
@@ -53,6 +54,7 @@ export function GravityB() {
   const wordLeftRef = useRef<HTMLHeadingElement>(null);
   const wordRightRef = useRef<HTMLSpanElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [bgStage, setBgStage] = useState(0);
   const [loaderValue, setLoaderValue] = useState(0);
@@ -71,10 +73,18 @@ export function GravityB() {
     if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
     if (wordRightRef.current) wordRightRef.current.style.transform = t;
     // the frame grid contracts around the viewport centre, revealing its neighbours
+    const g = 1 - 0.3765 * Math.min(progress, 1.448);
     if (gridRef.current) {
-      const g = 1 - 0.3765 * Math.min(progress, 1.448);
       gridRef.current.style.transform = `translate(-50%, -50%) scale(${g.toFixed(4)})`;
     }
+    // once the scale settles the rows counter-drift: outer right, centre left
+    // at twice the rate. Divide by g so the travel reads 1:1 on screen.
+    const drift = Math.max(0, progress - 1.47) / g;
+    rowRefs.current.forEach((row, r) => {
+      if (!row) return;
+      const dx = r === 1 ? -drift * 140 : drift * 70;
+      row.style.transform = `translateX(${dx.toFixed(1)}px)`;
+    });
   }, []);
   useSmoothScroll(onScrollFrame);
 
@@ -198,7 +208,7 @@ export function GravityB() {
       {/* 01 — HERO: a grid of medical-venture frames, sized so the centre
           frame fills the viewport, then scaled down on scroll to reveal its
           neighbours (Studio Aton). */}
-      <section className="relative z-10 h-[300svh]">
+      <section className="relative z-10 h-[300svh]" style={{ background: "#0d0e10" }}>
         <div className="sticky top-0 h-[100svh] overflow-hidden">
           <div
             ref={gridRef}
@@ -210,7 +220,14 @@ export function GravityB() {
             }}
           >
             {HERO_GRID.map((row, r) => (
-              <div key={r} className="flex" style={{ gap: GRID_GAP }}>
+              <div
+                key={r}
+                ref={(el) => {
+                  rowRefs.current[r] = el;
+                }}
+                className="flex"
+                style={{ gap: GRID_GAP, willChange: "transform" }}
+              >
                 {row.map((src, c) => (
                   <div
                     key={src}
@@ -237,12 +254,6 @@ export function GravityB() {
 
           {/* a flat 20% veil across the whole hero viewport — it has to cover
               the neighbouring frames too once the grid contracts */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{ background: "rgba(90,92,96,0.2)" }}
-          />
-
           {/* wordmark, seated low */}
           <div
             className="pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
@@ -346,7 +357,8 @@ export function GravityB() {
         </div>
       </div>
 
-      <GravityFooter />
+      <RxCta />
+      <RxFooter nav={B_NAV_ALL} />
     </div>
   );
 }

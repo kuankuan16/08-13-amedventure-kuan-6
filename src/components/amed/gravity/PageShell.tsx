@@ -9,13 +9,14 @@ import {
   RX_WHITE,
   type PaletteKey,
   GravityHeader,
-  GravityFooter,
+  B_NAV_ALL,
   useSmoothScroll,
   Reveal,
   ChipLabel,
   ScrollDial,
   BRAND_BLUE,
 } from "./shared";
+import { RxCta, RxFooter } from "@/components/amed/rx/ui";
 
 /**
  * Page scaffold for /b section pages. The sphere field is exclusive to the
@@ -26,8 +27,8 @@ export function PageShell({
   active,
   children,
 }: {
-  /** kept for per-page accent colour on chips and rules */
-  palette: PaletteKey;
+  /** kept so pages can keep declaring their accent family */
+  palette?: PaletteKey;
   active: string;
   count?: number;
   children: ReactNode;
@@ -37,7 +38,8 @@ export function PageShell({
     <div className="rx-root" style={RX_WHITE}>
       <GravityHeader active={active} onMedia />
       <main className="relative z-10">{children}</main>
-      <GravityFooter />
+      <RxCta />
+      <RxFooter nav={B_NAV_ALL} />
     </div>
   );
 }
@@ -62,7 +64,7 @@ export function SectionHead({
   label: string;
   title: readonly string[];
   lead?: string;
-  palette: PaletteKey;
+  palette?: PaletteKey;
 }) {
   return (
     <div>
@@ -137,7 +139,7 @@ export function PageHero({
   chip: string;
   title: readonly string[];
   lead: string;
-  palette: PaletteKey;
+  palette?: PaletteKey;
   pageIndex: string;
   image: string;
   imageAlt: string;

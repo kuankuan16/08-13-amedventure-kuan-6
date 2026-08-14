@@ -268,7 +268,12 @@ export function RxCta() {
   );
 }
 
-export function RxFooter() {
+export function RxFooter({
+  nav = RX_NAV,
+}: {
+  /** route list; /b passes its own */
+  nav?: readonly { label: string; href: string }[];
+} = {}) {
   return (
     <footer style={{ background: "var(--rx-dark)", color: "rgba(255,255,255,0.72)" }}>
       <div
@@ -301,7 +306,7 @@ export function RxFooter() {
         </div>
         <div className="flex flex-col gap-3 md:text-right">
           <nav className="flex flex-wrap gap-5 md:justify-end">
-            {RX_NAV.map((item) => (
+            {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
