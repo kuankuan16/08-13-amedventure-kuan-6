@@ -518,7 +518,28 @@ export function RxFocusRows({
 
         <div className={`grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] ${withIntro ? "mt-16" : ""}`}>
           <div>
-            {RX_FOCUS.rows.map((row, i) => (
+        <div>
+        <div className="overflow-hidden py-8">
+          <div className="marquee-track items-center gap-6" style={{ animationDuration: "36s" }}>
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex items-center gap-6 pr-6">
+                {RX_FOCUS.areas.map((area) => (
+                  <span key={`${copy}-${area}`} className="flex items-center gap-6">
+                    <Sparkle />
+                    <span
+                      className="rx-pill"
+                      style={sky ? { borderColor: "rgba(20,19,26,0.28)", color: "#14131a" } : undefined}
+                    >
+                      {area}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+          {RX_FOCUS.rows.map((row, i) => (
               <FadeUp key={row.index} delay={i * 0.06}>
                 <button
                   type="button"
@@ -552,7 +573,6 @@ export function RxFocusRows({
                 </button>
               </FadeUp>
             ))}
-            <div style={{ borderTop: `1px solid ${line}` }} />
           </div>
 
           <div className="relative hidden overflow-hidden rounded-2xl lg:block">
@@ -569,22 +589,6 @@ export function RxFocusRows({
         </div>
       </div>
 
-      <div style={{ borderTop: `1px solid ${line}` }}>
-        <div className="overflow-hidden py-8">
-          <div className="marquee-track items-center gap-6" style={{ animationDuration: "36s" }}>
-            {[0, 1].map((copy) => (
-              <div key={copy} className="flex items-center gap-6 pr-6">
-                {RX_FOCUS.areas.map((area) => (
-                  <span key={`${copy}-${area}`} className="flex items-center gap-6">
-                    <Sparkle />
-                    <span className="rx-pill">{area}</span>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

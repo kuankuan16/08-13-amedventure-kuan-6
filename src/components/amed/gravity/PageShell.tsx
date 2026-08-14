@@ -13,6 +13,7 @@ import {
   Reveal,
   ChipLabel,
   ScrollDial,
+  LABEL,
   BRAND_BLUE,
 } from "./shared";
 import { RxCta, RxFooter } from "@/components/amed/rx/ui";
@@ -231,12 +232,7 @@ export function PageHero({
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <Reveal>
-              <p
-                className="text-xs font-medium uppercase md:text-[14px]"
-                style={{ color: BRAND_BLUE, letterSpacing: "0.05em" }}
-              >
-                {chip}
-              </p>
+              <p style={LABEL}>{chip}</p>
             </Reveal>
             <Reveal delay={0.12}>
               <h2
@@ -304,7 +300,7 @@ export function MaskedPhoto({
   return (
     <div ref={ref} className={className}>
       <div
-        className="rx-clip relative w-full overflow-hidden"
+        className="relative w-full overflow-hidden rounded-[1.4rem]"
         style={{
           aspectRatio: ratio,
           clipPath: shown ? undefined : "inset(100% 0% 0% 0%)",

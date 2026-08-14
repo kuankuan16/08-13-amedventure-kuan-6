@@ -15,12 +15,12 @@ import {
   RX_WHITE,
   INK,
   SANS,
+  LABEL,
   Reveal,
   ScrollDial,
   GravityHeader,
   B_NAV_ALL,
   useSmoothScroll,
-  BRAND_BLUE,
 } from "./shared";
 import { RxCta, RxFooter } from "@/components/amed/rx/ui";
 import { StoryFeature } from "./StoryFeature";
@@ -322,17 +322,7 @@ export function GravityB() {
       <section className="rx-frame relative z-10 flex items-center px-6 py-28 md:px-10 md:py-32">
         <div className="mx-auto w-full max-w-[78rem] text-center">
           <Reveal>
-            <p
-              className="uppercase"
-              style={{
-                fontFamily: MONO,
-                fontSize: 11,
-                letterSpacing: "0.25em",
-                color: BRAND_BLUE,
-              }}
-            >
-              AMED Ventures ®
-            </p>
+            <p style={LABEL}>AMED Ventures ®</p>
           </Reveal>
           <Reveal delay={0.12}>
             <p

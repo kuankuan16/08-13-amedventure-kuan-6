@@ -4,7 +4,7 @@ import Image from "next/image";
 import { asset } from "@/lib/amed/content";
 import { RX_STORY } from "@/lib/amed/rx-content";
 import { B_STORY } from "@/lib/amed/b-content";
-import { MONO, SERIF, BRAND_BLUE, Reveal } from "./shared";
+import { SERIF, LABEL, BRAND_BLUE, Reveal } from "./shared";
 
 /* ------------------------------------------------------------------
    Featured milestones — one lead story beside two stacked secondaries.
@@ -22,12 +22,7 @@ function Tag({ label }: { label: string }) {
   return (
     <span className="flex items-center gap-2">
       <span className="h-1.5 w-1.5" style={{ background: BRAND_BLUE }} />
-      <span
-        className="uppercase"
-        style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.16em", color: "#52525b" }}
-      >
-        {label}
-      </span>
+      <span style={LABEL}>{label}</span>
     </span>
   );
 }

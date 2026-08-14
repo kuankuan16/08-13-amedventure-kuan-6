@@ -5,7 +5,7 @@ import Image from "next/image";
 import { asset } from "@/lib/amed/content";
 import { RX_PHILOSOPHY } from "@/lib/amed/rx-content";
 import { gsap, ScrollTrigger, useIsomorphicLayoutEffect } from "../motion";
-import { MONO, SERIF, BRAND_BLUE, Reveal } from "./shared";
+import { SERIF, LABEL, META, Reveal } from "./shared";
 
 /* ------------------------------------------------------------------
    Investment Philosophy — the original photo + solid-panel cards,
@@ -61,17 +61,7 @@ export function PhilosophyStack() {
   return (
     <section ref={root} className="rx-frame px-6 py-20 md:px-10 md:py-24">
       <Reveal>
-        <p
-          className="uppercase"
-          style={{
-            fontFamily: MONO,
-            fontSize: 11,
-            letterSpacing: "0.25em",
-            color: BRAND_BLUE,
-          }}
-        >
-          {RX_PHILOSOPHY.chip}
-        </p>
+        <p style={LABEL}>{RX_PHILOSOPHY.chip}</p>
       </Reveal>
       <Reveal delay={0.1}>
         <h2
@@ -122,15 +112,7 @@ export function PhilosophyStack() {
                     <p className="font-bold" style={{ color: c.ink }}>
                       {item.title}
                     </p>
-                    <p
-                      className="mt-1.5 uppercase"
-                      style={{
-                        fontFamily: MONO,
-                        fontSize: 10,
-                        letterSpacing: "0.2em",
-                        color: c.muted,
-                      }}
-                    >
+                    <p className="mt-1.5" style={{ ...META, color: c.muted }}>
                       {RX_PHILOSOPHY.chip} · {item.index}
                     </p>
                   </div>

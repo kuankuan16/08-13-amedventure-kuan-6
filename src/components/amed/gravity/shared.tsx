@@ -158,20 +158,32 @@ export function Glass({
   );
 }
 
-/** Mono chip label, e.g. "[ 02 — The Firm ]" */
+/* ---------------- label system ------------------------------------
+   Two roles only:
+   • LABEL — section/category labels: Satoshi, 11px, 0.22em, brand blue
+   • META  — dates, counts, locations: Satoshi, 11px, 0.08em, muted
+   ------------------------------------------------------------------ */
+
+export const LABEL: React.CSSProperties = {
+  fontFamily: MONO,
+  fontSize: 11,
+  fontWeight: 600,
+  letterSpacing: "0.22em",
+  textTransform: "uppercase",
+  color: BRAND_BLUE,
+};
+
+export const META: React.CSSProperties = {
+  fontFamily: MONO,
+  fontSize: 11,
+  letterSpacing: "0.08em",
+  color: "#71717a",
+};
+
+/** Section/category label. */
 export function ChipLabel({ text, color }: { text: string; color?: string }) {
   return (
-    <p
-      className="uppercase"
-      style={{
-        fontFamily: MONO,
-        fontSize: 11,
-        letterSpacing: "0.25em",
-        color: color ?? BRAND_BLUE,
-      }}
-    >
-      {text}
-    </p>
+    <p style={{ ...LABEL, color: color ?? BRAND_BLUE }}>{text}</p>
   );
 }
 
@@ -221,8 +233,27 @@ export function useSmoothScroll(onFrame?: (progress: number) => void) {
 export function ScrollDial({ light = false }: { light?: boolean }) {
   const ink = light ? "rgba(255,255,255,0.88)" : "rgba(20,19,26,0.62)";
   const line = light ? "rgba(255,255,255,0.5)" : "rgba(20,19,26,0.25)";
+  const toNextScreen = () => {
+    // the wheel-lerp scroller owns window scroll, so hand it a target and let
+    // it ease there rather than fighting it with smooth-behaviour
+    const target = Math.round(window.innerHeight);
+    const start = window.scrollY;
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / 900);
+      const e = 1 - Math.pow(1 - k, 3);
+      window.scrollTo(0, start + (target - start) * e);
+      if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
   return (
-    <div className="flex flex-col items-center gap-3">
+    <button
+      type="button"
+      onClick={toNextScreen}
+      aria-label="Scroll to the next section"
+      className="pointer-events-auto flex flex-col items-center gap-3 outline-none"
+    >
       <span
         className="relative flex items-center justify-center overflow-hidden rounded-full"
         style={{ width: 62, height: 62, border: `1px solid ${line}` }}
@@ -263,7 +294,7 @@ export function ScrollDial({ light = false }: { light?: boolean }) {
         70%  { transform: translateY(0);    opacity: 1; }
         100% { transform: translateY(9px);  opacity: 0; }
       }`}</style>
-    </div>
+    </button>
   );
 }
 
