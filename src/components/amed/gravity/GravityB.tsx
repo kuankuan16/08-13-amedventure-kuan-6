@@ -3,21 +3,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { asset } from "@/lib/amed/content";
-import { RX_HERO, RX_MAILTO, RX_PHILOSOPHY } from "@/lib/amed/rx-content";
+import { RX_MAILTO } from "@/lib/amed/rx-content";
 import {
   RxLogoBand,
   RxGlance,
-  RxFocusCards,
   RxStoryList,
 } from "@/components/amed/rx/sections";
 import {
   MONO,
-  SERIF,
   WHITE_BG,
   RX_WHITE,
   INK,
   SANS,
   Reveal,
+  ScrollDial,
   GravityHeader,
   GravityFooter,
   useSmoothScroll,
@@ -34,12 +33,16 @@ import { PhilosophyStack } from "./PhilosophyStack";
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
-const GRID_GAP = "22px";
+const GRID_GAP = "35px";
+/** measured from the reference: centre frames 1465x820, outer frames 2216x820 */
+const FRAME_H = "101.2svh";
+const RATIO_CENTRE = "1465 / 820";
+const RATIO_OUTER = "2216 / 820";
 /** Three rows of medical-venture frames; the centre of row 2 is the hero. */
 const HERO_GRID = [
-  ["/amed/images/hero-vc-01.jpg", "/amed/images/focus-03.jpg"],
-  ["/amed/images/philosophy-01.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/hero-b-02.jpg"],
-  ["/amed/images/practice-b-operating.jpg", "/amed/images/focus-04.jpg"],
+  ["/amed/images/grid-01.jpg", "/amed/images/grid-02.jpg"],
+  ["/amed/images/grid-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/grid-04.jpg"],
+  ["/amed/images/grid-05.jpg", "/amed/images/grid-06.jpg"],
 ];
 
 /* ---------------- main component ---------------------------------- */
@@ -61,14 +64,14 @@ export function GravityB() {
     controlRef.current.progress = progress;
     setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
     // wordmark contracts 1.3 -> 1 across the first ~0.56 of a screen
-    const k = clamp01(progress / 0.56);
+    const k = clamp01(progress / 0.9);
     const s = 1.3 - 0.3 * k;
     const t = `scale(${s.toFixed(4)})`;
     if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
     if (wordRightRef.current) wordRightRef.current.style.transform = t;
     // the frame grid contracts around the viewport centre, revealing its neighbours
     if (gridRef.current) {
-      const g = 1 - 0.34 * clamp01(progress / 0.9);
+      const g = 1 - 0.3765 * Math.min(progress, 1.448);
       gridRef.current.style.transform = `translate(-50%, -50%) scale(${g.toFixed(4)})`;
     }
   }, []);
@@ -194,7 +197,7 @@ export function GravityB() {
       {/* 01 — HERO: a grid of medical-venture frames, sized so the centre
           frame fills the viewport, then scaled down on scroll to reveal its
           neighbours (Studio Aton). */}
-      <section className="relative z-10 h-[200svh]">
+      <section className="relative z-10 h-[300svh]">
         <div className="sticky top-0 h-[100svh] overflow-hidden">
           <div
             ref={gridRef}
@@ -212,8 +215,8 @@ export function GravityB() {
                     key={src}
                     className="relative overflow-hidden rounded-[1.4rem]"
                     style={{
-                      width: r === 1 ? "100vw" : "152vw",
-                      height: "100svh",
+                      height: FRAME_H,
+                      aspectRatio: r === 1 ? RATIO_CENTRE : RATIO_OUTER,
                     }}
                   >
                     <Image
@@ -281,25 +284,18 @@ export function GravityB() {
             </span>
           </div>
 
-          <p
-            className="pointer-events-none absolute inset-x-0 text-center"
-            style={{
-              bottom: "clamp(28px, 5vh, 56px)",
-              fontFamily: MONO,
-              fontSize: 11,
-              letterSpacing: "0.2em",
-              color: "rgba(255,255,255,0.78)",
-              ...heroIn(0.5),
-            }}
+          <div
+            className="pointer-events-none absolute inset-x-0 flex justify-center"
+            style={{ bottom: "clamp(28px, 5vh, 56px)", ...heroIn(0.5) }}
           >
-            ( Scroll down )
-          </p>
+            <ScrollDial light />
+          </div>
         </div>
       </section>
 
-      {/* 02 — DROP / the studio statement */}
-      <section className="rx-frame pointer-events-none relative z-10 flex min-h-[100svh] items-center px-6 py-32 md:px-10 md:py-40">
-        <div className="pointer-events-auto w-full">
+      {/* 02 — the studio statement, centred (Studio Aton layout) */}
+      <section className="rx-frame relative z-10 flex min-h-[100svh] items-center px-6 py-32 md:px-10 md:py-40">
+        <div className="mx-auto w-full max-w-[62rem] text-center">
           <Reveal>
             <p
               className="uppercase"
@@ -313,20 +309,10 @@ export function GravityB() {
               AMED Ventures ®
             </p>
           </Reveal>
-          <Reveal delay={0.1}>
-            <h2
-              className="mt-8 text-[2.4rem] leading-[1.0] tracking-tight sm:text-5xl md:text-[64px] md:leading-[0.98]"
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-            >
-              {RX_HERO.title[0]}
-              <br />
-              {RX_HERO.title[1]}
-            </h2>
-          </Reveal>
-          <Reveal delay={0.2}>
+          <Reveal delay={0.12}>
             <p
-              className="mt-9 max-w-[52rem] text-[1.15rem] leading-[1.45] sm:text-[1.35rem] md:text-[1.6rem] md:leading-[1.42]"
-              style={{ color: "#3a3a3e" }}
+              className="mt-10 text-[1.5rem] leading-[1.24] tracking-tight sm:text-[2rem] md:text-[2.7rem] md:leading-[1.2]"
+              style={{ fontFamily: SANS, fontWeight: 500, color: "#0a0a0a" }}
             >
               AMED Ventures ® — a MedTech venture firm investing across the United States and
               Taiwan. Backing the medical technologies that change what a clinician can actually
@@ -334,100 +320,15 @@ export function GravityB() {
             </p>
           </Reveal>
           <Reveal delay={0.26}>
-            <div className="mt-12 flex flex-wrap items-end justify-between gap-8">
-              <a
-                href={RX_MAILTO}
-                className="group inline-flex items-center gap-3.5 rounded-full border border-black/10 py-2 pl-6 pr-2 transition-colors hover:border-black/25"
-              >
-                <span className="text-[15px] font-medium">Let&apos;s talk</span>
-                <span
-                  className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-transform group-hover:translate-x-0.5"
-                  style={{ background: INK }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path
-                      d="M9 6l6 6-6 6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </a>
-              <p
-                className="uppercase"
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 10,
-                  letterSpacing: "0.2em",
-                  color: "#8a8a8a",
-                }}
-              >
-                ( 26© ) — {RX_HERO.chip}
-              </p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 03 — SHAPE / heart. Taller than a screen so the heart holds, then the
-          field flies through the lens as the section exits. */}
-      <section className="pointer-events-none relative z-10 min-h-[170svh]">
-        <div className="rx-frame sticky top-0 flex h-[100svh] flex-col justify-between px-6 py-32 md:px-10 md:py-36">
-        <div className="pointer-events-auto">
-          <Reveal>
-            <p
-              className="uppercase"
-              style={{
-                fontFamily: MONO,
-                fontSize: 11,
-                letterSpacing: "0.25em",
-                color: BRAND_BLUE,
-              }}
+            <a
+              href={RX_MAILTO}
+              className="mt-12 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
+              style={{ background: INK }}
             >
-              03 — Portfolio
-            </p>
+              <span className="h-1.5 w-1.5 rounded-full bg-white" />
+              <span className="text-[15px] font-medium">Let&apos;s talk</span>
+            </a>
           </Reveal>
-          <Reveal delay={0.1}>
-            <h2
-              className="mt-6 max-w-[54rem] text-[2.6rem] leading-[1.0] tracking-tight sm:text-6xl md:text-[80px] md:leading-[0.95]"
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-            >
-              Every company we back represents lives that will be touched.
-            </h2>
-          </Reveal>
-        </div>
-        <div className="pointer-events-auto max-w-sm self-end text-left md:text-right">
-          <Reveal delay={0.15}>
-            <p className="text-base leading-[1.55] text-neutral-700 md:text-[19px]">
-              {RX_PHILOSOPHY.items[3].desc}
-            </p>
-          </Reveal>
-          <Reveal delay={0.28}>
-            <span
-              className="mt-7 inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-neutral-700"
-              style={{
-                border: "1px solid rgba(255,255,255,0.55)",
-                background: "rgba(255,255,255,0.35)",
-                backdropFilter: "blur(12px)",
-                WebkitBackdropFilter: "blur(12px)",
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M4 4l7 16 2-7 7-2L4 4z"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em" }}>
-                MOVE THROUGH IT
-              </span>
-            </span>
-          </Reveal>
-        </div>
         </div>
       </section>
 
@@ -439,7 +340,6 @@ export function GravityB() {
         <div style={{ background: "#ffffff" }}>
           <RxLogoBand fullBleed />
           <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
-          <RxFocusCards />
           <PhilosophyStack />
           <RxStoryList limit={3} serifTitles roomBelow />
         </div>

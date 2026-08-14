@@ -34,9 +34,9 @@ export function ContactB() {
         lead={B_CONTACT.lead}
         palette="rose"
         pageIndex="05"
-        image={asset("/amed/images/close-clouds.jpg")}
+        image={asset("/amed/images/page-contact.jpg")}
         word="CONTACT"
-        imageAlt="Soft morning clouds over an open horizon"
+        imageAlt="An open, sunlit studio entrance"
       />
 
       <section className="rx-frame px-6 py-24 md:px-10 md:py-32">

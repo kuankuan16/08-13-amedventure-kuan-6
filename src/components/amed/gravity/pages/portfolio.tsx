@@ -139,9 +139,9 @@ export function PortfolioB() {
         lead={B_PORTFOLIO.lead}
         palette="rose"
         pageIndex="02"
-        image={asset("/amed/images/hero-vc-01.jpg")}
+        image={asset("/amed/images/page-portfolio.jpg")}
         word="PORTFOLIO"
-        imageAlt="A founder presenting a medical device prototype to investors in a bright boardroom"
+        imageAlt="A founding team examining a device prototype at a workbench"
       />
 
       <section className="rx-frame px-6 py-24 md:px-10 md:py-32">

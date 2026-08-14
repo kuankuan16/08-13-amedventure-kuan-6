@@ -14,9 +14,9 @@ export function TeamB() {
         lead={B_TEAM.lead}
         palette="cyan"
         pageIndex="04"
-        image={asset("/amed/images/hero-vc-02.jpg")}
+        image={asset("/amed/images/page-team.jpg")}
         word="TEAM"
-        imageAlt="An investor and a young founder shaking hands in a bright studio office"
+        imageAlt="The investment team talking together in morning light"
       />
       {/* /v2 team blocks: grouped roster with full profiles */}
       <RxTeamBlocks />

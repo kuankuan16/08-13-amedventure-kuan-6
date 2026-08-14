@@ -14,9 +14,9 @@ export function StoryB() {
         lead={B_STORY.lead}
         palette="royal"
         pageIndex="03"
-        image={asset("/amed/images/hero-vc-03.jpg")}
+        image={asset("/amed/images/page-story.jpg")}
         word="STORY"
-        imageAlt="Investors and founders reviewing growth charts in a sunlit conference room"
+        imageAlt="A clinician and an engineer reviewing clinical imaging together"
       />
       {/* /v2 milestone list: filters, hairline rows, hover detail */}
       <RxStoryList showFilters showHeader={false} serifTitles roomBelow />

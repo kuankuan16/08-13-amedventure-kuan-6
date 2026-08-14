@@ -214,6 +214,51 @@ export function useSmoothScroll(onFrame?: (progress: number) => void) {
   }, [onFrame]);
 }
 
+/** Scroll indicator: a thin dial with a sweeping hand over a mono label. */
+export function ScrollDial({ light = false }: { light?: boolean }) {
+  const ink = light ? "rgba(255,255,255,0.85)" : "rgba(20,19,26,0.6)";
+  const line = light ? "rgba(255,255,255,0.5)" : "rgba(20,19,26,0.25)";
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <span
+        className="relative flex items-center justify-center rounded-full"
+        style={{ width: 62, height: 62, border: `1px solid ${line}` }}
+      >
+        <span
+          aria-hidden
+          className="absolute left-1/2 top-1/2"
+          style={{
+            width: 1,
+            height: 15,
+            background: ink,
+            transformOrigin: "top center",
+            transform: "translate(-50%, 0)",
+            animation: "scroll-dial 3.2s cubic-bezier(0.65,0,0.35,1) infinite",
+          }}
+        />
+        <span
+          aria-hidden
+          className="absolute left-1/2"
+          style={{
+            top: 9,
+            width: 1,
+            height: 7,
+            background: ink,
+            opacity: 0.7,
+            transform: "translateX(-50%)",
+          }}
+        />
+      </span>
+      <span
+        style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.24em", color: ink }}
+      >
+        SCROLL
+      </span>
+      <style>{`@keyframes scroll-dial { 0% { transform: translate(-50%,0) rotate(0deg); } 100% { transform: translate(-50%,0) rotate(360deg); } }`}</style>
+    </div>
+  );
+}
+
 /* ---------------- header ------------------------------------------ */
 
 export function GravityHeader({
@@ -311,14 +356,11 @@ export function GravityHeader({
           href={RX_MAILTO}
           className="group pointer-events-auto flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 md:pl-6"
           style={{
-            background: "rgba(255,255,255,0.12)",
-            backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
-            borderTop: "1px solid rgba(255,255,255,0.9)",
-            borderBottom: "1px solid rgba(255,255,255,0.85)",
-            borderLeft: "1px solid rgba(255,255,255,0.1)",
-            borderRight: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "inset 0 1.5px 2px rgba(255,255,255,0.7), 0 8px 30px rgba(0,0,0,0.04)",
+            // flat: one uniform hairline, no bevel or inset highlight
+            background: reversed ? "rgba(255,255,255,0.10)" : "rgba(255,255,255,0.55)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+            border: `1px solid ${reversed ? "rgba(255,255,255,0.45)" : "rgba(20,19,26,0.12)"}`,
           }}
         >
           <span

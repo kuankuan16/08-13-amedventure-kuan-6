@@ -3,14 +3,9 @@
 import Link from "next/link";
 import { asset } from "@/lib/amed/content";
 import { B_ABOUT } from "@/lib/amed/b-content";
-import {
-  RxGlance,
-  RxFocusRows,
-  RxProcess,
-} from "@/components/amed/rx/sections";
+import { RxFocusRows } from "@/components/amed/rx/sections";
 import { MONO, SERIF, INK, BRAND_BLUE, Reveal } from "../shared";
 import { PageShell, PageHero } from "../PageShell";
-import { PhilosophyStack } from "../PhilosophyStack";
 
 export function AboutB() {
   return (
@@ -21,9 +16,9 @@ export function AboutB() {
         lead={B_ABOUT.lead}
         palette="cyan"
         pageIndex="01"
-        image={asset("/amed/images/firm-studio.jpg")}
+        image={asset("/amed/images/page-about.jpg")}
         word="ABOUT"
-        imageAlt="A team around an oak table examining a device prototype"
+        imageAlt="Two partners in conversation beside a bright studio window"
       />
 
       {/* founding conviction */}
@@ -64,17 +59,8 @@ export function AboutB() {
         </div>
       </section>
 
-      {/* firm highlights — /v2 spread-from-centre tiles with the masked photo */}
-      <RxGlance cards="panel" />
-
       {/* investment focus — /v2 numbered rows with the hover image panel */}
       <RxFocusRows />
-
-      {/* philosophy — scroll-scrubbed statements */}
-      <PhilosophyStack />
-
-      {/* how we partner */}
-      <RxProcess />
 
       {/* onward to the team */}
       <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
