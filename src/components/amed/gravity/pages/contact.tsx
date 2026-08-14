@@ -38,7 +38,7 @@ export function ContactB() {
         imageAlt="Soft morning clouds over an open horizon"
       />
 
-      <section className="px-6 py-24 md:px-12 md:py-32">
+      <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
         <SectionHead
           index="01"
           label={B_CONTACT.pitchTitle}

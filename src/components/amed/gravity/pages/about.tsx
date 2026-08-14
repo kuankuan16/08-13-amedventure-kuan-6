@@ -28,7 +28,7 @@ export function AboutB() {
       />
 
       {/* founding conviction */}
-      <section className="px-6 py-24 md:px-12 md:py-32">
+      <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <Reveal>
@@ -78,7 +78,7 @@ export function AboutB() {
       <RxProcess />
 
       {/* onward to the team */}
-      <section className="px-6 py-24 md:px-12 md:py-32">
+      <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
         <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <Reveal>

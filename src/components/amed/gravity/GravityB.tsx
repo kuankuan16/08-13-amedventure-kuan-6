@@ -701,7 +701,7 @@ export function GravityB() {
 
       {/* 01 — HERO */}
       <section className="pointer-events-none relative z-10 flex min-h-[100svh] items-end">
-        <div className="flex w-full flex-col justify-between gap-8 px-6 pb-12 md:flex-row md:items-end md:px-12 md:pb-14">
+        <div className="rx-frame flex w-full flex-col justify-between gap-8 px-6 pb-12 md:flex-row md:items-end md:px-10 md:pb-14">
           <div className="pointer-events-auto flex flex-col items-start gap-3.5">
             <p
               className="mb-4 text-xs font-medium uppercase md:mb-6 md:text-[14px]"
@@ -743,7 +743,7 @@ export function GravityB() {
       </section>
 
       {/* 02 — DROP / firm highlights */}
-      <section className="pointer-events-none relative z-10 flex min-h-[100svh] items-center px-6 pb-40 pt-32 md:px-12 md:pt-40">
+      <section className="rx-frame pointer-events-none relative z-10 flex min-h-[100svh] items-center px-6 pb-40 pt-32 md:px-10 md:pt-40">
         <div className="grid w-full grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="pointer-events-auto lg:col-span-7">
             <Reveal>
@@ -772,7 +772,7 @@ export function GravityB() {
               </h2>
             </Reveal>
             <Reveal delay={0.2}>
-              <p className="mt-8 max-w-lg text-base leading-[1.55] text-neutral-700 md:text-[19px]">
+              <p className="mt-8 max-w-[34rem] text-base leading-[1.55] text-neutral-700 md:text-[19px]">
                 {RX_ABOUT.body}
               </p>
             </Reveal>
@@ -829,7 +829,7 @@ export function GravityB() {
       {/* 03 — SHAPE / heart. Taller than a screen so the heart holds, then the
           field flies through the lens as the section exits. */}
       <section className="pointer-events-none relative z-10 min-h-[170svh]">
-        <div className="sticky top-0 flex h-[100svh] flex-col justify-between px-6 py-32 md:px-12 md:py-36">
+        <div className="rx-frame sticky top-0 flex h-[100svh] flex-col justify-between px-6 py-32 md:px-10 md:py-36">
         <div className="pointer-events-auto">
           <Reveal>
             <p
@@ -846,7 +846,7 @@ export function GravityB() {
           </Reveal>
           <Reveal delay={0.1}>
             <h2
-              className="mt-6 max-w-2xl text-[2.6rem] leading-[1.0] tracking-tight sm:text-6xl md:text-[80px] md:leading-[0.95]"
+              className="mt-6 max-w-[54rem] text-[2.6rem] leading-[1.0] tracking-tight sm:text-6xl md:text-[80px] md:leading-[0.95]"
               style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
             >
               Every company we back represents lives that will be touched.

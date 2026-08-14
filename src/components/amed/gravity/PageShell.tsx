@@ -83,7 +83,7 @@ export function SectionHead({
       </Reveal>
       <Reveal delay={0.1}>
         <h2
-          className="mt-6 max-w-4xl text-[2.4rem] leading-[1.02] tracking-tight sm:text-5xl md:text-[64px] md:leading-[0.98]"
+          className="mt-6 max-w-[54rem] text-[2.4rem] leading-[1.02] tracking-tight sm:text-5xl md:text-[64px] md:leading-[0.98]"
           style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
         >
           {title.map((line) => (
@@ -95,7 +95,7 @@ export function SectionHead({
       </Reveal>
       {lead ? (
         <Reveal delay={0.18}>
-          <p className="mt-7 max-w-xl text-base leading-[1.6] text-neutral-700 md:text-[17px]">
+          <p className="mt-7 max-w-[34rem] text-base leading-[1.6] text-neutral-700 md:text-[17px]">
             {lead}
           </p>
         </Reveal>
@@ -134,7 +134,7 @@ export function PageHero({
   }, []);
 
   return (
-    <section className="relative flex min-h-[100svh] flex-col justify-end px-6 pb-12 pt-28 md:px-12 md:pb-16 md:pt-32">
+    <section className="rx-frame relative flex min-h-[100svh] flex-col justify-end px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
       <div className="grid flex-1 grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-12">
         {/* left: chip + display + lead */}
         <div className="flex flex-col items-start lg:col-span-7">
@@ -161,7 +161,7 @@ export function PageHero({
             </h1>
           </Reveal>
           <Reveal delay={0.26}>
-            <p className="mt-8 max-w-md text-[15px] leading-[1.6] md:text-base">{lead}</p>
+            <p className="mt-8 max-w-[30rem] text-[15px] leading-[1.6] md:text-base">{lead}</p>
           </Reveal>
         </div>
 

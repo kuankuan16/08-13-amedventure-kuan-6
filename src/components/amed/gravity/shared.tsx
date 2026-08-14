@@ -57,8 +57,15 @@ export const PALETTES: Record<
 /** The /v2 section system on a white ground (client: 改回白色背景). */
 export const RX_WHITE = { "--rx-paper": "#ffffff" } as React.CSSProperties;
 
-/** RX_NAV remapped onto the /b routes. */
-export const B_NAV = RX_NAV.map((item) => ({
+/** RX_NAV remapped onto the /b routes. Contact is omitted from the bar —
+ *  the "Contact us" pill already carries it (client). */
+export const B_NAV = RX_NAV.filter((item) => item.label !== "Contact").map((item) => ({
+  label: item.label,
+  href: item.href.replace("/v2", "/b"),
+}));
+
+/** Full route list, for the footer columns. */
+export const B_NAV_ALL = RX_NAV.map((item) => ({
   label: item.label,
   href: item.href.replace("/v2", "/b"),
 }));
@@ -235,7 +242,7 @@ export function GravityHeader({
         href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
       />
       <header
-        className={`pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 md:px-12 ${scrolled ? "" : "h-20 md:h-24"}`}
+        className={`pointer-events-none fixed inset-x-0 top-0 z-30 ${scrolled ? "" : "h-20 md:h-24"}`}
         style={{
           height: scrolled ? 72 : undefined,
           opacity: visible ? 1 : 0,
@@ -260,6 +267,7 @@ export function GravityHeader({
             transition: "opacity 0.4s ease",
           }}
         />
+        <div className="rx-frame flex h-full items-center justify-between px-6 md:px-10">
         <Link href="/b" className="pointer-events-auto">
           <Image
             src={asset("/amed/brand/amed-logo-light.png")}
@@ -316,6 +324,7 @@ export function GravityHeader({
             </svg>
           </span>
         </a>
+        </div>
       </header>
     </>
   );
@@ -370,7 +379,7 @@ export function GravityFooter() {
         </div>
       </div>
 
-      <div className="px-6 pb-10 pt-16 md:px-12 md:pt-24">
+      <div className="rx-frame px-6 pb-10 pt-16 md:px-10 md:pt-24">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="lg:col-span-5">
             <Reveal>
@@ -419,7 +428,7 @@ export function GravityFooter() {
           <div className="lg:col-span-7">
             <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
               {[
-                { title: "Studio", links: B_NAV.slice(0, 4) },
+                { title: "Studio", links: B_NAV_ALL.slice(0, 4) },
                 {
                   title: "Offices",
                   links: [
