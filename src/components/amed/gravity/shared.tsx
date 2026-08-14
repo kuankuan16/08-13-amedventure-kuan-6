@@ -14,6 +14,8 @@ import { RX_NAV, RX_MAILTO, RX_CTA, RX_FOOTER } from "@/lib/amed/rx-content";
 
 export const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
 export const SERIF = "var(--font-fraunces), Georgia, serif";
+/** 黑體 — the grotesque used for the hero wordmark. */
+export const SANS = 'Satoshi, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif';
 export const ACCENT = "#0E7FA5";
 
 export type PaletteKey = "cyan" | "royal" | "rose";

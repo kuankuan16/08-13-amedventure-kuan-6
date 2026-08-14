@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { RX_HERO, RX_ABOUT, RX_PHILOSOPHY } from "@/lib/amed/rx-content";
+import Image from "next/image";
+import { asset } from "@/lib/amed/content";
+import { RX_HERO, RX_MAILTO, RX_PHILOSOPHY } from "@/lib/amed/rx-content";
 import {
   RxLogoBand,
   RxGlance,
@@ -15,9 +17,10 @@ import {
 import {
   MONO,
   SERIF,
-  ACCENT,
   WHITE_BG,
   RX_WHITE,
+  INK,
+  SANS,
   Reveal,
   GravityHeader,
   GravityFooter,
@@ -640,189 +643,164 @@ export function GravityB() {
         <canvas ref={canvasRef} className="h-full w-full" />
       </div>
 
-      {/* loader */}
+      {/* loader — dark ground, centred wordmark, then a curtain wipes up */}
       {!loaderGone && (
-        <div
-          className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
-          style={{
-            gap: 26,
-            background: WHITE_BG,
-            opacity: loaderLeaving ? 0 : 1,
-            transition: "opacity 0.55s cubic-bezier(0.65,0,0.35,1)",
-            pointerEvents: loaderLeaving ? "none" : "auto",
-          }}
-        >
-          <p
-            style={{
-              fontFamily: MONO,
-              fontSize: 10,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: "#5b7f8f",
-            }}
-          >
-            {loaderValue < 100 ? "Calibrating gravity field" : "Entering orbit"}
-          </p>
-          <div
-            style={{
-              width: "clamp(180px, 32vw, 280px)",
-              height: 2,
-              background: "rgba(14,127,165,0.14)",
-              borderRadius: 99,
-            }}
-          >
+        <div className="fixed inset-0 z-[100] overflow-hidden" style={{ pointerEvents: loaderLeaving ? "none" : "auto" }}>
+          {/* dark stage */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ background: "#0b0c0e" }}>
             <div
               style={{
-                width: `${loaderValue}%`,
-                height: "100%",
-                borderRadius: 99,
-                background: ACCENT,
-                transition: "width 0.45s cubic-bezier(0.16,1,0.3,1)",
+                opacity: loaderLeaving ? 0 : 1,
+                transform: loaderLeaving ? "translateY(-10px)" : "translateY(0)",
+                transition:
+                  "opacity 0.42s cubic-bezier(0.65,0,0.35,1), transform 0.42s cubic-bezier(0.65,0,0.35,1)",
               }}
-            />
+            >
+              <Image
+                src={asset("/amed/brand/amed-logo-dark.png")}
+                alt="AMED Ventures"
+                width={1999}
+                height={452}
+                priority
+                style={{ height: "clamp(28px, 4.2vw, 52px)", width: "auto" }}
+              />
+            </div>
+            <p
+              className="absolute"
+              style={{
+                bottom: "clamp(28px, 6vh, 56px)",
+                fontFamily: MONO,
+                fontSize: 11,
+                letterSpacing: "0.28em",
+                color: "rgba(255,255,255,0.5)",
+                fontVariantNumeric: "tabular-nums",
+                opacity: loaderLeaving ? 0 : 1,
+                transition: "opacity 0.3s ease",
+              }}
+            >
+              {String(Math.floor(loaderValue)).padStart(3, "0")}
+            </p>
           </div>
-          <p
+          {/* curtain: wipes up over the dark stage and hands off to the white site */}
+          <div
+            className="absolute inset-x-0 bottom-0"
             style={{
-              fontFamily: MONO,
-              fontSize: 11,
-              letterSpacing: "0.1em",
-              color: ACCENT,
-              fontWeight: 700,
-              fontVariantNumeric: "tabular-nums",
+              height: "100%",
+              background: "#ffffff",
+              transform: loaderLeaving ? "translateY(0)" : "translateY(100%)",
+              transition: "transform 0.95s cubic-bezier(0.76,0,0.24,1) 0.18s",
             }}
-          >
-            {String(Math.floor(loaderValue)).padStart(3, "0")}%
-          </p>
+          />
         </div>
       )}
 
       {/* header */}
       <GravityHeader visible={pageIn} />
 
-      {/* 01 — HERO */}
-      <section className="pointer-events-none relative z-10 flex min-h-[100svh] items-end">
-        <div className="rx-frame flex w-full flex-col justify-between gap-8 px-6 pb-12 md:flex-row md:items-end md:px-10 md:pb-14">
-          <div className="pointer-events-auto flex flex-col items-start gap-3.5">
+      {/* 01 — HERO: full-bleed wordmark over the sphere field */}
+      <section className="pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-center">
+        <div className="w-full px-4 md:px-6">
+          <h1
+            className="whitespace-nowrap text-center"
+            style={{
+              fontFamily: SANS,
+              fontWeight: 900,
+              fontSize: "clamp(2.6rem, 12.4vw, 17rem)",
+              lineHeight: 0.9,
+              letterSpacing: "-0.035em",
+              color: INK,
+              ...heroIn(0.2),
+            }}
+          >
+            AMED Ventures
+          </h1>
+        </div>
+        <p
+          className="absolute inset-x-0 text-center"
+          style={{
+            bottom: "clamp(28px, 5vh, 56px)",
+            fontFamily: MONO,
+            fontSize: 11,
+            letterSpacing: "0.2em",
+            color: "#8a8a8a",
+            ...heroIn(0.5),
+          }}
+        >
+          ( Scroll down )
+        </p>
+      </section>
+
+      {/* 02 — DROP / the studio statement */}
+      <section className="rx-frame pointer-events-none relative z-10 flex min-h-[100svh] items-center px-6 py-32 md:px-10 md:py-40">
+        <div className="pointer-events-auto w-full">
+          <Reveal>
             <p
-              className="mb-4 text-xs font-medium uppercase md:mb-6 md:text-[14px]"
-              style={{ color: ACCENT, letterSpacing: "0.05em", ...heroIn(0.15) }}
+              className="uppercase"
+              style={{
+                fontFamily: MONO,
+                fontSize: 11,
+                letterSpacing: "0.25em",
+                color: "rgba(14,127,165,0.8)",
+              }}
             >
-              [ {RX_HERO.chip} ]
+              ( AMED Ventures ® )
             </p>
-            <h1
-              className="text-[2.6rem] leading-[0.98] tracking-tight sm:text-6xl md:text-[90px] md:leading-none"
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a", ...heroIn(0.28) }}
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2
+              className="mt-8 text-[2.4rem] leading-[1.0] tracking-tight sm:text-5xl md:text-[64px] md:leading-[0.98]"
+              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
             >
               {RX_HERO.title[0]}
               <br />
               {RX_HERO.title[1]}
-            </h1>
-          </div>
-          <div className="pointer-events-auto md:w-[280px]" style={heroIn(0.45)}>
-            <p className="text-[15px] font-medium leading-[1.4]">{RX_HERO.support}</p>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.2}>
             <p
-              className="mt-5 uppercase"
-              style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#737373" }}
+              className="mt-9 max-w-[52rem] text-[1.15rem] leading-[1.45] sm:text-[1.35rem] md:text-[1.6rem] md:leading-[1.42]"
+              style={{ color: "#3a3a3e" }}
             >
-              © 2026 — MedTech venture capital
+              AMED Ventures ® — a MedTech venture firm investing across the United States and
+              Taiwan. Backing the medical technologies that change what a clinician can actually
+              do, on an ordinary Tuesday morning, in a real hospital.
             </p>
-            <div className="mt-4 hidden animate-pulse items-center gap-2 text-neutral-500 md:flex">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
-                <path
-                  d="M12 5v14m0 0l-6-6m6 6l6-6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em" }}>SCROLL</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 02 — DROP / firm highlights */}
-      <section className="rx-frame pointer-events-none relative z-10 flex min-h-[100svh] items-center px-6 pb-40 pt-32 md:px-10 md:pt-40">
-        <div className="grid w-full grid-cols-1 items-start gap-10 lg:grid-cols-12 lg:gap-16">
-          <div className="pointer-events-auto lg:col-span-7">
-            <Reveal>
+          </Reveal>
+          <Reveal delay={0.26}>
+            <div className="mt-12 flex flex-wrap items-end justify-between gap-8">
+              <a
+                href={RX_MAILTO}
+                className="group inline-flex items-center gap-3.5 rounded-full border border-black/10 py-2 pl-6 pr-2 transition-colors hover:border-black/25"
+              >
+                <span className="text-[15px] font-medium">Let&apos;s talk</span>
+                <span
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-transform group-hover:translate-x-0.5"
+                  style={{ background: INK }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path
+                      d="M9 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </a>
               <p
                 className="uppercase"
                 style={{
                   fontFamily: MONO,
-                  fontSize: 11,
-                  letterSpacing: "0.25em",
-                  color: "rgba(14,127,165,0.8)",
+                  fontSize: 10,
+                  letterSpacing: "0.2em",
+                  color: "#8a8a8a",
                 }}
               >
-                [ 02 — The Firm ]
+                ( 26© ) — {RX_HERO.chip}
               </p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <h2
-                className="mt-6 text-[2.6rem] leading-[1.0] tracking-tight sm:text-6xl md:text-[80px] md:leading-[0.95]"
-                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-              >
-                Breakthroughs matter
-                <br />
-                when patients feel
-                <br />
-                the difference.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="mt-8 max-w-[34rem] text-base leading-[1.55] text-neutral-700 md:text-[19px]">
-                {RX_ABOUT.body}
-              </p>
-            </Reveal>
-          </div>
-          <div className="pointer-events-auto lg:col-span-5 lg:pt-3">
-            <Reveal delay={0.25}>
-              <div className="flex flex-col gap-3.5">
-                {RX_ABOUT.highlights.slice(0, 3).map((card, i) => (
-                  <div
-                    key={card.title}
-                    className="rounded-[1.4rem] p-px transition-transform hover:-translate-y-0.5"
-                    style={{
-                      background:
-                        "linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.3), rgba(255,255,255,0.1))",
-                      boxShadow: "0 14px 40px -12px rgba(14,127,165,0.18)",
-                    }}
-                  >
-                    <div
-                      className="rounded-[1.35rem] px-6 py-5"
-                      style={{
-                        background: "rgba(255,255,255,0.25)",
-                        backdropFilter: "blur(24px)",
-                        WebkitBackdropFilter: "blur(24px)",
-                      }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span style={{ fontFamily: MONO, fontSize: 10 }}>
-                          0{i + 1}
-                        </span>
-                        <span
-                          className="uppercase text-neutral-400"
-                          style={{ fontFamily: MONO, fontSize: 10 }}
-                        >
-                          Highlights
-                        </span>
-                        <span
-                          className="h-2 w-2 rounded-full"
-                          style={{ background: ACCENT }}
-                        />
-                      </div>
-                      <p className="mt-3 text-lg font-semibold" style={{ fontFamily: SERIF }}>
-                        {card.title}
-                      </p>
-                      <p className="mt-1 text-[13px] text-neutral-500">{card.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
