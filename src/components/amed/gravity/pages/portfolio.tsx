@@ -14,6 +14,9 @@ const pal = PALETTES.rose;
  * aspect ratio so wordmarks and lockups read as the same visual weight
  * rather than at their raw file proportions. Measured per logo.
  */
+/** Marks with a baked coloured plate — shown as a wordmark instead. */
+const PLATED = new Set(["Dynaflex Technologies"]);
+
 const LOGO_SIZE: Record<string, { h: number; r: number }> = {
   "Adona Medical": { h: 30, r: 2.53 },
   "Akura Medical": { h: 27, r: 3.53 },
@@ -73,7 +76,7 @@ function CompanyCard({ company, index }: { company: PortfolioCompany; index: num
               "opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
-          {company.logo ? (
+          {company.logo && !PLATED.has(company.name) ? (
             <span className="relative block" style={{ height: size.h, width: w }}>
               <Image
                 src={company.logo}

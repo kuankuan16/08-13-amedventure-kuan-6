@@ -161,6 +161,10 @@ export function RxHero() {
  * Per-logo display height (px) tuned from each mark's aspect ratio so every
  * logo carries a similar visual mass in the band; width follows the ratio.
  */
+/** Marks supplied as rasters with a baked-in coloured plate — shown as a
+ *  wordmark rather than the artefact. */
+const PLATED_LOGOS = new Set(["Dynaflex Technologies"]);
+
 const LOGO_BAND_SIZE: Record<string, { h: number; r: number }> = {
   "Adona Medical": { h: 30, r: 2.53 },
   "Akura Medical": { h: 27, r: 3.53 },
@@ -193,19 +197,28 @@ export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
                 const w = Math.min(Math.round(size.h * size.r), 170);
                 return (
                   <span key={`${copy}-${c.name}`} className="flex items-center">
-                    <span
-                      className="relative mx-10 inline-block"
-                      style={{ height: size.h, width: w }}
-                    >
-                      <Image
-                        src={c.logo!}
-                        alt={c.name}
-                        fill
-                        sizes="12vw"
-                        className="object-contain opacity-100 grayscale contrast-150 brightness-75"
-                        style={{ mixBlendMode: "multiply" }}
-                      />
-                    </span>
+                    {PLATED_LOGOS.has(c.name) ? (
+                      <span
+                        className="mx-10 inline-flex items-center whitespace-nowrap font-bold tracking-tight"
+                        style={{ fontSize: 19, color: "#3f3f46" }}
+                      >
+                        {c.name.replace(" Technologies", "")}
+                      </span>
+                    ) : (
+                      <span
+                        className="relative mx-10 inline-block"
+                        style={{ height: size.h, width: w }}
+                      >
+                        <Image
+                          src={c.logo!}
+                          alt={c.name}
+                          fill
+                          sizes="12vw"
+                          className="object-contain opacity-100 grayscale contrast-125"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+                      </span>
+                    )}
                     <span
                       className="inline-block h-1.5 w-1.5 rounded-full"
                       style={{ background: "var(--rx-line)" }}
