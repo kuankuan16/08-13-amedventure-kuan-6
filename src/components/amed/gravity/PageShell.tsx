@@ -197,13 +197,7 @@ export function PageHero({
                 transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(10,12,14,0.26) 0%, rgba(10,12,14,0.4) 55%, rgba(10,12,14,0.3) 100%)",
-              }}
-            />
+            <div className="absolute inset-0" style={{ background: "rgba(90,92,96,0.2)" }} />
           </div>
         </div>
 

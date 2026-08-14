@@ -231,10 +231,7 @@ export function GravityB() {
                     {r === 1 && c === 1 ? (
                       <div
                         className="absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(180deg, rgba(12,14,17,0.16) 0%, rgba(12,14,17,0.32) 60%, rgba(12,14,17,0.24) 100%)",
-                        }}
+                        style={{ background: "rgba(90,92,96,0.2)" }}
                       />
                     ) : null}
                   </div>
