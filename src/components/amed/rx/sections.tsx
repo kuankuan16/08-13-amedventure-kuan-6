@@ -180,11 +180,11 @@ const LOGO_BAND_SIZE: Record<string, { h: number; r: number }> = {
   Wiltrom: { h: 28, r: 3.23 },
 };
 
-export function RxLogoBand() {
+export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
   const logos = PORTFOLIO.companies.filter((c) => c.logo);
   return (
     <div className="rx-sep relative">
-      <div className="rx-frame overflow-hidden px-0 py-12">
+      <div className={`overflow-hidden px-0 py-12 ${fullBleed ? "" : "rx-frame"}`}>
         <div className="marquee-track items-center" style={{ animationDuration: "55s" }}>
           {[0, 1].map((copy) => (
             <div key={copy} className="flex items-center">
@@ -203,6 +203,7 @@ export function RxLogoBand() {
                         fill
                         sizes="12vw"
                         className="object-contain opacity-100 grayscale contrast-150 brightness-75"
+                        style={{ mixBlendMode: "multiply" }}
                       />
                     </span>
                     <span

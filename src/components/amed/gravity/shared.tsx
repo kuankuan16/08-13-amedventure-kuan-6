@@ -164,10 +164,10 @@ export function ChipLabel({ text, color }: { text: string; color?: string }) {
         fontFamily: MONO,
         fontSize: 11,
         letterSpacing: "0.25em",
-        color: color ?? "rgba(14,127,165,0.8)",
+        color: color ?? BRAND_BLUE,
       }}
     >
-      [ {text} ]
+      {text}
     </p>
   );
 }
@@ -219,9 +219,12 @@ export function useSmoothScroll(onFrame?: (progress: number) => void) {
 export function GravityHeader({
   visible = true,
   active,
+  onMedia = false,
 }: {
   visible?: boolean;
   active?: string;
+  /** the bar opens over full-bleed media, so it reverses out until scrolled */
+  onMedia?: boolean;
 }) {
   // Past the first fold the bar earns a ground so it never sits on live text,
   // and a hairline tracks reading progress.
@@ -237,6 +240,8 @@ export function GravityHeader({
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  const reversed = onMedia && !scrolled;
 
   return (
     <>
@@ -275,7 +280,9 @@ export function GravityHeader({
         <div className="rx-frame flex h-full items-center justify-between px-6 md:px-10">
         <Link href="/b" className="pointer-events-auto">
           <Image
-            src={asset("/amed/brand/amed-logo-light.png")}
+            src={asset(
+              reversed ? "/amed/brand/amed-logo-dark.png" : "/amed/brand/amed-logo-light.png"
+            )}
             alt="AMED Ventures"
             width={1999}
             height={452}
@@ -289,6 +296,7 @@ export function GravityHeader({
               key={item.href}
               href={item.href}
               className="group relative text-sm font-medium"
+              style={{ color: reversed ? "#ffffff" : undefined }}
             >
               {item.label}
               <span
@@ -313,10 +321,18 @@ export function GravityHeader({
             boxShadow: "inset 0 1.5px 2px rgba(255,255,255,0.7), 0 8px 30px rgba(0,0,0,0.04)",
           }}
         >
-          <span className="text-[13px] font-medium md:text-sm">Contact us</span>
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white transition-transform group-hover:scale-105"
-            style={{ background: INK }}
+            className="text-[13px] font-medium md:text-sm"
+            style={{ color: reversed ? "#ffffff" : undefined }}
+          >
+            Contact us
+          </span>
+          <span
+            className="flex h-8 w-8 items-center justify-center rounded-full transition-transform group-hover:scale-105"
+            style={{
+              background: reversed ? "#ffffff" : INK,
+              color: reversed ? INK : "#ffffff",
+            }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
               <path
@@ -370,9 +386,9 @@ export function GravityFooter() {
                     className="px-8"
                     style={{
                       fontFamily: SERIF,
-                      fontWeight: 500,
-                      fontSize: "clamp(28px, 6vw, 64px)",
-                      color: "rgba(255,255,255,0.9)",
+                      fontWeight: 300,
+                      fontSize: "clamp(18px, 3.2vw, 34px)",
+                      color: "rgba(255,255,255,0.82)",
                     }}
                   >
                     {w}
@@ -390,18 +406,28 @@ export function GravityFooter() {
           <div className="lg:col-span-5">
             <Reveal>
               <p
-                className="uppercase text-white/40"
-                style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.25em" }}
+                className="uppercase"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  letterSpacing: "0.25em",
+                  color: BRAND_BLUE,
+                }}
               >
-                [ {RX_CTA.chip} ]
+                {RX_CTA.chip}
               </p>
+              {/* no hard break: the column is narrow, so let the browser
+                  balance the lines instead of tearing them */}
               <h2
-                className="mt-6 text-4xl leading-[0.98] md:text-6xl"
-                style={{ fontFamily: SERIF, fontWeight: 500, color: "#ffffff" }}
+                className="mt-6 max-w-[15ch] text-[2rem] leading-[1.08] sm:text-[2.4rem] md:text-[3rem] md:leading-[1.05]"
+                style={{
+                  fontFamily: SERIF,
+                  fontWeight: 500,
+                  color: "#ffffff",
+                  textWrap: "balance",
+                }}
               >
-                {RX_CTA.title[0]}
-                <br />
-                {RX_CTA.title[1]}
+                {RX_CTA.title.join(" ")}
               </h2>
               <a
                 href={RX_MAILTO}
@@ -451,7 +477,11 @@ export function GravityFooter() {
                     >
                       {col.title}
                     </p>
-                    <ul className="mt-5 space-y-2.5">
+                    <ul
+                      className={`mt-5 space-y-2.5 ${
+                        col.links.length > 3 ? "grid grid-cols-2 gap-x-6 space-y-0 gap-y-2.5" : ""
+                      }`}
+                    >
                       {col.links.map((l) => (
                         <li key={l.label}>
                           <Link

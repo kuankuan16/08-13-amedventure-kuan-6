@@ -81,6 +81,7 @@ function CompanyCard({ company, index }: { company: PortfolioCompany; index: num
                 fill
                 sizes="220px"
                 className="object-contain"
+                style={{ mixBlendMode: "multiply" }}
               />
             </span>
           ) : (

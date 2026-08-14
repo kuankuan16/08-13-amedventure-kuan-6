@@ -26,7 +26,7 @@ const CARDS = [
   },
 ];
 
-const STICK_TOP_REM = 7;
+const STICK_TOP_REM = 11;
 
 export function PhilosophyStack() {
   const root = useRef<HTMLElement | null>(null);
@@ -51,7 +51,7 @@ export function PhilosophyStack() {
         };
         // the card recedes while the following one rides up over it
         gsap.fromTo(inner, { scale: 1 }, { scale: 0.9, ease: "none", scrollTrigger: st });
-        if (dim) gsap.fromTo(dim, { opacity: 0 }, { opacity: 0.14, ease: "none", scrollTrigger: st });
+        if (dim) gsap.fromTo(dim, { opacity: 0 }, { opacity: 0.04, ease: "none", scrollTrigger: st });
       });
       ScrollTrigger.refresh();
     }, root);
@@ -70,7 +70,7 @@ export function PhilosophyStack() {
             color: BRAND_BLUE,
           }}
         >
-          ( {RX_PHILOSOPHY.chip} )
+          {RX_PHILOSOPHY.chip}
         </p>
       </Reveal>
       <Reveal delay={0.1}>
@@ -94,12 +94,12 @@ export function PhilosophyStack() {
             >
               <div
                 data-stack-inner
-                className="relative mb-6 grid overflow-hidden rounded-[1.6rem] md:mb-0 md:h-[64vh] md:max-h-[42rem] md:min-h-[24rem] md:grid-cols-2"
+                className="relative mb-6 grid overflow-hidden rounded-[1.6rem] md:mb-0 md:h-[58vh] md:max-h-[42rem] md:min-h-[24rem] md:grid-cols-2"
                 style={{
                   background: c.panel,
                   transformOrigin: "center top",
                   willChange: "transform",
-                  boxShadow: "0 -18px 50px -30px rgba(20,19,26,0.45)",
+                  boxShadow: "0 -10px 34px -28px rgba(20,19,26,0.18)",
                 }}
               >
                 <div className="relative min-h-[16rem]">

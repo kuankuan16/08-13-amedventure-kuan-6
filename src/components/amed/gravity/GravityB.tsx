@@ -23,6 +23,7 @@ import {
   GravityHeader,
   GravityFooter,
   useSmoothScroll,
+  BRAND_BLUE,
 } from "./shared";
 import { getDynamicColors, ROLES, type Role } from "./palette";
 import { PhilosophyStack } from "./PhilosophyStack";
@@ -52,6 +53,8 @@ export function GravityB() {
   const readyRef = useRef(false);
   const wordLeftRef = useRef<HTMLHeadingElement>(null);
   const wordRightRef = useRef<HTMLSpanElement>(null);
+  const heroMediaRef = useRef<HTMLDivElement>(null);
+  const heroMediaInnerRef = useRef<HTMLDivElement>(null);
 
   const [bgStage, setBgStage] = useState(0);
   const [loaderValue, setLoaderValue] = useState(0);
@@ -64,10 +67,18 @@ export function GravityB() {
     controlRef.current.progress = progress;
     setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
     // wordmark contracts 1.3 -> 1 across the first ~0.56 of a screen
-    const s = 1.3 - 0.3 * clamp01(progress / 0.56);
+    const k = clamp01(progress / 0.56);
+    const s = 1.3 - 0.3 * k;
     const t = `scale(${s.toFixed(4)})`;
     if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
     if (wordRightRef.current) wordRightRef.current.style.transform = t;
+    // the media contracts out of full bleed on the same curve
+    if (heroMediaRef.current) {
+      heroMediaRef.current.style.padding = `${(k * 4).toFixed(2)}vh ${(k * 5).toFixed(2)}vw`;
+    }
+    if (heroMediaInnerRef.current) {
+      heroMediaInnerRef.current.style.borderRadius = `${(k * 28).toFixed(1)}px`;
+    }
   }, []);
   useSmoothScroll(onScrollFrame);
 
@@ -701,14 +712,39 @@ export function GravityB() {
       )}
 
       {/* header */}
-      <GravityHeader visible={pageIn} />
+      <GravityHeader visible={pageIn} onMedia />
 
-      {/* 01 — HERO: the wordmark opens oversized and contracts on scroll,
-          each half anchored to its own outer edge (Studio Aton grammar). */}
-      <section className="pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-center">
+      {/* 01 — HERO: full-bleed media that contracts into a card on scroll,
+          with the wordmark riding the same 1.3 -> 1 curve (Studio Aton). */}
+      <section className="pointer-events-none relative z-10 min-h-[100svh] overflow-hidden">
+        <div ref={heroMediaRef} className="absolute inset-0" style={{ padding: 0 }}>
+          <div
+            ref={heroMediaInnerRef}
+            className="relative h-full w-full overflow-hidden"
+            style={{ borderRadius: 0 }}
+          >
+            <Image
+              src={asset("/amed/images/hero-b-01.jpg")}
+              alt="A founder and a clinician in conversation across a sunlit table"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(12,14,17,0.18) 0%, rgba(12,14,17,0.34) 58%, rgba(12,14,17,0.26) 100%)",
+              }}
+            />
+          </div>
+        </div>
+
+        {/* wordmark, seated low in the frame */}
         <div
-          className="flex w-full items-baseline justify-between px-4 md:px-6"
-          style={heroIn(0.2)}
+          className="absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
+          style={{ top: "58%", ...heroIn(0.2) }}
         >
           <h1
             ref={wordLeftRef}
@@ -719,7 +755,7 @@ export function GravityB() {
               fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
               lineHeight: 0.9,
               letterSpacing: "-0.035em",
-              color: INK,
+              color: "#ffffff",
               transformOrigin: "left center",
               transform: "scale(1.3)",
               willChange: "transform",
@@ -737,7 +773,7 @@ export function GravityB() {
               fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
               lineHeight: 0.9,
               letterSpacing: "-0.035em",
-              color: INK,
+              color: "#ffffff",
               transformOrigin: "right center",
               transform: "scale(1.3)",
               willChange: "transform",
@@ -746,6 +782,7 @@ export function GravityB() {
             Ventures
           </span>
         </div>
+
         <p
           className="absolute inset-x-0 text-center"
           style={{
@@ -753,7 +790,7 @@ export function GravityB() {
             fontFamily: MONO,
             fontSize: 11,
             letterSpacing: "0.2em",
-            color: "#8a8a8a",
+            color: "rgba(255,255,255,0.75)",
             ...heroIn(0.5),
           }}
         >
@@ -771,10 +808,10 @@ export function GravityB() {
                 fontFamily: MONO,
                 fontSize: 11,
                 letterSpacing: "0.25em",
-                color: "rgba(14,127,165,0.8)",
+                color: BRAND_BLUE,
               }}
             >
-              ( AMED Ventures ® )
+              AMED Ventures ®
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -847,10 +884,10 @@ export function GravityB() {
                 fontFamily: MONO,
                 fontSize: 11,
                 letterSpacing: "0.25em",
-                color: "rgba(14,127,165,0.8)",
+                color: BRAND_BLUE,
               }}
             >
-              [ 03 — Portfolio ]
+              03 — Portfolio
             </p>
           </Reveal>
           <Reveal delay={0.1}>
@@ -901,7 +938,7 @@ export function GravityB() {
         style={{ ...RX_WHITE, background: "transparent" }}
       >
         <div style={{ background: "#ffffff" }}>
-          <RxLogoBand />
+          <RxLogoBand fullBleed />
           <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
           <RxFocusCards />
           <PhilosophyStack />

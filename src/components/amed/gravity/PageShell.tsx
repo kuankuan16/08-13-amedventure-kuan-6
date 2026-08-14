@@ -14,6 +14,7 @@ import {
   useSmoothScroll,
   Reveal,
   ChipLabel,
+  BRAND_BLUE,
 } from "./shared";
 
 /**
@@ -243,9 +244,9 @@ export function PageHero({
             <Reveal>
               <p
                 className="text-xs font-medium uppercase md:text-[14px]"
-                style={{ color: pal.accent, letterSpacing: "0.05em" }}
+                style={{ color: BRAND_BLUE, letterSpacing: "0.05em" }}
               >
-                [ {chip} ]
+                {chip}
               </p>
             </Reveal>
             <Reveal delay={0.12}>

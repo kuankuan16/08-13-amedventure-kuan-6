@@ -8,11 +8,9 @@ import {
   RxFocusRows,
   RxProcess,
 } from "@/components/amed/rx/sections";
-import { MONO, SERIF, INK, PALETTES, Reveal } from "../shared";
+import { MONO, SERIF, INK, BRAND_BLUE, Reveal } from "../shared";
 import { PageShell, PageHero } from "../PageShell";
 import { PhilosophyStack } from "../PhilosophyStack";
-
-const pal = PALETTES.cyan;
 
 export function AboutB() {
   return (
@@ -39,10 +37,10 @@ export function AboutB() {
                   fontFamily: MONO,
                   fontSize: 11,
                   letterSpacing: "0.25em",
-                  color: pal.chip,
+                  color: BRAND_BLUE,
                 }}
               >
-                [ 01 — Founding conviction ]
+                01 — Founding conviction
               </p>
             </Reveal>
             <Reveal delay={0.12}>
@@ -89,10 +87,10 @@ export function AboutB() {
                   fontFamily: MONO,
                   fontSize: 11,
                   letterSpacing: "0.25em",
-                  color: pal.chip,
+                  color: BRAND_BLUE,
                 }}
               >
-                [ 05 — The team ]
+                05 — The team
               </p>
             </Reveal>
             <Reveal delay={0.12}>
