@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { PillButton } from "../gravity/shared";
 import { asset } from "@/lib/amed/content";
 import { RX_NAV, RX_MAILTO, RX_CTA, RX_FOOTER } from "@/lib/amed/rx-content";
 import { gsap, ScrollTrigger, useIsomorphicLayoutEffect } from "../motion";
@@ -245,9 +246,7 @@ export function RxCta() {
           <p className="mt-6 max-w-[30rem]">{RX_CTA.body}</p>
         </div>
         <div className="flex flex-col gap-5">
-          <a href={RX_MAILTO} className="rx-btn rx-btn--light">
-            {RX_CTA.cta}
-          </a>
+          <PillButton href={RX_MAILTO} label={RX_CTA.cta} external tone="dark" />
           <div>
             <p className="rx-label">Email</p>
             <a href={RX_MAILTO} className="u-sweep font-bold" style={{ color: "#fff" }}>

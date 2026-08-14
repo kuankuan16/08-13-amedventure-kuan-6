@@ -16,6 +16,7 @@ import {
   INK,
   SANS,
   LABEL,
+  PillButton,
   Reveal,
   ScrollDial,
   GravityHeader,
@@ -36,9 +37,7 @@ import { PhilosophyStack } from "./PhilosophyStack";
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 /** Per-frame crop overrides where the default centre crop misses the subject. */
-const FRAME_POS: Record<string, string> = {
-  "/amed/images/grid-04.jpg": "72% 28%",
-};
+const FRAME_POS: Record<string, string> = {};
 
 const GRID_GAP = "35px";
 /** measured from the reference: centre frames 1465x820, outer frames 2216x820 */
@@ -47,9 +46,9 @@ const RATIO_CENTRE = "1465 / 820";
 const RATIO_OUTER = "2216 / 820";
 /** Three rows of medical-venture frames; the centre of row 2 is the hero. */
 const HERO_GRID = [
-  ["/amed/images/micro-01.jpg", "/amed/images/micro-02.jpg"],
-  ["/amed/images/focus-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/grid-04.jpg"],
-  ["/amed/images/focus-04.jpg", "/amed/images/grid-06.jpg"],
+  ["/amed/images/macro-01.jpg", "/amed/images/macro-02.jpg"],
+  ["/amed/images/macro-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/macro-04.jpg"],
+  ["/amed/images/macro-05.jpg", "/amed/images/macro-06.jpg"],
 ];
 
 /* ---------------- main component ---------------------------------- */
@@ -66,6 +65,16 @@ export function GravityB() {
   const [loaderLeaving, setLoaderLeaving] = useState(false);
   const [loaderGone, setLoaderGone] = useState(false);
   const [pageIn, setPageIn] = useState(false);
+  const [compact, setCompact] = useState(false);
+
+  /* ---- compact layout below md, per the reference's phone/tablet build ---- */
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 1023px)");
+    const sync = () => setCompact(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   /* ---- smooth scroll + progress ---- */
   const onScrollFrame = useCallback((progress: number) => {
@@ -73,8 +82,7 @@ export function GravityB() {
     setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
     // wordmark contracts 1.3 -> 1 across the first ~0.56 of a screen
     const k = clamp01(progress / 0.9);
-    const s = 1.28 - 0.28 * k;
-    const t = `scale(${s.toFixed(4)})`;
+    const t = window.innerWidth < 1024 ? "none" : `scale(${(1.28 - 0.28 * k).toFixed(4)})`;
     if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
     if (wordRightRef.current) wordRightRef.current.style.transform = t;
     // the frame grid contracts around the viewport centre, revealing its neighbours
@@ -87,7 +95,7 @@ export function GravityB() {
     const drift = Math.max(0, progress - 1.47) / g;
     rowRefs.current.forEach((row, r) => {
       if (!row) return;
-      const dx = r === 1 ? -drift * 140 : drift * 70;
+      const dx = r === 1 ? -drift * 280 : drift * 140;
       row.style.transform = `translateX(${dx.toFixed(1)}px)`;
     });
   }, []);
@@ -238,8 +246,14 @@ export function GravityB() {
                     key={src}
                     className="relative overflow-hidden rounded-[1.4rem]"
                     style={{
-                      height: FRAME_H,
-                      aspectRatio: r === 1 ? RATIO_CENTRE : RATIO_OUTER,
+                      height: compact ? "72svh" : FRAME_H,
+                      aspectRatio: compact
+                        ? r === 1
+                          ? "1.15"
+                          : "1.71"
+                        : r === 1
+                          ? RATIO_CENTRE
+                          : RATIO_OUTER,
                     }}
                   >
                     <Image
@@ -267,10 +281,15 @@ export function GravityB() {
             style={{ background: "#b4b7bb", mixBlendMode: "multiply" }}
           />
 
-          {/* wordmark, seated low */}
+          {/* wordmark: one full-width line on desktop; stacked top and
+              bottom, left-aligned and unscaled on compact (reference build) */}
           <div
-            className="pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
-            style={{ top: "56%", ...heroIn(0.2) }}
+            className={
+              compact
+                ? "pointer-events-none absolute inset-0 flex flex-col justify-between px-5 py-24"
+                : "pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
+            }
+            style={compact ? heroIn(0.2) : { top: "56%", ...heroIn(0.2) }}
           >
             <h1
               ref={wordLeftRef}
@@ -278,12 +297,12 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: "clamp(1.9rem, 9.2vw, 12.5rem)",
+                fontSize: compact ? "clamp(2.6rem, 29vw, 8rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
                 transformOrigin: "left center",
-                transform: "scale(1.28)",
+                transform: compact ? "none" : "scale(1.28)",
                 willChange: "transform",
               }}
             >
@@ -296,12 +315,12 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: "clamp(1.9rem, 9.2vw, 12.5rem)",
+                fontSize: compact ? "clamp(2.6rem, 29vw, 8rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
-                transformOrigin: "right center",
-                transform: "scale(1.28)",
+                transformOrigin: compact ? "left center" : "right center",
+                transform: compact ? "none" : "scale(1.28)",
                 willChange: "transform",
               }}
             >
@@ -335,14 +354,7 @@ export function GravityB() {
             </p>
           </Reveal>
           <Reveal delay={0.26}>
-            <a
-              href={RX_MAILTO}
-              className="mt-12 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
-              style={{ background: INK }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              <span className="text-[15px] font-medium">Let&apos;s talk</span>
-            </a>
+<PillButton className="mt-12" href={RX_MAILTO} label="Let's talk" external />
           </Reveal>
         </div>
       </section>

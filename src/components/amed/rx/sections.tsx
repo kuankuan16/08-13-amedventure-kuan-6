@@ -15,6 +15,7 @@ import {
   type RxMilestone,
 } from "@/lib/amed/rx-content";
 import { FadeUp, gsap, ScrollTrigger, useIsomorphicLayoutEffect } from "../motion";
+import { PillButton } from "../gravity/shared";
 import { Arrow, Sparkle, SlideIn } from "./ui";
 
 /* ------------------------------------------------------------------
@@ -444,13 +445,9 @@ export function RxGlance({
             )}
             <div className="mt-8">
               {cta ? (
-                <Link href={cta.href} className="rx-btn">
-                  {cta.label}
-                </Link>
+                <PillButton href={cta.href} label={cta.label} />
               ) : (
-                <a href={RX_MAILTO} className="rx-btn">
-                  Send us your deck
-                </a>
+                <PillButton href={RX_MAILTO} label="Send us your deck" external />
               )}
             </div>
           </div>
@@ -516,8 +513,6 @@ export function RxFocusRows({
           </>
         ) : null}
 
-        <div className={`grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] ${withIntro ? "mt-16" : ""}`}>
-          <div>
         <div>
         <div className="overflow-hidden py-8">
           <div className="marquee-track items-center gap-6" style={{ animationDuration: "36s" }}>
@@ -539,6 +534,8 @@ export function RxFocusRows({
           </div>
         </div>
       </div>
+        <div className={`grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] ${withIntro ? "mt-16" : ""}`}>
+          <div>
           {RX_FOCUS.rows.map((row, i) => (
               <FadeUp key={row.index} delay={i * 0.06}>
                 <button

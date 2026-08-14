@@ -206,6 +206,8 @@ export const TEAM = {
 
 export type PortfolioCompany = {
   name: string;
+  /** the company's own site — each one checked to resolve */
+  url?: string;
   logo?: string;
   /** white/reversed marks need a dark chip */
   reversed?: boolean;
@@ -232,6 +234,7 @@ export const PORTFOLIO = {
   companies: [
     {
       name: "Adona Medical",
+      url: "https://adonamedical.com",
       logo: asset("/amed/logos/adona-medical.svg"),
       sector: "Heart failure · Structural heart",
       location: "Los Gatos, CA",
@@ -240,6 +243,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Akura Medical",
+      url: "https://akuramedical.com",
       logo: asset("/amed/logos/akura-medical.svg"),
       sector: "Vascular · VTE",
       location: "Los Gatos, CA",
@@ -248,6 +252,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Atia Vision",
+      url: "https://atiavision.com",
       logo: asset("/amed/logos/atia-vision.svg"),
       sector: "Ophthalmology",
       location: "Campbell, CA",
@@ -256,6 +261,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Benthic Genomics",
+      url: "https://www.benthic.bio",
       logo: asset("/amed/logos/benthic-genomics.png"),
       sector: "Genomic analysis",
       location: "Mountain View, CA",
@@ -264,6 +270,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Dynaflex Technologies",
+      url: "https://www.dynaflextech.com",
       logo: asset("/amed/logos/dynaflex-technologies.png"),
       sector: "CDMO",
       location: "California & Taiwan",
@@ -272,6 +279,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Imperative Care",
+      url: "https://imperativecare.com",
       logo: asset("/amed/logos/imperative-care.svg"),
       sector: "Neurovascular · Stroke",
       location: "Campbell, CA",
@@ -280,6 +288,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Instylla",
+      url: "https://instylla.com",
       logo: asset("/amed/logos/instylla.svg"),
       sector: "Embolization · IR",
       location: "Bedford, MA",
@@ -288,6 +297,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Kandu Health",
+      url: "https://www.kanduhealth.com",
       logo: asset("/amed/logos/kandu.svg"),
       sector: "Digital health · Stroke recovery",
       location: "Campbell, CA",
@@ -304,6 +314,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Rejoni",
+      url: "https://rejoni.com",
       logo: asset("/amed/logos/rejoni.png"),
       sector: "Women's health",
       location: "Bedford, MA",
@@ -312,6 +323,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Sealonix",
+      url: "https://sealonix.com",
       logo: asset("/amed/logos/sealonix.png"),
       sector: "Surgical sealants · Biomaterials",
       location: "Bedford, MA",
@@ -320,6 +332,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Supira Medical",
+      url: "https://supiramedical.com",
       logo: asset("/amed/logos/supira-medical.svg"),
       sector: "Mechanical circulatory support",
       location: "Los Gatos, CA",
@@ -328,6 +341,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Tioga Cardiovascular",
+      url: "https://tiogacardiovascular.com",
       logo: asset("/amed/logos/tioga-medical.png"),
       sector: "Structural heart · Valve",
       location: "Campbell, CA",
@@ -336,6 +350,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Tulavi Therapeutics",
+      url: "https://tulavitherapeutics.com",
       logo: asset("/amed/logos/tulavi-therapeutics.svg"),
       sector: "Peripheral nerve surgery",
       location: "Los Gatos, CA",
@@ -344,6 +359,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Verge Medical",
+      url: "https://vergemedical.com",
       logo: asset("/amed/logos/verge-medical.png"),
       sector: "Coronary · Peripheral vascular",
       location: "Campbell, CA",
@@ -352,6 +368,7 @@ export const PORTFOLIO = {
     },
     {
       name: "Wiltrom",
+      url: "https://www.wiltrom.com.tw",
       logo: asset("/amed/logos/wiltrom.png"),
       sector: "Spine implants",
       location: "Zhubei, Taiwan",

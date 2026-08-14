@@ -92,9 +92,28 @@ export function StoryFeature() {
             </div>
 
             <div className="mt-auto pt-10">
-              <div className="border-t border-black/10 pt-5">
-                <span className="text-[15px] font-medium underline underline-offset-4">
-                  Read the story
+              <div className="flex border-t border-black/10 pt-5">
+                <span
+                  className="inline-flex items-center gap-4 rounded-full py-2 pl-7 pr-2 transition-colors duration-300 group-hover:bg-[#111213]"
+                  style={{ border: "1px solid rgba(20,19,26,0.16)" }}
+                >
+                  <span className="text-[15px] font-medium transition-colors duration-300 group-hover:text-white">
+                    Read the story
+                  </span>
+                  <span
+                    className="flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 group-hover:translate-x-0.5 group-hover:bg-white group-hover:text-[#111213]"
+                    style={{ background: "#111213", color: "#fff" }}
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path
+                        d="M9 6l6 6-6 6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                 </span>
               </div>
             </div>

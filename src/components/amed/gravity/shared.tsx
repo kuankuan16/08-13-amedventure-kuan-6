@@ -298,6 +298,70 @@ export function ScrollDial({ light = false }: { light?: boolean }) {
   );
 }
 
+/* ---------------- button ------------------------------------------
+   One shape for every call to action: a hairline pill with the label
+   left and a filled arrow disc right. Hover fills the pill and inverts
+   the disc.
+   ------------------------------------------------------------------ */
+
+export function PillButton({
+  href,
+  label,
+  external = false,
+  tone = "light",
+  className = "",
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+  /** "dark" = sitting on a dark ground */
+  tone?: "light" | "dark";
+  className?: string;
+}) {
+  const dark = tone === "dark";
+  return (
+    <a
+      href={href}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noreferrer" : undefined}
+      className={`group inline-flex items-center gap-4 rounded-full py-2 pl-7 pr-2 transition-colors duration-300 ${className}`}
+      style={{
+        border: `1px solid ${dark ? "rgba(255,255,255,0.28)" : "rgba(20,19,26,0.16)"}`,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = dark ? "#ffffff" : INK;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "transparent";
+      }}
+    >
+      <span
+        className="text-[15px] font-medium transition-colors duration-300"
+        style={{ color: dark ? "#ffffff" : INK }}
+      >
+        <span className="group-hover:hidden">{label}</span>
+        <span className="hidden group-hover:inline" style={{ color: dark ? INK : "#ffffff" }}>
+          {label}
+        </span>
+      </span>
+      <span
+        className="flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-0.5"
+        style={{ background: dark ? "#ffffff" : INK, color: dark ? INK : "#ffffff" }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d="M9 6l6 6-6 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+    </a>
+  );
+}
+
 /* ---------------- header ------------------------------------------ */
 
 export function GravityHeader({
