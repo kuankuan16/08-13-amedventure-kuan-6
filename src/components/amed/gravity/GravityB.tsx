@@ -129,7 +129,7 @@ export function GravityB() {
     }) as const;
 
   return (
-    <div style={{ color: "#1a1a1a" }}>
+    <div className="rx-root" style={{ ...RX_WHITE, color: "#1a1a1a" }}>
       {/* background gradient */}
       <div
         style={{

@@ -393,7 +393,7 @@ export function GravityHeader({
 
 export function GravityFooter() {
   return (
-    <footer className="relative z-10 overflow-hidden rounded-t-[2.5rem] bg-neutral-950 text-white md:rounded-t-[4rem]">
+    <footer className="relative z-10 overflow-hidden bg-neutral-950 text-white">
       <div
         className="pointer-events-none absolute -right-40 -top-40 h-[28rem] w-[28rem] rounded-full blur-2xl"
         style={{ background: "radial-gradient(circle, #33c0e266 0%, transparent 65%)" }}
