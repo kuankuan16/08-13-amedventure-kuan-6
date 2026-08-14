@@ -53,7 +53,7 @@ export const B_ABOUT = {
 
 export const B_PORTFOLIO = {
   chip: "Selected investments",
-  title: ["Every company we back", "represents lives", "that will be touched."],
+  title: ["Every company we back represents", "lives that will be touched."],
   lead: "AMED Ventures invests in medical technology and healthcare companies across cardiovascular, neurovascular, surgical, vision, diagnostics and manufacturing.",
   leadRest:
     "Backing teams in Taiwan and the United States developing solutions with the potential to improve patient outcomes and healthcare delivery.",

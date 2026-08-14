@@ -2,12 +2,130 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { PORTFOLIO, PORTFOLIO_FILTERS } from "@/lib/amed/content";
+import { PORTFOLIO, PORTFOLIO_FILTERS, type PortfolioCompany } from "@/lib/amed/content";
 import { B_PORTFOLIO, B_COMPANY_NOTES } from "@/lib/amed/b-content";
 import { MONO, SERIF, INK, PALETTES, Reveal, Glass } from "../shared";
 import { PageShell, PageHero, SectionHead } from "../PageShell";
 
 const pal = PALETTES.rose;
+
+/**
+ * Optical size normalization: each mark gets an explicit height and
+ * aspect ratio so wordmarks and lockups read as the same visual weight
+ * rather than at their raw file proportions. Measured per logo.
+ */
+const LOGO_SIZE: Record<string, { h: number; r: number }> = {
+  "Adona Medical": { h: 30, r: 2.53 },
+  "Akura Medical": { h: 27, r: 3.53 },
+  "Atia Vision": { h: 28, r: 3.27 },
+  "Benthic Genomics": { h: 54, r: 0.6 }, // vertical mark — taller to match optical mass
+  "Dynaflex Technologies": { h: 27, r: 3.44 },
+  "Imperative Care": { h: 17, r: 8.26 },
+  Instylla: { h: 34, r: 2.1 },
+  "Kandu Health": { h: 26, r: 3.74 },
+  "KT Medical": { h: 15, r: 9.81 },
+  Rejoni: { h: 28, r: 3.31 },
+  Sealonix: { h: 23, r: 4.77 },
+  "Supira Medical": { h: 31, r: 2.65 },
+  "Tioga Cardiovascular": { h: 26, r: 3.87 },
+  "Tulavi Therapeutics": { h: 30, r: 2.89 },
+  "Verge Medical": { h: 30, r: 2.76 },
+  Wiltrom: { h: 28, r: 3.23 },
+};
+
+function CompanyCard({ company, index }: { company: PortfolioCompany; index: number }) {
+  const [hover, setHover] = useState(false);
+  const size = LOGO_SIZE[company.name] ?? { h: 28, r: 3.2 };
+  const w = Math.min(Math.round(size.h * size.r), 190);
+
+  return (
+    <Reveal delay={Math.min(index, 5) * 0.05}>
+      <div
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        onFocus={() => setHover(true)}
+        onBlur={() => setHover(false)}
+        tabIndex={0}
+        className="group relative aspect-[4/3] overflow-hidden rounded-[1.4rem] outline-none"
+        style={{
+          border: "1px solid rgba(255,255,255,0.85)",
+          // denser than the other glass surfaces: logos must stay legible when
+          // ambient spheres drift behind the card
+          background: "rgba(255,255,255,0.76)",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          boxShadow: "0 14px 40px -12px rgba(20,40,80,0.14)",
+        }}
+      >
+        {/* full-bleed hover ground */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: pal.soft,
+            opacity: hover ? 1 : 0,
+            transition: "opacity 0.5s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        />
+
+        {/* resting state: normalized logo, centered */}
+        <div
+          className="absolute inset-0 flex items-center justify-center p-8"
+          style={{
+            opacity: hover ? 0 : 1,
+            transform: hover ? "scale(0.96)" : "scale(1)",
+            transition:
+              "opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.55s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        >
+          {company.logo ? (
+            <span className="relative block" style={{ height: size.h, width: w }}>
+              <Image
+                src={company.logo}
+                alt={company.name}
+                fill
+                sizes="220px"
+                className="object-contain"
+              />
+            </span>
+          ) : (
+            <span className="text-2xl" style={{ fontFamily: SERIF, fontWeight: 500 }}>
+              {company.name}
+            </span>
+          )}
+        </div>
+
+        {/* hover state: centered text information */}
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center"
+          style={{
+            opacity: hover ? 1 : 0,
+            transform: hover ? "translateY(0)" : "translateY(10px)",
+            transition:
+              "opacity 0.45s cubic-bezier(0.16,1,0.3,1) 0.06s, transform 0.55s cubic-bezier(0.16,1,0.3,1) 0.06s",
+          }}
+        >
+          <p className="text-[22px] leading-tight" style={{ fontFamily: SERIF, fontWeight: 500 }}>
+            {company.name}
+          </p>
+          <p className="mt-3 max-w-[30ch] text-[13.5px] leading-[1.6] text-neutral-600">
+            {B_COMPANY_NOTES[company.name] ?? company.sector}
+          </p>
+          <p
+            className="mt-5 uppercase"
+            style={{
+              fontFamily: MONO,
+              fontSize: 10,
+              letterSpacing: "0.16em",
+              color: pal.accent,
+            }}
+          >
+            {company.location} — Founded {company.year}
+          </p>
+        </div>
+      </div>
+    </Reveal>
+  );
+}
 
 export function PortfolioB() {
   const [filter, setFilter] = useState<string>("all");
@@ -72,43 +190,9 @@ export function PortfolioB() {
         </Reveal>
 
         {/* grid */}
-        <div className="mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-8 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {companies.map((company, i) => (
-            <Reveal key={company.name} delay={Math.min(i, 5) * 0.05}>
-              <Glass hover innerClassName="flex h-full flex-col p-7">
-                <div className="flex h-14 items-center">
-                  {company.logo ? (
-                    <Image
-                      src={company.logo}
-                      alt={company.name}
-                      width={220}
-                      height={64}
-                      className="h-8 w-auto max-w-[70%] object-contain object-left"
-                    />
-                  ) : (
-                    <span className="text-xl" style={{ fontFamily: SERIF, fontWeight: 500 }}>
-                      {company.name}
-                    </span>
-                  )}
-                </div>
-                <p
-                  className="mt-6 text-[22px] leading-tight"
-                  style={{ fontFamily: SERIF, fontWeight: 500 }}
-                >
-                  {company.name}
-                </p>
-                <p className="mt-3 text-[14px] leading-[1.6] text-neutral-600">
-                  {B_COMPANY_NOTES[company.name] ?? company.sector}
-                </p>
-                <div
-                  className="mt-auto flex items-center justify-between pt-7 uppercase text-neutral-400"
-                  style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.08em" }}
-                >
-                  <span>{company.location}</span>
-                  <span>Founded {company.year}</span>
-                </div>
-              </Glass>
-            </Reveal>
+            <CompanyCard key={company.name} company={company} index={i} />
           ))}
         </div>
 
@@ -125,8 +209,11 @@ export function PortfolioB() {
           <div className="mt-5 grid grid-cols-2 gap-3.5 sm:grid-cols-4">
             {[...PORTFOLIO.exited].sort().map((name, i) => (
               <Reveal key={name} delay={i * 0.06}>
-                <Glass innerClassName="p-6">
-                  <span className="h-2 w-2 rounded-full" style={{ background: pal.accent, display: "block" }} />
+                <Glass innerClassName="p-6 text-center">
+                  <span
+                    className="mx-auto block h-2 w-2 rounded-full"
+                    style={{ background: pal.accent }}
+                  />
                   <p className="mt-5 text-xl" style={{ fontFamily: SERIF, fontWeight: 500 }}>
                     {name}
                   </p>
