@@ -35,6 +35,11 @@ import { PhilosophyStack } from "./PhilosophyStack";
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
+/** Per-frame crop overrides where the default centre crop misses the subject. */
+const FRAME_POS: Record<string, string> = {
+  "/amed/images/grid-04.jpg": "72% 28%",
+};
+
 const GRID_GAP = "35px";
 /** measured from the reference: centre frames 1465x820, outer frames 2216x820 */
 const FRAME_H = "101.2svh";
@@ -244,6 +249,7 @@ export function GravityB() {
                       priority={r === 1 && c === 1}
                       sizes="100vw"
                       className="object-cover"
+                      style={{ objectPosition: FRAME_POS[src] ?? "50% 50%" }}
                     />
 
                   </div>
@@ -258,7 +264,7 @@ export function GravityB() {
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{ background: "rgba(90,92,96,0.4)" }}
+            style={{ background: "#b4b7bb", mixBlendMode: "multiply" }}
           />
 
           {/* wordmark, seated low */}

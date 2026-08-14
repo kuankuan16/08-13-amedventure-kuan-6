@@ -244,7 +244,17 @@ export function ScrollDial({ light = false }: { light?: boolean }) {
           />
         </svg>
       </span>
-      <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.24em", color: ink }}>
+      {/* letter-spacing leaves a trailing gap after the last glyph, which
+          throws the label off-centre under the ring — pull it back */}
+      <span
+        style={{
+          fontFamily: MONO,
+          fontSize: 10,
+          letterSpacing: "0.24em",
+          marginRight: "-0.24em",
+          color: ink,
+        }}
+      >
         SCROLL
       </span>
       <style>{`@keyframes scroll-dial {

@@ -199,7 +199,7 @@ export function PageHero({
                 transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-            <div className="absolute inset-0" style={{ background: "rgba(90,92,96,0.4)" }} />
+            <div className="absolute inset-0" style={{ background: "#b4b7bb", mixBlendMode: "multiply" }} />
           </div>
         </div>
 
