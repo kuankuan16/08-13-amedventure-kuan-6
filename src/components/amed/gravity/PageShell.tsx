@@ -5,6 +5,7 @@ import Image from "next/image";
 import {
   MONO,
   SERIF,
+  SANS,
   PALETTES,
   RX_WHITE,
   type PaletteKey,
@@ -105,9 +106,9 @@ export function SectionHead({
 }
 
 /**
- * Page opening: the /v2 two-column hero grammar (serif display left, notched
- * photo right revealed by a vertical mask) carrying the B identity — mono
- * chip, page index and scroll cue.
+ * Page opening (Jores /about grammar): a photo panel slides up from far
+ * below, the section's category word grows in over it, and the copy arrives
+ * on white below the fold.
  */
 export function PageHero({
   chip,
@@ -117,6 +118,7 @@ export function PageHero({
   pageIndex,
   image,
   imageAlt,
+  word,
 }: {
   chip: string;
   title: readonly string[];
@@ -125,83 +127,127 @@ export function PageHero({
   pageIndex: string;
   image: string;
   imageAlt: string;
+  /** the big category word, e.g. ABOUT */
+  word: string;
 }) {
   const pal = PALETTES[palette];
-  const [shown, setShown] = useState(false);
+  const [panelIn, setPanelIn] = useState(false);
+  const [wordIn, setWordIn] = useState(false);
   useEffect(() => {
-    const t = setTimeout(() => setShown(true), 120);
-    return () => clearTimeout(t);
+    const a = setTimeout(() => setPanelIn(true), 120);
+    const b = setTimeout(() => setWordIn(true), 900);
+    return () => {
+      clearTimeout(a);
+      clearTimeout(b);
+    };
   }, []);
 
   return (
-    <section className="rx-frame relative flex min-h-[100svh] flex-col justify-end px-6 pb-12 pt-28 md:px-10 md:pb-16 md:pt-32">
-      <div className="grid flex-1 grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-12">
-        {/* left: chip + display + lead */}
-        <div className="flex flex-col items-start lg:col-span-7">
-          <Reveal>
-            <p
-              className="mb-5 text-xs font-medium uppercase md:mb-7 md:text-[14px]"
-              style={{ color: pal.accent, letterSpacing: "0.05em" }}
-            >
-              [ {chip} ]
-            </p>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <h1
-              className={`tracking-tight text-[2.6rem] leading-[0.98] sm:text-6xl ${
-                title.length >= 3 ? "md:text-[68px]" : "md:text-[76px]"
-              } md:leading-[0.97]`}
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-            >
-              {title.map((line) => (
-                <span key={line} className="block">
-                  {line}
-                </span>
-              ))}
-            </h1>
-          </Reveal>
-          <Reveal delay={0.26}>
-            <p className="mt-8 max-w-[30rem] text-[15px] leading-[1.6] md:text-base">{lead}</p>
-          </Reveal>
-        </div>
-
-        {/* right: notched photo with the vertical mask reveal */}
-        <div className="lg:col-span-5">
+    <>
+      {/* 01 — the panel rises, then the category word grows over it */}
+      <section className="relative flex min-h-[100svh] flex-col overflow-hidden">
+        <div className="relative flex flex-1 items-center justify-center px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
+          {/* photo panel */}
           <div
-            className="rx-clip relative aspect-[7/6] w-full overflow-hidden"
+            className="absolute inset-x-6 bottom-16 top-28 md:inset-x-[18%] md:bottom-20 md:top-32"
             style={{
-              clipPath: shown ? undefined : "inset(100% 0% 0% 0%)",
-              transition: "clip-path 1.35s cubic-bezier(0.16,1,0.3,1) 0.15s",
+              transform: panelIn ? "translateY(0)" : "translateY(78%)",
+              opacity: panelIn ? 1 : 0,
+              transition:
+                "transform 1.5s cubic-bezier(0.16,1,0.3,1), opacity 0.9s cubic-bezier(0.16,1,0.3,1)",
             }}
           >
-            <Image
-              src={image}
-              alt={imageAlt}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 42vw"
-              className="object-cover"
-              style={{
-                transform: shown ? "scale(1.06)" : "scale(1.25)",
-                transition: "transform 1.9s cubic-bezier(0.16,1,0.3,1) 0.15s",
-              }}
-            />
+            <div className="relative h-full w-full overflow-hidden rounded-[1.6rem]">
+              <Image
+                src={image}
+                alt={imageAlt}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, 64vw"
+                className="object-cover"
+                style={{
+                  transform: panelIn ? "scale(1.04)" : "scale(1.2)",
+                  transition: "transform 2.2s cubic-bezier(0.16,1,0.3,1)",
+                }}
+              />
+              {/* scrim so the category word reads over any photo */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(180deg, rgba(10,12,14,0.28) 0%, rgba(10,12,14,0.42) 55%, rgba(10,12,14,0.3) 100%)",
+                }}
+              />
+            </div>
+          </div>
+
+          {/* category word */}
+          <h1
+            className="relative z-10 whitespace-nowrap text-center"
+            style={{
+              fontFamily: SANS,
+              fontWeight: 900,
+              fontSize: "clamp(3rem, 15vw, 15rem)",
+              lineHeight: 0.9,
+              letterSpacing: "-0.035em",
+              color: "#ffffff",
+              opacity: wordIn ? 1 : 0,
+              transform: wordIn ? "scale(1)" : "scale(0.82)",
+              transition:
+                "opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1)",
+            }}
+          >
+            {word}
+          </h1>
+        </div>
+
+        <div className="rx-frame w-full px-6 pb-10 md:px-10 md:pb-12">
+          <div className="flex items-end justify-between">
+            <p
+              className="uppercase"
+              style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#8a8a8a" }}
+            >
+              Page {pageIndex} / 05 — AMED Ventures © 2026
+            </p>
+            <ScrollCue />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* baseline: page index + scroll cue */}
-      <Reveal delay={0.36}>
-        <div className="mt-10 flex items-end justify-between border-t border-black/8 pt-5">
-          <p
-            className="uppercase"
-            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#8a8a8a" }}
-          >
-            Page {pageIndex} / 05 — AMED Ventures © 2026
-          </p>
-          <ScrollCue />
+      {/* 02 — the copy lands on white */}
+      <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
+        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <Reveal>
+              <p
+                className="text-xs font-medium uppercase md:text-[14px]"
+                style={{ color: pal.accent, letterSpacing: "0.05em" }}
+              >
+                [ {chip} ]
+              </p>
+            </Reveal>
+            <Reveal delay={0.12}>
+              <h2
+                className={`mt-7 tracking-tight text-[2.4rem] leading-[1.0] sm:text-5xl ${
+                  title.length >= 3 ? "md:text-[62px]" : "md:text-[70px]"
+                } md:leading-[0.98]`}
+                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+              >
+                {title.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </h2>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-4 lg:pb-3">
+            <Reveal delay={0.24}>
+              <p className="max-w-[30rem] text-base leading-[1.65] md:text-[17px]">{lead}</p>
+            </Reveal>
+          </div>
         </div>
-      </Reveal>
-    </section>
+      </section>
+    </>
   );
 }

@@ -35,6 +35,7 @@ export function ContactB() {
         palette="rose"
         pageIndex="05"
         image={asset("/amed/images/close-clouds.jpg")}
+        word="CONTACT"
         imageAlt="Soft morning clouds over an open horizon"
       />
 

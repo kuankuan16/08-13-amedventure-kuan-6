@@ -24,6 +24,7 @@ export function AboutB() {
         palette="cyan"
         pageIndex="01"
         image={asset("/amed/images/firm-studio.jpg")}
+        word="ABOUT"
         imageAlt="A team around an oak table examining a device prototype"
       />
 

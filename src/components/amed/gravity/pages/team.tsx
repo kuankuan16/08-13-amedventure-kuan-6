@@ -15,6 +15,7 @@ export function TeamB() {
         palette="cyan"
         pageIndex="04"
         image={asset("/amed/images/hero-vc-02.jpg")}
+        word="TEAM"
         imageAlt="An investor and a young founder shaking hands in a bright studio office"
       />
       {/* /v2 team blocks: grouped roster with full profiles */}

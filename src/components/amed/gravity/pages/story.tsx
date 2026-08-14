@@ -15,6 +15,7 @@ export function StoryB() {
         palette="royal"
         pageIndex="03"
         image={asset("/amed/images/hero-vc-03.jpg")}
+        word="STORY"
         imageAlt="Investors and founders reviewing growth charts in a sunlit conference room"
       />
       {/* /v2 milestone list: filters, hairline rows, hover detail */}

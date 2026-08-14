@@ -367,11 +367,12 @@ export function GravityFooter() {
               {MARQUEE_WORDS.map((w) => (
                 <span key={`${copy}-${w}`} className="inline-flex items-center">
                   <span
-                    className="px-8 text-white/90"
+                    className="px-8"
                     style={{
                       fontFamily: SERIF,
                       fontWeight: 500,
                       fontSize: "clamp(28px, 6vw, 64px)",
+                      color: "rgba(255,255,255,0.9)",
                     }}
                   >
                     {w}
@@ -396,7 +397,7 @@ export function GravityFooter() {
               </p>
               <h2
                 className="mt-6 text-4xl leading-[0.98] md:text-6xl"
-                style={{ fontFamily: SERIF, fontWeight: 500 }}
+                style={{ fontFamily: SERIF, fontWeight: 500, color: "#ffffff" }}
               >
                 {RX_CTA.title[0]}
                 <br />
@@ -431,44 +432,38 @@ export function GravityFooter() {
             </Reveal>
           </div>
           <div className="lg:col-span-7">
-            <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-8 sm:gap-12 lg:justify-items-end">
               {[
-                { title: "Studio", links: B_NAV_ALL.slice(0, 4) },
+                { title: "Studio", links: B_NAV_ALL },
                 {
                   title: "Offices",
                   links: [
                     { label: RX_CTA.offices[0], href: RX_MAILTO },
                     { label: RX_CTA.offices[1], href: RX_MAILTO },
-                    { label: "Contact", href: "/b/contact" },
-                  ],
-                },
-                {
-                  title: "Versions",
-                  links: [
-                    { label: "Proposal A", href: "/v2" },
-                    { label: "Proposal B", href: "/b" },
                   ],
                 },
               ].map((col, i) => (
                 <Reveal key={col.title} delay={i * 0.08}>
-                  <p
-                    className="uppercase text-white/40"
-                    style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.25em" }}
-                  >
-                    {col.title}
-                  </p>
-                  <ul className="mt-4 space-y-3">
-                    {col.links.map((l) => (
-                      <li key={l.label}>
-                        <Link
-                          href={l.href}
-                          className="text-[15px] text-white/75 transition-colors hover:text-white"
-                        >
-                          {l.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="lg:min-w-[11rem]">
+                    <p
+                      className="uppercase text-white/35"
+                      style={{ fontFamily: MONO, fontSize: 9, letterSpacing: "0.26em" }}
+                    >
+                      {col.title}
+                    </p>
+                    <ul className="mt-5 space-y-2.5">
+                      {col.links.map((l) => (
+                        <li key={l.label}>
+                          <Link
+                            href={l.href}
+                            className="text-[13.5px] text-white/70 transition-colors hover:text-white"
+                          >
+                            {l.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </Reveal>
               ))}
             </div>

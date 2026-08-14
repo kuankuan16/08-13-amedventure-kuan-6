@@ -139,6 +139,7 @@ export function PortfolioB() {
         palette="rose"
         pageIndex="02"
         image={asset("/amed/images/hero-vc-01.jpg")}
+        word="PORTFOLIO"
         imageAlt="A founder presenting a medical device prototype to investors in a bright boardroom"
       />
 
