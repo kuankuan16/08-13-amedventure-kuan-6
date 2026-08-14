@@ -228,17 +228,20 @@ export function GravityB() {
                       sizes="100vw"
                       className="object-cover"
                     />
-                    {r === 1 && c === 1 ? (
-                      <div
-                        className="absolute inset-0"
-                        style={{ background: "rgba(90,92,96,0.2)" }}
-                      />
-                    ) : null}
+
                   </div>
                 ))}
               </div>
             ))}
           </div>
+
+          {/* a flat 20% veil across the whole hero viewport — it has to cover
+              the neighbouring frames too once the grid contracts */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: "rgba(90,92,96,0.2)" }}
+          />
 
           {/* wordmark, seated low */}
           <div
@@ -320,7 +323,7 @@ export function GravityB() {
           <Reveal delay={0.26}>
             <a
               href={RX_MAILTO}
-              className="mt-6 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
+              className="mt-12 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
               style={{ background: INK }}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
