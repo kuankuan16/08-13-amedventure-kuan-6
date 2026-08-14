@@ -304,7 +304,7 @@ export function RxGlance({
       });
       if (cards.length) {
         ScrollTrigger.create({
-          trigger: cards[0].parentElement,
+          trigger: cards[0].closest("[data-rx-spread-root]") ?? cards[0].parentElement,
           start: "top 78%",
           once: true,
           onEnter: () =>
@@ -377,37 +377,41 @@ export function RxGlance({
           <div>
             {cards === "panel" ? (
               <div
+                data-rx-spread-root
                 className="grid overflow-hidden rounded-[1.6rem] sm:grid-cols-2"
                 style={{ background: "#ffffff", border: "1px solid rgba(20,19,26,0.08)" }}
               >
                 {RX_ABOUT.highlights.map((item, i) => (
                   <div
                     key={item.title}
-                    data-rx-spread={i}
                     className="p-8 md:p-9"
                     style={{
                       borderRight: i % 2 === 0 ? "1px solid rgba(20,19,26,0.08)" : undefined,
                       borderBottom: i < 2 ? "1px solid rgba(20,19,26,0.08)" : undefined,
                     }}
                   >
-                    <span
-                      className="flex h-14 w-14 items-center justify-center rounded-full"
-                      style={{ background: GLANCE_BADGE[i % 4] }}
-                    >
-                      <GlanceIcon index={i} />
-                    </span>
-                    <p
-                      className="mt-9 text-[1.35rem] font-bold leading-[1.2] tracking-tight md:text-[1.55rem]"
-                      style={{ color: "var(--rx-ink)" }}
-                    >
-                      {item.title}
-                    </p>
-                    <p className="mt-3.5 text-[15px] leading-[1.55]">{item.desc}</p>
+                    {/* the grid and its hairlines stay put; the contents are what
+                        converge from the centre (the original entrance) */}
+                    <div data-rx-spread={i}>
+                      <span
+                        className="flex h-14 w-14 items-center justify-center rounded-full"
+                        style={{ background: GLANCE_BADGE[i % 4] }}
+                      >
+                        <GlanceIcon index={i} />
+                      </span>
+                      <p
+                        className="mt-9 text-[1.35rem] font-bold leading-[1.2] tracking-tight md:text-[1.55rem]"
+                        style={{ color: "var(--rx-ink)" }}
+                      >
+                        {item.title}
+                      </p>
+                      <p className="mt-3.5 text-[15px] leading-[1.55]">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div data-rx-spread-root className="grid gap-3 sm:grid-cols-2">
                 {RX_ABOUT.highlights.map((item, i) => (
                   <div
                     key={item.title}
