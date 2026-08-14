@@ -10,7 +10,7 @@ import {
 } from "@/components/amed/rx/sections";
 import { MONO, SERIF, INK, PALETTES, Reveal } from "../shared";
 import { PageShell, PageHero } from "../PageShell";
-import { PhilosophyScroll } from "../PhilosophyScroll";
+import { PhilosophyStack } from "../PhilosophyStack";
 
 const pal = PALETTES.cyan;
 
@@ -73,7 +73,7 @@ export function AboutB() {
       <RxFocusRows />
 
       {/* philosophy — scroll-scrubbed statements */}
-      <PhilosophyScroll />
+      <PhilosophyStack />
 
       {/* how we partner */}
       <RxProcess />

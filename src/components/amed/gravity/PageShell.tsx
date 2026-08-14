@@ -105,6 +105,33 @@ export function SectionHead({
   );
 }
 
+/** Category word split into per-letter masks — each letter rises into an
+ *  overflow-clipped box, staggered (the Jores /about grammar). */
+function MaskedWord({ text, shown }: { text: string; shown: boolean }) {
+  return (
+    <span aria-label={text} className="inline-flex">
+      {[...text].map((ch, i) => (
+        <span
+          key={`${ch}-${i}`}
+          aria-hidden
+          className="inline-block"
+          style={{ overflow: "clip", verticalAlign: "bottom" }}
+        >
+          <span
+            className="inline-block"
+            style={{
+              transform: shown ? "translateY(0)" : "translateY(105%)",
+              transition: `transform 0.95s cubic-bezier(0.16,1,0.3,1) ${0.28 + i * 0.045}s`,
+            }}
+          >
+            {ch}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
 /**
  * Page opening (Jores /about grammar): a photo panel slides up from far
  * below, the section's category word grows in over it, and the copy arrives
@@ -131,30 +158,29 @@ export function PageHero({
   word: string;
 }) {
   const pal = PALETTES[palette];
-  const [panelIn, setPanelIn] = useState(false);
-  const [wordIn, setWordIn] = useState(false);
+  const [shown, setShown] = useState(false);
   useEffect(() => {
-    const a = setTimeout(() => setPanelIn(true), 120);
-    const b = setTimeout(() => setWordIn(true), 900);
-    return () => {
-      clearTimeout(a);
-      clearTimeout(b);
-    };
+    const t = setTimeout(() => setShown(true), 90);
+    return () => clearTimeout(t);
   }, []);
 
   return (
     <>
       {/* 01 — the panel rises, then the category word grows over it */}
       <section className="relative flex min-h-[100svh] flex-col overflow-hidden">
-        <div className="relative flex flex-1 items-center justify-center px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32">
+        <div
+          className="relative flex flex-1 items-center justify-center px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32"
+          style={{
+            transform: shown ? "translateY(0)" : "translateY(54vh)",
+            transition: "transform 1.15s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        >
           {/* photo panel */}
           <div
             className="absolute inset-x-6 bottom-16 top-28 md:inset-x-[18%] md:bottom-20 md:top-32"
             style={{
-              transform: panelIn ? "translateY(0)" : "translateY(78%)",
-              opacity: panelIn ? 1 : 0,
-              transition:
-                "transform 1.5s cubic-bezier(0.16,1,0.3,1), opacity 0.9s cubic-bezier(0.16,1,0.3,1)",
+              transform: shown ? "translateY(0)" : "translateY(26%)",
+              transition: "transform 1.4s cubic-bezier(0.16,1,0.3,1)",
             }}
           >
             <div className="relative h-full w-full overflow-hidden rounded-[1.6rem]">
@@ -166,8 +192,8 @@ export function PageHero({
                 sizes="(max-width: 768px) 100vw, 64vw"
                 className="object-cover"
                 style={{
-                  transform: panelIn ? "scale(1.04)" : "scale(1.2)",
-                  transition: "transform 2.2s cubic-bezier(0.16,1,0.3,1)",
+                  transform: shown ? "scale(1.04)" : "scale(1.18)",
+                  transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
                 }}
               />
               {/* scrim so the category word reads over any photo */}
@@ -191,13 +217,9 @@ export function PageHero({
               lineHeight: 0.9,
               letterSpacing: "-0.035em",
               color: "#ffffff",
-              opacity: wordIn ? 1 : 0,
-              transform: wordIn ? "scale(1)" : "scale(0.82)",
-              transition:
-                "opacity 1.1s cubic-bezier(0.16,1,0.3,1), transform 1.4s cubic-bezier(0.16,1,0.3,1)",
             }}
           >
-            {word}
+            <MaskedWord text={word} shown={shown} />
           </h1>
         </div>
 

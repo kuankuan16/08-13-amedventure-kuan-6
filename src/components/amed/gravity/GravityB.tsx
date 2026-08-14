@@ -25,7 +25,7 @@ import {
   useSmoothScroll,
 } from "./shared";
 import { getDynamicColors, ROLES, type Role } from "./palette";
-import { PhilosophyScroll } from "./PhilosophyScroll";
+import { PhilosophyStack } from "./PhilosophyStack";
 
 /* ------------------------------------------------------------------
    Version B — "Gravity" proposal.
@@ -904,7 +904,7 @@ export function GravityB() {
           <RxLogoBand />
           <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
           <RxFocusCards />
-          <PhilosophyScroll />
+          <PhilosophyStack />
           <RxStoryList limit={3} />
         </div>
       </div>
