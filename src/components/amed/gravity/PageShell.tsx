@@ -158,7 +158,6 @@ export function PageHero({
   /** the big category word, e.g. ABOUT */
   word: string;
 }) {
-  const pal = PALETTES[palette];
   const [shown, setShown] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setShown(true), 90);

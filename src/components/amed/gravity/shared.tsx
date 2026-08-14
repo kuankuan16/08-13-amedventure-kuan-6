@@ -353,12 +353,6 @@ export function GravityHeader({
 
 /* ---------------- footer ------------------------------------------ */
 
-const MARQUEE_WORDS = [
-  "Capital that reaches the bedside",
-  "Beyond capital",
-  "Lives that will be touched",
-  "Evidence, execution, endurance",
-];
 
 export function GravityFooter() {
   return (
@@ -371,35 +365,6 @@ export function GravityFooter() {
         className="pointer-events-none absolute -bottom-48 -left-48 h-[32rem] w-[32rem] rounded-full blur-2xl"
         style={{ background: "radial-gradient(circle, #0e7fa544 0%, transparent 65%)" }}
       />
-
-      {/* marquee */}
-      <div className="overflow-hidden border-b border-white/10 py-5">
-        <div
-          className="inline-flex whitespace-nowrap"
-          style={{ animation: "gravity-marquee 26s linear infinite" }}
-        >
-          {[0, 1].map((copy) => (
-            <span key={copy} className="inline-flex items-center">
-              {MARQUEE_WORDS.map((w) => (
-                <span key={`${copy}-${w}`} className="inline-flex items-center">
-                  <span
-                    className="px-8"
-                    style={{
-                      fontFamily: SERIF,
-                      fontWeight: 300,
-                      fontSize: "clamp(18px, 3.2vw, 34px)",
-                      color: "rgba(255,255,255,0.82)",
-                    }}
-                  >
-                    {w}
-                  </span>
-                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: "#33c0e2" }} />
-                </span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
 
       <div className="rx-frame px-6 pb-10 pt-16 md:px-10 md:pt-24">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
@@ -515,7 +480,6 @@ export function GravityFooter() {
           </div>
         </div>
       </div>
-      <style>{`@keyframes gravity-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
     </footer>
   );
 }
