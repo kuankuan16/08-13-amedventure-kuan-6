@@ -23,6 +23,9 @@ export type PaletteKey = "cyan" | "royal" | "rose";
 /** Buttons stay gradient-free (優雅摩登): solid ink on light, solid white on dark. */
 export const INK = "#111213";
 
+/** AMED brand blue, taken from the logo mark. */
+export const BRAND_BLUE = "#00A8D0";
+
 /** White ground across the whole proposal — the spheres carry all the colour.
  *  A barely-there neutral vignette keeps the 3D field from floating on a
  *  dead-flat field; it still reads as white. */
@@ -257,15 +260,15 @@ export function GravityHeader({
             "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1), background 0.5s ease, height 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.5s ease",
         }}
       >
-        {/* reading progress */}
+        {/* reading progress — AMED brand blue */}
         <span
           aria-hidden
           className="absolute bottom-0 left-0 h-px origin-left"
           style={{
             width: "100%",
-            background: INK,
+            background: BRAND_BLUE,
             transform: `scaleX(${progress})`,
-            opacity: scrolled ? 0.35 : 0,
+            opacity: scrolled ? 1 : 0,
             transition: "opacity 0.4s ease",
           }}
         />
