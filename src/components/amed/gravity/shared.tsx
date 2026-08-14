@@ -214,47 +214,42 @@ export function useSmoothScroll(onFrame?: (progress: number) => void) {
   }, [onFrame]);
 }
 
-/** Scroll indicator: a thin dial with a sweeping hand over a mono label. */
+/** Scroll indicator: a down arrow inside a thin ring, over a mono label. */
 export function ScrollDial({ light = false }: { light?: boolean }) {
-  const ink = light ? "rgba(255,255,255,0.85)" : "rgba(20,19,26,0.6)";
+  const ink = light ? "rgba(255,255,255,0.88)" : "rgba(20,19,26,0.62)";
   const line = light ? "rgba(255,255,255,0.5)" : "rgba(20,19,26,0.25)";
   return (
     <div className="flex flex-col items-center gap-3">
       <span
-        className="relative flex items-center justify-center rounded-full"
+        className="relative flex items-center justify-center overflow-hidden rounded-full"
         style={{ width: 62, height: 62, border: `1px solid ${line}` }}
       >
-        <span
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
           aria-hidden
-          className="absolute left-1/2 top-1/2"
-          style={{
-            width: 1,
-            height: 15,
-            background: ink,
-            transformOrigin: "top center",
-            transform: "translate(-50%, 0)",
-            animation: "scroll-dial 3.2s cubic-bezier(0.65,0,0.35,1) infinite",
-          }}
-        />
-        <span
-          aria-hidden
-          className="absolute left-1/2"
-          style={{
-            top: 9,
-            width: 1,
-            height: 7,
-            background: ink,
-            opacity: 0.7,
-            transform: "translateX(-50%)",
-          }}
-        />
+          style={{ color: ink, animation: "scroll-dial 2.4s cubic-bezier(0.65,0,0.35,1) infinite" }}
+        >
+          <path
+            d="M12 4v14M6 13l6 6 6-6"
+            stroke="currentColor"
+            strokeWidth="1.6"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
       </span>
-      <span
-        style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.24em", color: ink }}
-      >
+      <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.24em", color: ink }}>
         SCROLL
       </span>
-      <style>{`@keyframes scroll-dial { 0% { transform: translate(-50%,0) rotate(0deg); } 100% { transform: translate(-50%,0) rotate(360deg); } }`}</style>
+      <style>{`@keyframes scroll-dial {
+        0%   { transform: translateY(-9px); opacity: 0; }
+        30%  { transform: translateY(0);    opacity: 1; }
+        70%  { transform: translateY(0);    opacity: 1; }
+        100% { transform: translateY(9px);  opacity: 0; }
+      }`}</style>
     </div>
   );
 }

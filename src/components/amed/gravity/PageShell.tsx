@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
   MONO,
   SERIF,
   SANS,
-  PALETTES,
   RX_WHITE,
   type PaletteKey,
   GravityHeader,
@@ -36,7 +35,7 @@ export function PageShell({
   useSmoothScroll();
   return (
     <div className="rx-root" style={RX_WHITE}>
-      <GravityHeader active={active} />
+      <GravityHeader active={active} onMedia />
       <main className="relative z-10">{children}</main>
       <GravityFooter />
     </div>
@@ -65,11 +64,10 @@ export function SectionHead({
   lead?: string;
   palette: PaletteKey;
 }) {
-  const pal = PALETTES[palette];
   return (
     <div>
       <Reveal>
-        <ChipLabel text={`${index} — ${label}`} color={pal.chip} />
+        <ChipLabel text={`${index} — ${label}`} color={BRAND_BLUE} />
       </Reveal>
       <Reveal delay={0.1}>
         <h2
@@ -147,55 +145,70 @@ export function PageHero({
   word: string;
 }) {
   const [shown, setShown] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
+  const mediaInnerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const t = setTimeout(() => setShown(true), 90);
     return () => clearTimeout(t);
   }, []);
 
+  useEffect(() => {
+    let raf = 0;
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const k = Math.min(1, window.scrollY / (window.innerHeight * 0.9));
+      if (mediaRef.current) {
+        mediaRef.current.style.padding = `${(k * 3.5).toFixed(2)}vh ${(k * 4).toFixed(2)}vw`;
+      }
+      if (mediaInnerRef.current) {
+        mediaInnerRef.current.style.borderRadius = `${(k * 26).toFixed(1)}px`;
+      }
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   return (
     <>
-      {/* 01 — the panel rises, then the category word grows over it */}
-      <section className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      {/* 01 — full-bleed frame; it rises in, the category word unmasks over
+          it, and it contracts on scroll exactly as the home hero does */}
+      <section ref={sectionRef} className="relative h-[100svh] overflow-hidden">
         <div
-          className="relative flex flex-1 items-center justify-center px-6 pb-16 pt-28 md:px-10 md:pb-20 md:pt-32"
+          ref={mediaRef}
+          className="absolute inset-0"
           style={{
+            padding: 0,
             transform: shown ? "translateY(0)" : "translateY(54vh)",
             transition: "transform 1.15s cubic-bezier(0.16,1,0.3,1)",
           }}
         >
-          {/* photo panel */}
-          <div
-            className="absolute inset-x-6 bottom-16 top-28 md:inset-x-[18%] md:bottom-20 md:top-32"
-            style={{
-              transform: shown ? "translateY(0)" : "translateY(26%)",
-              transition: "transform 1.4s cubic-bezier(0.16,1,0.3,1)",
-            }}
-          >
-            <div className="relative h-full w-full overflow-hidden rounded-[1.6rem]">
-              <Image
-                src={image}
-                alt={imageAlt}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, 64vw"
-                className="object-cover"
-                style={{
-                  transform: shown ? "scale(1.04)" : "scale(1.18)",
-                  transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
-                }}
-              />
-              {/* scrim so the category word reads over any photo */}
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "linear-gradient(180deg, rgba(10,12,14,0.28) 0%, rgba(10,12,14,0.42) 55%, rgba(10,12,14,0.3) 100%)",
-                }}
-              />
-            </div>
+          <div ref={mediaInnerRef} className="relative h-full w-full overflow-hidden">
+            <Image
+              src={image}
+              alt={imageAlt}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+              style={{
+                transform: shown ? "scale(1.04)" : "scale(1.18)",
+                transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg, rgba(10,12,14,0.26) 0%, rgba(10,12,14,0.4) 55%, rgba(10,12,14,0.3) 100%)",
+              }}
+            />
           </div>
+        </div>
 
-          {/* category word */}
+        {/* category word */}
+        <div className="absolute inset-0 flex items-center justify-center px-6">
           <h1
             className="relative z-10 whitespace-nowrap text-center"
             style={{
@@ -211,15 +224,21 @@ export function PageHero({
           </h1>
         </div>
 
-        <div className="rx-frame w-full px-6 pb-10 md:px-10 md:pb-12">
-          <div className="flex items-end justify-between">
+        {/* baseline */}
+        <div className="absolute inset-x-0 bottom-0 px-6 pb-8 md:px-10 md:pb-10">
+          <div className="rx-frame flex items-end justify-between">
             <p
               className="uppercase"
-              style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#8a8a8a" }}
+              style={{
+                fontFamily: MONO,
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                color: "rgba(255,255,255,0.72)",
+              }}
             >
               Page {pageIndex} / 05 — AMED Ventures © 2026
             </p>
-            <ScrollCue />
+            <ScrollDial light />
           </div>
         </div>
       </section>

@@ -11,6 +11,7 @@ import {
 } from "@/components/amed/rx/sections";
 import {
   MONO,
+  SERIF,
   WHITE_BG,
   RX_WHITE,
   INK,
@@ -294,7 +295,7 @@ export function GravityB() {
       </section>
 
       {/* 02 — the studio statement, centred (Studio Aton layout) */}
-      <section className="rx-frame relative z-10 flex min-h-[100svh] items-center px-6 py-32 md:px-10 md:py-40">
+      <section className="rx-frame relative z-10 flex min-h-[70svh] items-center px-6 py-16 md:px-10 md:py-20">
         <div className="mx-auto w-full max-w-[62rem] text-center">
           <Reveal>
             <p
@@ -311,8 +312,8 @@ export function GravityB() {
           </Reveal>
           <Reveal delay={0.12}>
             <p
-              className="mt-10 text-[1.5rem] leading-[1.24] tracking-tight sm:text-[2rem] md:text-[2.7rem] md:leading-[1.2]"
-              style={{ fontFamily: SANS, fontWeight: 500, color: "#0a0a0a" }}
+              className="mt-5 text-[1.5rem] leading-[1.26] tracking-tight sm:text-[2rem] md:text-[2.7rem] md:leading-[1.22]"
+              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
             >
               AMED Ventures ® — a MedTech venture firm investing across the United States and
               Taiwan. Backing the medical technologies that change what a clinician can actually
@@ -322,7 +323,7 @@ export function GravityB() {
           <Reveal delay={0.26}>
             <a
               href={RX_MAILTO}
-              className="mt-12 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
+              className="mt-6 inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-white"
               style={{ background: INK }}
             >
               <span className="h-1.5 w-1.5 rounded-full bg-white" />
