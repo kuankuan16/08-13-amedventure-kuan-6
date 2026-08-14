@@ -2,12 +2,22 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { RX_HERO, RX_ABOUT } from "@/lib/amed/rx-content";
+import { RX_HERO, RX_ABOUT, RX_PHILOSOPHY } from "@/lib/amed/rx-content";
+import {
+  RxLogoBand,
+  RxGlance,
+  RxFocusCards,
+  RxPhilosophySplit,
+  RxPortfolioGrid,
+  RxStoryList,
+  RxTeamStrip,
+} from "@/components/amed/rx/sections";
 import {
   MONO,
   SERIF,
   ACCENT,
   WHITE_BG,
+  RX_WHITE,
   Reveal,
   GravityHeader,
   GravityFooter,
@@ -393,16 +403,22 @@ export function GravityB() {
         return;
       }
 
+      // Once the field has flown past the lens and the /v2 content covers the
+      // canvas, stop simulating entirely — the long content below stays smooth.
+      if ((ctrl.progress ?? 0) > 5.0) return;
+
       const progress = ctrl.progress ?? 0;
 
-      const heroF = 1 - smoothstep(0.3, 0.8, progress);
-      const dropRaw = smoothstep(0.4, 0.95, progress);
-      const flyF = smoothstep(2.7, 3.45, progress);
-      const shapeF = smoothstep(1.4, 2.05, progress) * (1 - smoothstep(2.55, 3.0, progress));
-      const dropF = dropRaw * (1 - smoothstep(1.25, 1.75, progress));
+      // Three screens: 0–1 float, 1–2 gravity drop, 2–3 heart. Past 3 the
+      // field flies through the lens and hands off to the /v2 content.
+      const heroF = 1 - smoothstep(0.35, 0.9, progress);
+      const dropRaw = smoothstep(0.55, 1.15, progress);
+      const flyF = smoothstep(2.92, 3.58, progress);
+      const shapeF = smoothstep(1.95, 2.6, progress) * (1 - smoothstep(2.88, 3.3, progress));
+      const dropF = dropRaw * (1 - smoothstep(1.8, 2.3, progress));
 
-      const bLime = smoothstep(0.55, 1.05, progress);
-      const bPink = smoothstep(1.4, 1.95, progress);
+      const bLime = smoothstep(0.6, 1.3, progress);
+      const bPink = smoothstep(1.9, 2.6, progress);
       for (const role of ROLES) {
         curPal[role].copy(palHero[role]).lerp(palLime[role], bLime).lerp(palPink[role], bPink);
       }
@@ -810,8 +826,10 @@ export function GravityB() {
         </div>
       </section>
 
-      {/* 03 — SHAPE / heart */}
-      <section className="pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-between px-6 py-36 md:px-12 md:py-44">
+      {/* 03 — SHAPE / heart. Taller than a screen so the heart holds, then the
+          field flies through the lens as the section exits. */}
+      <section className="pointer-events-none relative z-10 min-h-[170svh]">
+        <div className="sticky top-0 flex h-[100svh] flex-col justify-between px-6 py-32 md:px-12 md:py-36">
         <div className="pointer-events-auto">
           <Reveal>
             <p
@@ -838,9 +856,7 @@ export function GravityB() {
         <div className="pointer-events-auto max-w-sm self-end text-left md:text-right">
           <Reveal delay={0.15}>
             <p className="text-base leading-[1.55] text-neutral-700 md:text-[19px]">
-              Out of free-fall, the field reassembles — sixteen companies and the people they serve,
-              finding their place in a single shape. Move your cursor through it and watch the order
-              ripple, scatter, and recover.
+              {RX_PHILOSOPHY.items[3].desc}
             </p>
           </Reveal>
           <Reveal delay={0.28}>
@@ -862,47 +878,29 @@ export function GravityB() {
                 />
               </svg>
               <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.2em" }}>
-                SWIPE THROUGH IT
+                MOVE THROUGH IT
               </span>
             </span>
           </Reveal>
         </div>
-      </section>
-
-      {/* 04 — RELEASE */}
-      <section className="pointer-events-none relative z-10 flex min-h-[100svh] flex-col items-center justify-center px-6 py-36 text-center md:px-12 md:py-44">
-        <div className="pointer-events-auto mx-auto max-w-3xl">
-          <Reveal>
-            <p
-              className="uppercase"
-              style={{
-                fontFamily: MONO,
-                fontSize: 11,
-                letterSpacing: "0.25em",
-                color: "rgba(14,127,165,0.8)",
-              }}
-            >
-              [ 04 — Release ]
-            </p>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <h2
-              className="mt-7 text-[2.8rem] leading-[1.0] sm:text-7xl md:text-[88px] md:leading-[0.95]"
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-            >
-              Tomorrow&apos;s
-              <br />
-              global impact.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.24}>
-            <p className="mx-auto mt-8 max-w-md text-base leading-[1.55] text-neutral-700 md:text-[19px]">
-              With the right support, today&apos;s pioneering idea lifts off — every sphere
-              accelerating into the lens until nothing remains but light.
-            </p>
-          </Reveal>
         </div>
       </section>
+
+      {/* handoff — the field flies through the lens and the /v2 content arrives */}
+      <div
+        className="relative z-10 rx-root"
+        style={{ ...RX_WHITE, background: "transparent" }}
+      >
+        <div style={{ background: "#ffffff" }}>
+          <RxLogoBand />
+          <RxGlance cta={{ label: "More about AMED", href: "/b/about" }} />
+          <RxFocusCards />
+          <RxPhilosophySplit />
+          <RxPortfolioGrid featured />
+          <RxStoryList limit={3} />
+          <RxTeamStrip />
+        </div>
+      </div>
 
       <GravityFooter />
     </div>

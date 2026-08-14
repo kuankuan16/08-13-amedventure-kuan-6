@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { PORTFOLIO, PORTFOLIO_FILTERS, type PortfolioCompany } from "@/lib/amed/content";
+import { asset, PORTFOLIO, PORTFOLIO_FILTERS, type PortfolioCompany } from "@/lib/amed/content";
 import { B_PORTFOLIO, B_COMPANY_NOTES } from "@/lib/amed/b-content";
-import { MONO, SERIF, INK, PALETTES, Reveal, Glass } from "../shared";
+import { MONO, SERIF, INK, PALETTES, Reveal } from "../shared";
 import { PageShell, PageHero, SectionHead } from "../PageShell";
 
 const pal = PALETTES.rose;
@@ -48,13 +48,9 @@ function CompanyCard({ company, index }: { company: PortfolioCompany; index: num
         tabIndex={0}
         className="group relative aspect-[4/3] overflow-hidden rounded-[1.4rem] outline-none"
         style={{
-          border: "1px solid rgba(255,255,255,0.85)",
-          // denser than the other glass surfaces: logos must stay legible when
-          // ambient spheres drift behind the card
-          background: "rgba(255,255,255,0.76)",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
-          boxShadow: "0 14px 40px -12px rgba(20,40,80,0.14)",
+          border: "1px solid rgba(20,19,26,0.08)",
+          background: "#ffffff",
+          boxShadow: "0 10px 30px -18px rgba(20,19,26,0.35)",
         }}
       >
         {/* full-bleed hover ground */}
@@ -135,13 +131,15 @@ export function PortfolioB() {
       : PORTFOLIO.companies.filter((c) => c.group === filter);
 
   return (
-    <PageShell palette="rose" active="/b/portfolio" count={22}>
+    <PageShell palette="rose" active="/b/portfolio">
       <PageHero
         chip={B_PORTFOLIO.chip}
         title={B_PORTFOLIO.title}
         lead={B_PORTFOLIO.lead}
         palette="rose"
         pageIndex="02"
+        image={asset("/amed/images/hero-vc-01.jpg")}
+        imageAlt="A founder presenting a medical device prototype to investors in a bright boardroom"
       />
 
       <section className="px-6 py-24 md:px-12 md:py-32">
@@ -168,10 +166,8 @@ export function PortfolioB() {
                     isActive
                       ? { background: INK, color: "#ffffff" }
                       : {
-                          border: "1px solid rgba(255,255,255,0.65)",
-                          background: "rgba(255,255,255,0.4)",
-                          backdropFilter: "blur(12px)",
-                          WebkitBackdropFilter: "blur(12px)",
+                          border: "1px solid rgba(20,19,26,0.12)",
+                          background: "#ffffff",
                           color: "#404040",
                         }
                   }
@@ -209,7 +205,7 @@ export function PortfolioB() {
           <div className="mt-5 grid grid-cols-2 gap-3.5 sm:grid-cols-4">
             {[...PORTFOLIO.exited].sort().map((name, i) => (
               <Reveal key={name} delay={i * 0.06}>
-                <Glass innerClassName="p-6 text-center">
+                <div className="rounded-[1.4rem] border border-black/8 bg-white p-6 text-center">
                   <span
                     className="mx-auto block h-2 w-2 rounded-full"
                     style={{ background: pal.accent }}
@@ -220,7 +216,7 @@ export function PortfolioB() {
                   <p className="mt-2 text-[13px] leading-[1.55] text-neutral-500">
                     {B_PORTFOLIO.realizedNote}
                   </p>
-                </Glass>
+                </div>
               </Reveal>
             ))}
           </div>

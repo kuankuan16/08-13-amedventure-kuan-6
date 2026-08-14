@@ -1,10 +1,12 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import Image from "next/image";
 import {
   MONO,
   SERIF,
   PALETTES,
+  RX_WHITE,
   type PaletteKey,
   GravityHeader,
   GravityFooter,
@@ -12,16 +14,17 @@ import {
   Reveal,
   ChipLabel,
 } from "./shared";
-import { AmbientField } from "./AmbientField";
 
-/** Page scaffold for /b section pages: gradient ground, ambient field,
- *  fixed header, smooth scroll and the shared dark footer. */
+/**
+ * Page scaffold for /b section pages. The sphere field is exclusive to the
+ * home opening (client: 其他頁面不用再出現泡泡) — section pages run on the
+ * /v2 system (rx-root) over a white ground, with the B header and footer.
+ */
 export function PageShell({
-  palette,
   active,
-  count,
   children,
 }: {
+  /** kept for per-page accent colour on chips and rules */
   palette: PaletteKey;
   active: string;
   count?: number;
@@ -29,11 +32,7 @@ export function PageShell({
 }) {
   useSmoothScroll();
   return (
-    <div style={{ color: "#1a1a1a" }}>
-      <div
-        style={{ position: "fixed", inset: 0, zIndex: -10, background: PALETTES[palette].bg }}
-      />
-      <AmbientField palette={palette} count={count} />
+    <div className="rx-root" style={RX_WHITE}>
       <GravityHeader active={active} />
       <main className="relative z-10">{children}</main>
       <GravityFooter />
@@ -106,9 +105,9 @@ export function SectionHead({
 }
 
 /**
- * Full-viewport page opening in the home hero's grammar: sans chip and
- * bottom-anchored serif display on the left, a 280px support column on the
- * right with the lead paragraph, a mono page-index line and the scroll cue.
+ * Page opening: the /v2 two-column hero grammar (serif display left, notched
+ * photo right revealed by a vertical mask) carrying the B identity — mono
+ * chip, page index and scroll cue.
  */
 export function PageHero({
   chip,
@@ -116,21 +115,32 @@ export function PageHero({
   lead,
   palette,
   pageIndex,
+  image,
+  imageAlt,
 }: {
   chip: string;
   title: readonly string[];
   lead: string;
   palette: PaletteKey;
   pageIndex: string;
+  image: string;
+  imageAlt: string;
 }) {
   const pal = PALETTES[palette];
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => setShown(true), 120);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
-    <section className="relative flex min-h-[100svh] items-end">
-      <div className="flex w-full flex-col justify-between gap-8 px-6 pb-12 md:flex-row md:items-end md:px-12 md:pb-14">
-        <div className="flex flex-col items-start gap-3.5">
+    <section className="relative flex min-h-[100svh] flex-col justify-end px-6 pb-12 pt-28 md:px-12 md:pb-16 md:pt-32">
+      <div className="grid flex-1 grid-cols-1 items-end gap-10 lg:grid-cols-12 lg:gap-12">
+        {/* left: chip + display + lead */}
+        <div className="flex flex-col items-start lg:col-span-7">
           <Reveal>
             <p
-              className="mb-4 text-xs font-medium uppercase md:mb-6 md:text-[14px]"
+              className="mb-5 text-xs font-medium uppercase md:mb-7 md:text-[14px]"
               style={{ color: pal.accent, letterSpacing: "0.05em" }}
             >
               [ {chip} ]
@@ -139,7 +149,7 @@ export function PageHero({
           <Reveal delay={0.12}>
             <h1
               className={`tracking-tight text-[2.6rem] leading-[0.98] sm:text-6xl ${
-                title.length >= 3 ? "md:text-[76px]" : "md:text-[86px]"
+                title.length >= 3 ? "md:text-[68px]" : "md:text-[76px]"
               } md:leading-[0.97]`}
               style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
             >
@@ -150,18 +160,48 @@ export function PageHero({
               ))}
             </h1>
           </Reveal>
+          <Reveal delay={0.26}>
+            <p className="mt-8 max-w-md text-[15px] leading-[1.6] md:text-base">{lead}</p>
+          </Reveal>
         </div>
-        <Reveal delay={0.28} className="md:w-[280px] md:shrink-0">
-          <p className="text-[15px] font-medium leading-[1.4]">{lead}</p>
-          <p
-            className="mt-5 uppercase"
-            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#737373" }}
+
+        {/* right: notched photo with the vertical mask reveal */}
+        <div className="lg:col-span-5">
+          <div
+            className="rx-clip relative aspect-[7/6] w-full overflow-hidden"
+            style={{
+              clipPath: shown ? undefined : "inset(100% 0% 0% 0%)",
+              transition: "clip-path 1.35s cubic-bezier(0.16,1,0.3,1) 0.15s",
+            }}
           >
-            Page {pageIndex} / 05 — © 2026
+            <Image
+              src={image}
+              alt={imageAlt}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 42vw"
+              className="object-cover"
+              style={{
+                transform: shown ? "scale(1.06)" : "scale(1.25)",
+                transition: "transform 1.9s cubic-bezier(0.16,1,0.3,1) 0.15s",
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* baseline: page index + scroll cue */}
+      <Reveal delay={0.36}>
+        <div className="mt-10 flex items-end justify-between border-t border-black/8 pt-5">
+          <p
+            className="uppercase"
+            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.18em", color: "#8a8a8a" }}
+          >
+            Page {pageIndex} / 05 — AMED Ventures © 2026
           </p>
           <ScrollCue />
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
     </section>
   );
 }

@@ -54,6 +54,9 @@ export const PALETTES: Record<
   },
 };
 
+/** The /v2 section system on a white ground (client: 改回白色背景). */
+export const RX_WHITE = { "--rx-paper": "#ffffff" } as React.CSSProperties;
+
 /** RX_NAV remapped onto the /b routes. */
 export const B_NAV = RX_NAV.map((item) => ({
   label: item.label,
@@ -208,6 +211,21 @@ export function GravityHeader({
   visible?: boolean;
   active?: string;
 }) {
+  // Past the first fold the bar earns a ground so it never sits on live text,
+  // and a hairline tracks reading progress.
+  const [scrolled, setScrolled] = useState(false);
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      setScrolled(window.scrollY > 40);
+      setProgress(Math.min(1, window.scrollY / max));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <>
       <link rel="preconnect" href="https://api.fontshare.com" />
@@ -217,14 +235,31 @@ export function GravityHeader({
         href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
       />
       <header
-        className="pointer-events-none fixed inset-x-0 top-0 z-30 flex h-20 items-center justify-between px-6 md:h-24 md:px-12"
+        className={`pointer-events-none fixed inset-x-0 top-0 z-30 flex items-center justify-between px-6 md:px-12 ${scrolled ? "" : "h-20 md:h-24"}`}
         style={{
+          height: scrolled ? 72 : undefined,
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(-16px)",
+          background: scrolled ? "rgba(255,255,255,0.82)" : "transparent",
+          backdropFilter: scrolled ? "blur(18px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(18px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(20,19,26,0.07)" : "1px solid transparent",
           transition:
-            "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1)",
+            "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1), background 0.5s ease, height 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.5s ease",
         }}
       >
+        {/* reading progress */}
+        <span
+          aria-hidden
+          className="absolute bottom-0 left-0 h-px origin-left"
+          style={{
+            width: "100%",
+            background: INK,
+            transform: `scaleX(${progress})`,
+            opacity: scrolled ? 0.35 : 0,
+            transition: "opacity 0.4s ease",
+          }}
+        />
         <Link href="/b" className="pointer-events-auto">
           <Image
             src={asset("/amed/brand/amed-logo-light.png")}
@@ -240,11 +275,14 @@ export function GravityHeader({
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-opacity hover:opacity-60 ${
-                active === item.href ? "underline decoration-1 underline-offset-8" : ""
-              }`}
+              className="group relative text-sm font-medium"
             >
               {item.label}
+              <span
+                aria-hidden
+                className="absolute -bottom-1.5 left-0 h-px w-full origin-left bg-current transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-x-100"
+                style={{ transform: active === item.href ? "scaleX(1)" : "scaleX(0)" }}
+              />
             </Link>
           ))}
         </nav>
