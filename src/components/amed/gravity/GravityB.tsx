@@ -57,7 +57,6 @@ export function GravityB() {
   const gridRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
   const wordBoxRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLSpanElement>(null);
 
   const [bgStage, setBgStage] = useState(0);
   const [loaderValue, setLoaderValue] = useState(0);
@@ -97,10 +96,6 @@ export function GravityB() {
       const descend = 54 + 18 * clamp01(progress / 1.48);
       const release = Math.max(0, progress - 2.04) * 100;
       wordBoxRef.current.style.transform = `translateY(${(descend - release).toFixed(2)}vh)`;
-    }
-    if (lineRef.current) {
-      const grow = clamp01((progress - 1.42) / 0.31) * 205;
-      lineRef.current.style.width = `${grow.toFixed(1)}px`;
     }
     rowRefs.current.forEach((row, r) => {
       if (!row) return;
@@ -336,19 +331,6 @@ export function GravityB() {
             >
               VENTURES
             </span>
-            {!compact ? (
-              <span
-                ref={lineRef}
-                aria-hidden
-                className="pointer-events-none absolute left-1/2 top-1/2"
-                style={{
-                  height: 3,
-                  width: 0,
-                  background: "#ffffff",
-                  transform: "translate(-50%, -50%)",
-                }}
-              />
-            ) : null}
           </div>
 
           <div

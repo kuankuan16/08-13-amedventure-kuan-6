@@ -563,13 +563,6 @@ export function RxFocusRows({
                     </span>
                     <span className="mt-1 block text-sm md:text-base">{row.desc}</span>
                   </span>
-                  <span
-                    className="rx-circle shrink-0"
-                    style={{ borderColor: line, color: ink }}
-                    aria-hidden
-                  >
-                    <Arrow />
-                  </span>
                 </button>
               </FadeUp>
             ))}

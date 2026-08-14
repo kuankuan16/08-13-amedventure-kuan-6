@@ -134,6 +134,7 @@ export function PageHero({
   image,
   imageAlt,
   secondary,
+  secondaryVideo,
   word,
 }: {
   chip: string;
@@ -144,6 +145,8 @@ export function PageHero({
   imageAlt: string;
   /** optional wide photo under the copy block */
   secondary?: string;
+  /** optional looping clip that replaces the wide photo */
+  secondaryVideo?: string;
   /** the big category word, e.g. ABOUT */
   word: string;
 }) {
@@ -229,7 +232,7 @@ export function PageHero({
 
       {/* 02 — the copy lands on white */}
       <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
-        <div className="grid grid-cols-1 items-end gap-10 lg:grid-cols-12">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-8">
             <Reveal>
               <p style={LABEL}>{chip}</p>
@@ -249,13 +252,26 @@ export function PageHero({
               </h2>
             </Reveal>
           </div>
-          <div className="lg:col-span-4 lg:pb-3">
+          <div className="lg:col-span-4">
             <Reveal delay={0.24}>
               <p className="max-w-[30rem] text-base leading-[1.65] md:text-[17px]">{lead}</p>
             </Reveal>
           </div>
         </div>
-        {secondary ? (
+        {secondaryVideo ? (
+          <div className="mt-16 overflow-hidden rounded-[1.4rem] md:mt-20">
+            <video
+              className="block w-full"
+              style={{ aspectRatio: "1180 / 470", objectFit: "cover" }}
+              src={secondaryVideo}
+              poster={secondary}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
+        ) : secondary ? (
           <MaskedPhoto
             className="mt-16 md:mt-20"
             ratio="1180 / 470"
