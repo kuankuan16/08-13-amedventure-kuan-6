@@ -202,7 +202,7 @@ export function RxLogoBand() {
                         alt={c.name}
                         fill
                         sizes="12vw"
-                        className="object-contain opacity-60 grayscale"
+                        className="object-contain opacity-100 grayscale contrast-150 brightness-75"
                       />
                     </span>
                     <span
@@ -225,7 +225,64 @@ export function RxLogoBand() {
    Firm at a glance: mission + image + counters (+ optional highlights)
    ------------------------------------------------------------------ */
 
-export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
+/** Badge fills for the panelled highlight cards — the /v2 tile quartet. */
+const GLANCE_BADGE = ["#e6edf8", "#ede5d3", "#e3eae0", "#ece7f0"];
+
+/** Small line icons for the four firm highlights. */
+function GlanceIcon({ index }: { index: number }) {
+  const common = {
+    width: 22,
+    height: 22,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+    style: { color: "var(--rx-ink)" },
+  };
+  if (index % 4 === 0)
+    // MedTech-focused — cross in a rounded square
+    return (
+      <svg {...common}>
+        <rect x="3" y="3" width="18" height="18" rx="5" />
+        <path d="M12 8v8M8 12h8" />
+      </svg>
+    );
+  if (index % 4 === 1)
+    // Global portfolio — globe
+    return (
+      <svg {...common}>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3c2.5 2.6 2.5 15.4 0 18-2.5-2.6-2.5-15.4 0-18z" />
+      </svg>
+    );
+  if (index % 4 === 2)
+    // Early through growth — rising steps
+    return (
+      <svg {...common}>
+        <path d="M3 19h18" />
+        <path d="M6 19v-5M12 19V9M18 19V5" />
+      </svg>
+    );
+  // Beyond capital — layered support
+  return (
+    <svg {...common}>
+      <path d="M12 3l9 5-9 5-9-5 9-5z" />
+      <path d="M3 13l9 5 9-5" />
+    </svg>
+  );
+}
+
+export function RxGlance({
+  cta,
+  cards = "tile",
+}: {
+  cta?: { label: string; href: string };
+  /** "tile" = pastel blocks (/v2); "panel" = white cards with icon badges (/b) */
+  cards?: "tile" | "panel";
+}) {
   const root = useRef<HTMLElement | null>(null);
 
   useIsomorphicLayoutEffect(() => {
@@ -317,23 +374,56 @@ export function RxGlance({ cta }: { cta?: { label: string; href: string } }) {
             </div>
           </div>
           <div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {RX_ABOUT.highlights.map((item, i) => (
-                <div
-                  key={item.title}
-                  data-rx-spread={i}
-                  className="rounded-2xl p-7"
-                  style={{
-                    background: ["#e6edf8", "#ede5d3", "#e3eae0", "#ece7f0"][i % 4],
-                  }}
-                >
-                  <p className="rx-serif text-2xl" style={{ color: "var(--rx-ink)" }}>
-                    {item.title}
-                  </p>
-                  <p className="mt-4 text-base leading-relaxed">{item.desc}</p>
-                </div>
-              ))}
-            </div>
+            {cards === "panel" ? (
+              <div
+                className="grid overflow-hidden rounded-[1.6rem] sm:grid-cols-2"
+                style={{ background: "#ffffff", border: "1px solid rgba(20,19,26,0.08)" }}
+              >
+                {RX_ABOUT.highlights.map((item, i) => (
+                  <div
+                    key={item.title}
+                    data-rx-spread={i}
+                    className="p-8 md:p-9"
+                    style={{
+                      borderRight: i % 2 === 0 ? "1px solid rgba(20,19,26,0.08)" : undefined,
+                      borderBottom: i < 2 ? "1px solid rgba(20,19,26,0.08)" : undefined,
+                    }}
+                  >
+                    <span
+                      className="flex h-14 w-14 items-center justify-center rounded-full"
+                      style={{ background: GLANCE_BADGE[i % 4] }}
+                    >
+                      <GlanceIcon index={i} />
+                    </span>
+                    <p
+                      className="mt-9 text-[1.35rem] font-bold leading-[1.2] tracking-tight md:text-[1.55rem]"
+                      style={{ color: "var(--rx-ink)" }}
+                    >
+                      {item.title}
+                    </p>
+                    <p className="mt-3.5 text-[15px] leading-[1.55]">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {RX_ABOUT.highlights.map((item, i) => (
+                  <div
+                    key={item.title}
+                    data-rx-spread={i}
+                    className="rounded-2xl p-7"
+                    style={{
+                      background: ["#e6edf8", "#ede5d3", "#e3eae0", "#ece7f0"][i % 4],
+                    }}
+                  >
+                    <p className="rx-serif text-2xl" style={{ color: "var(--rx-ink)" }}>
+                      {item.title}
+                    </p>
+                    <p className="mt-4 text-base leading-relaxed">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
             <div className="mt-8">
               {cta ? (
                 <Link href={cta.href} className="rx-btn">

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import Image from "next/image";
 import { asset } from "@/lib/amed/content";
 import { RX_HERO, RX_MAILTO, RX_PHILOSOPHY } from "@/lib/amed/rx-content";
@@ -9,10 +10,7 @@ import {
   RxLogoBand,
   RxGlance,
   RxFocusCards,
-  RxPhilosophySplit,
-  RxPortfolioGrid,
   RxStoryList,
-  RxTeamStrip,
 } from "@/components/amed/rx/sections";
 import {
   MONO,
@@ -27,6 +25,7 @@ import {
   useSmoothScroll,
 } from "./shared";
 import { getDynamicColors, ROLES, type Role } from "./palette";
+import { PhilosophyScroll } from "./PhilosophyScroll";
 
 /* ------------------------------------------------------------------
    Version B — "Gravity" proposal.
@@ -51,6 +50,8 @@ export function GravityB() {
   const controlRef = useRef({ progress: 0, started: false });
   const mouseRef = useRef({ x: 99, y: 99, isDown: false });
   const readyRef = useRef(false);
+  const wordLeftRef = useRef<HTMLHeadingElement>(null);
+  const wordRightRef = useRef<HTMLSpanElement>(null);
 
   const [bgStage, setBgStage] = useState(0);
   const [loaderValue, setLoaderValue] = useState(0);
@@ -62,6 +63,11 @@ export function GravityB() {
   const onScrollFrame = useCallback((progress: number) => {
     controlRef.current.progress = progress;
     setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
+    // wordmark contracts 1.3 -> 1 across the first ~0.56 of a screen
+    const s = 1.3 - 0.3 * clamp01(progress / 0.56);
+    const t = `scale(${s.toFixed(4)})`;
+    if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
+    if (wordRightRef.current) wordRightRef.current.style.transform = t;
   }, []);
   useSmoothScroll(onScrollFrame);
 
@@ -194,7 +200,7 @@ export function GravityB() {
       glass: new THREE.Color(),
     };
 
-    const sphereGeometry = new THREE.SphereGeometry(1, 48, 48);
+    const sphereGeometry = new RoundedBoxGeometry(1.72, 1.72, 1.72, 5, 0.36);
     type Ball = {
       id: number;
       radius: number;
@@ -583,7 +589,7 @@ export function GravityB() {
           // pure-z motion gives a zero axis — normalizing it would inject NaN
           if (rotAxis.lengthSq() > 0.000001) {
             rotAxis.normalize();
-            const rotAngle = (deltaPos.length() / b.radius) * 0.95;
+            const rotAngle = (deltaPos.length() / b.radius) * 0.55;
             b.meshGroup.rotateOnWorldAxis(rotAxis, rotAngle);
           }
         }
@@ -697,23 +703,48 @@ export function GravityB() {
       {/* header */}
       <GravityHeader visible={pageIn} />
 
-      {/* 01 — HERO: full-bleed wordmark over the sphere field */}
+      {/* 01 — HERO: the wordmark opens oversized and contracts on scroll,
+          each half anchored to its own outer edge (Studio Aton grammar). */}
       <section className="pointer-events-none relative z-10 flex min-h-[100svh] flex-col justify-center">
-        <div className="w-full px-4 md:px-6">
+        <div
+          className="flex w-full items-baseline justify-between px-4 md:px-6"
+          style={heroIn(0.2)}
+        >
           <h1
-            className="whitespace-nowrap text-center"
+            ref={wordLeftRef}
+            className="whitespace-nowrap"
             style={{
               fontFamily: SANS,
               fontWeight: 900,
-              fontSize: "clamp(2.6rem, 12.4vw, 17rem)",
+              fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
               lineHeight: 0.9,
               letterSpacing: "-0.035em",
               color: INK,
-              ...heroIn(0.2),
+              transformOrigin: "left center",
+              transform: "scale(1.3)",
+              willChange: "transform",
             }}
           >
-            AMED Ventures
+            AMED
           </h1>
+          <span
+            ref={wordRightRef}
+            aria-hidden
+            className="whitespace-nowrap"
+            style={{
+              fontFamily: SANS,
+              fontWeight: 900,
+              fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
+              lineHeight: 0.9,
+              letterSpacing: "-0.035em",
+              color: INK,
+              transformOrigin: "right center",
+              transform: "scale(1.3)",
+              willChange: "transform",
+            }}
+          >
+            Ventures
+          </span>
         </div>
         <p
           className="absolute inset-x-0 text-center"
@@ -871,12 +902,10 @@ export function GravityB() {
       >
         <div style={{ background: "#ffffff" }}>
           <RxLogoBand />
-          <RxGlance cta={{ label: "More about AMED", href: "/b/about" }} />
+          <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
           <RxFocusCards />
-          <RxPhilosophySplit />
-          <RxPortfolioGrid featured />
+          <PhilosophyScroll />
           <RxStoryList limit={3} />
-          <RxTeamStrip />
         </div>
       </div>
 

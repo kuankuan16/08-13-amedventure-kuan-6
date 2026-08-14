@@ -6,11 +6,11 @@ import { B_ABOUT } from "@/lib/amed/b-content";
 import {
   RxGlance,
   RxFocusRows,
-  RxPhilosophySplit,
   RxProcess,
 } from "@/components/amed/rx/sections";
 import { MONO, SERIF, INK, PALETTES, Reveal } from "../shared";
 import { PageShell, PageHero } from "../PageShell";
+import { PhilosophyScroll } from "../PhilosophyScroll";
 
 const pal = PALETTES.cyan;
 
@@ -66,13 +66,13 @@ export function AboutB() {
       </section>
 
       {/* firm highlights — /v2 spread-from-centre tiles with the masked photo */}
-      <RxGlance />
+      <RxGlance cards="panel" />
 
       {/* investment focus — /v2 numbered rows with the hover image panel */}
       <RxFocusRows />
 
-      {/* philosophy — /v2 sticky stacking cards */}
-      <RxPhilosophySplit />
+      {/* philosophy — scroll-scrubbed statements */}
+      <PhilosophyScroll />
 
       {/* how we partner */}
       <RxProcess />
