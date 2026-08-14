@@ -295,7 +295,7 @@ export function GravityB() {
       </section>
 
       {/* 02 — the studio statement, centred (Studio Aton layout) */}
-      <section className="rx-frame relative z-10 flex min-h-[70svh] items-center px-6 py-16 md:px-10 md:py-20">
+      <section className="rx-frame relative z-10 flex items-center px-6 py-14 md:px-10 md:py-16">
         <div className="mx-auto w-full max-w-[62rem] text-center">
           <Reveal>
             <p
