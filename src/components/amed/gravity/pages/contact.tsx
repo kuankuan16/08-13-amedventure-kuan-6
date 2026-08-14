@@ -33,7 +33,6 @@ export function ContactB() {
         title={B_CONTACT.title}
         lead={B_CONTACT.lead}
         palette="rose"
-        pageIndex="05"
         image={asset("/amed/images/page-contact.jpg")}
         word="CONTACT"
         imageAlt="An open, sunlit studio entrance"

@@ -13,7 +13,6 @@ export function TeamB() {
         title={B_TEAM.title}
         lead={B_TEAM.lead}
         palette="cyan"
-        pageIndex="04"
         image={asset("/amed/images/page-team.jpg")}
         word="TEAM"
         imageAlt="The investment team talking together in morning light"

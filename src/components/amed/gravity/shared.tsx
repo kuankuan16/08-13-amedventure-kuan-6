@@ -12,7 +12,10 @@ import { RX_NAV, RX_MAILTO } from "@/lib/amed/rx-content";
    the wheel-lerp smooth scroll, and the fixed header / dark footer.
    ------------------------------------------------------------------ */
 
-export const MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
+/** Design system: two typefaces only — Fraunces (serif) and Satoshi (sans).
+ *  MONO keeps its name for the tracked-out label role, but it is Satoshi. */
+export const MONO =
+  'Satoshi, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif';
 export const SERIF = "var(--font-fraunces), Georgia, serif";
 /** 黑體 — the grotesque used for the hero wordmark. */
 export const SANS = 'Satoshi, ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif';

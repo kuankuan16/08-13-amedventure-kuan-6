@@ -7,7 +7,6 @@ import { RX_MAILTO } from "@/lib/amed/rx-content";
 import {
   RxLogoBand,
   RxGlance,
-  RxStoryList,
 } from "@/components/amed/rx/sections";
 import {
   MONO,
@@ -24,6 +23,7 @@ import {
   BRAND_BLUE,
 } from "./shared";
 import { RxCta, RxFooter } from "@/components/amed/rx/ui";
+import { StoryFeature } from "./StoryFeature";
 import { PhilosophyStack } from "./PhilosophyStack";
 
 /* ------------------------------------------------------------------
@@ -257,7 +257,7 @@ export function GravityB() {
           {/* wordmark, seated low */}
           <div
             className="pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
-            style={{ top: "58%", ...heroIn(0.2) }}
+            style={{ top: "66%", ...heroIn(0.2) }}
           >
             <h1
               ref={wordLeftRef}
@@ -306,7 +306,7 @@ export function GravityB() {
       </section>
 
       {/* 02 — the studio statement, centred (Studio Aton layout) */}
-      <section className="rx-frame relative z-10 flex items-center px-6 py-14 md:px-10 md:py-16">
+      <section className="rx-frame relative z-10 flex items-center px-6 py-28 md:px-10 md:py-32">
         <div className="mx-auto w-full max-w-[62rem] text-center">
           <Reveal>
             <p
@@ -353,7 +353,7 @@ export function GravityB() {
           <RxLogoBand fullBleed />
           <RxGlance cards="panel" cta={{ label: "More about AMED", href: "/b/about" }} />
           <PhilosophyStack />
-          <RxStoryList limit={3} serifTitles roomBelow />
+          <StoryFeature />
         </div>
       </div>
 

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
-  MONO,
   SERIF,
   SANS,
   RX_WHITE,
@@ -131,7 +130,6 @@ export function PageHero({
   title,
   lead,
   palette,
-  pageIndex,
   image,
   imageAlt,
   word,
@@ -140,7 +138,6 @@ export function PageHero({
   title: readonly string[];
   lead: string;
   palette?: PaletteKey;
-  pageIndex: string;
   image: string;
   imageAlt: string;
   /** the big category word, e.g. ABOUT */
@@ -221,21 +218,8 @@ export function PageHero({
         </div>
 
         {/* baseline */}
-        <div className="absolute inset-x-0 bottom-0 px-6 pb-8 md:px-10 md:pb-10">
-          <div className="rx-frame flex items-end justify-between">
-            <p
-              className="uppercase"
-              style={{
-                fontFamily: MONO,
-                fontSize: 10,
-                letterSpacing: "0.18em",
-                color: "rgba(255,255,255,0.72)",
-              }}
-            >
-              Page {pageIndex} / 05 — AMED Ventures © 2026
-            </p>
-            <ScrollDial light />
-          </div>
+        <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-8 md:pb-10">
+          <ScrollDial light />
         </div>
       </section>
 

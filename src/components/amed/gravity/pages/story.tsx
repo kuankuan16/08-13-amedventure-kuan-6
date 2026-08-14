@@ -13,7 +13,6 @@ export function StoryB() {
         title={B_STORY.title}
         lead={B_STORY.lead}
         palette="royal"
-        pageIndex="03"
         image={asset("/amed/images/page-story.jpg")}
         word="STORY"
         imageAlt="A clinician and an engineer reviewing clinical imaging together"

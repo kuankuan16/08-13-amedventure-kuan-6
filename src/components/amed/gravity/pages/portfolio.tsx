@@ -141,7 +141,6 @@ export function PortfolioB() {
         title={B_PORTFOLIO.title}
         lead={B_PORTFOLIO.lead}
         palette="rose"
-        pageIndex="02"
         image={asset("/amed/images/page-portfolio.jpg")}
         word="PORTFOLIO"
         imageAlt="A founding team examining a device prototype at a workbench"

@@ -20,7 +20,7 @@
   --rx-paper: #faf8f3;
   --rx-grey: #eaf0f9;
   --rx-accent: var(--cyan);
-  font-family: "Satoshi", var(--font-instrument), ui-sans-serif, sans-serif;
+  font-family: "Satoshi", ui-sans-serif, system-ui, sans-serif;
   background: var(--rx-paper);
   color: var(--rx-body);
 }

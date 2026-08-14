@@ -15,7 +15,6 @@ export function AboutB() {
         title={B_ABOUT.title}
         lead={B_ABOUT.lead}
         palette="cyan"
-        pageIndex="01"
         image={asset("/amed/images/page-about.jpg")}
         word="ABOUT"
         imageAlt="Two partners in conversation beside a bright studio window"
@@ -56,6 +55,38 @@ export function AboutB() {
               <p className="text-base leading-[1.65] md:text-[17px]">{B_ABOUT.leadRest}</p>
             </Reveal>
           </div>
+        </div>
+      </section>
+
+      {/* the four convictions, verbatim from the source about page */}
+      <section className="rx-frame px-6 pb-8 md:px-10 md:pb-12">
+        <div className="grid grid-cols-1 gap-x-10 gap-y-12 border-t border-black/10 pt-12 sm:grid-cols-2 lg:grid-cols-4">
+          {B_ABOUT.principles.map((item, i) => (
+            <Reveal key={item.index} delay={i * 0.07}>
+              <p
+                className="uppercase"
+                style={{
+                  fontFamily: MONO,
+                  fontSize: 11,
+                  letterSpacing: "0.22em",
+                  color: BRAND_BLUE,
+                }}
+              >
+                {item.index}
+              </p>
+              <h3
+                className="mt-5 text-[1.55rem] leading-[1.15] md:text-[1.75rem]"
+                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+              >
+                {item.title.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </h3>
+              <p className="mt-4 text-[15px] leading-[1.65] text-neutral-600">{item.desc}</p>
+            </Reveal>
+          ))}
         </div>
       </section>
 
