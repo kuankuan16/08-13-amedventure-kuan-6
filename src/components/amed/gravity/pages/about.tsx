@@ -17,6 +17,7 @@ export function AboutB() {
         palette="cyan"
         image={asset("/amed/images/page-about.jpg")}
         secondary={asset("/amed/images/hero-b-02.jpg")}
+        secondaryVideo={asset("/amed/video/about-studio.mp4")}
         word="ABOUT"
         imageAlt="Two partners in conversation beside a bright studio window"
       />
