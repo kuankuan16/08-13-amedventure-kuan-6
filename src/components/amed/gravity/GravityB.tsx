@@ -208,7 +208,7 @@ export function GravityB() {
       )}
 
       {/* header */}
-      <GravityHeader visible={pageIn} onMedia />
+      <GravityHeader visible={pageIn} onMedia largeLogo />
 
       {/* 01 — HERO: a grid of medical-venture frames, sized so the centre
           frame fills the viewport, then scaled down on scroll to reveal its
@@ -320,7 +320,7 @@ export function GravityB() {
 
       {/* 02 — the studio statement, centred (Studio Aton layout) */}
       <section className="rx-frame relative z-10 flex items-center px-6 py-28 md:px-10 md:py-32">
-        <div className="mx-auto w-full max-w-[62rem] text-center">
+        <div className="mx-auto w-full max-w-[78rem] text-center">
           <Reveal>
             <p
               className="uppercase"

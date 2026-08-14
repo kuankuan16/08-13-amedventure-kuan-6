@@ -273,11 +273,14 @@ export function GravityHeader({
   visible = true,
   active,
   onMedia = false,
+  largeLogo = false,
 }: {
   visible?: boolean;
   active?: string;
   /** the bar opens over full-bleed media, so it reverses out until scrolled */
   onMedia?: boolean;
+  /** the home hero carries a larger mark */
+  largeLogo?: boolean;
 }) {
   // Past the first fold the bar earns a ground so it never sits on live text,
   // and a hairline tracks reading progress.
@@ -340,7 +343,7 @@ export function GravityHeader({
             width={1999}
             height={452}
             priority
-            className="h-6 w-auto md:h-7"
+            className={largeLogo ? "h-9 w-auto md:h-[2.625rem]" : "h-6 w-auto md:h-7"}
           />
         </Link>
         <nav className="pointer-events-auto hidden items-center gap-10 md:flex">
