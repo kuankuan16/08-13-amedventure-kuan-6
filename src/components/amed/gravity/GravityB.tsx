@@ -73,7 +73,7 @@ export function GravityB() {
     setBgStage(progress > 1.55 ? 2 : progress > 0.7 ? 1 : 0);
     // wordmark contracts 1.3 -> 1 across the first ~0.56 of a screen
     const k = clamp01(progress / 0.9);
-    const s = 1.3 - 0.3 * k;
+    const s = 1.28 - 0.28 * k;
     const t = `scale(${s.toFixed(4)})`;
     if (wordLeftRef.current) wordLeftRef.current.style.transform = t;
     if (wordRightRef.current) wordRightRef.current.style.transform = t;
@@ -278,12 +278,12 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
+                fontSize: "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
                 transformOrigin: "left center",
-                transform: "scale(1.3)",
+                transform: "scale(1.28)",
                 willChange: "transform",
               }}
             >
@@ -296,16 +296,16 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: "clamp(2.2rem, 9.4vw, 13rem)",
+                fontSize: "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
                 transformOrigin: "right center",
-                transform: "scale(1.3)",
+                transform: "scale(1.28)",
                 willChange: "transform",
               }}
             >
-              Ventures
+              VENTURES
             </span>
           </div>
 
