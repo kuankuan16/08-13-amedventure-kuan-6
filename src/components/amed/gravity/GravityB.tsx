@@ -310,7 +310,7 @@ export function GravityB() {
           </div>
 
           <div
-            className="pointer-events-none absolute inset-x-0 flex justify-end px-6 md:px-12"
+            className="pointer-events-none absolute inset-x-0 flex justify-center px-6"
             style={{ bottom: "clamp(56px, 10vh, 120px)", ...heroIn(0.5) }}
           >
             <ScrollDial light />
