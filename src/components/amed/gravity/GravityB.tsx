@@ -42,7 +42,7 @@ const RATIO_CENTRE = "1465 / 820";
 const RATIO_OUTER = "2216 / 820";
 /** Three rows of medical-venture frames; the centre of row 2 is the hero. */
 const HERO_GRID = [
-  ["/amed/images/focus-01.jpg", "/amed/images/focus-02.jpg"],
+  ["/amed/images/micro-01.jpg", "/amed/images/micro-02.jpg"],
   ["/amed/images/focus-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/grid-04.jpg"],
   ["/amed/images/focus-04.jpg", "/amed/images/grid-06.jpg"],
 ];
@@ -254,10 +254,17 @@ export function GravityB() {
 
           {/* a flat 20% veil across the whole hero viewport — it has to cover
               the neighbouring frames too once the grid contracts */}
+          {/* 40% veil across the whole hero viewport */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0"
+            style={{ background: "rgba(90,92,96,0.4)" }}
+          />
+
           {/* wordmark, seated low */}
           <div
             className="pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
-            style={{ top: "66%", ...heroIn(0.2) }}
+            style={{ top: "56%", ...heroIn(0.2) }}
           >
             <h1
               ref={wordLeftRef}
@@ -297,8 +304,8 @@ export function GravityB() {
           </div>
 
           <div
-            className="pointer-events-none absolute inset-x-0 flex justify-center"
-            style={{ bottom: "clamp(28px, 5vh, 56px)", ...heroIn(0.5) }}
+            className="pointer-events-none absolute inset-x-0 flex justify-end px-6 md:px-12"
+            style={{ bottom: "clamp(56px, 10vh, 120px)", ...heroIn(0.5) }}
           >
             <ScrollDial light />
           </div>

@@ -136,6 +136,8 @@ export const RX_FOCUS = {
 export type RxMilestone = {
   title: string;
   source: string;
+  /** the published article this milestone points at */
+  url?: string;
   tag: "Financing" | "Clinical" | "Regulatory" | "Commercial";
   company: string;
   date: string;
@@ -153,6 +155,7 @@ export const RX_STORY = {
       tag: "Financing",
       company: "Rejoni",
       date: "16 Jun 2026",
+      url: "https://www.businesswire.com/news/home/20260616503636/en/Rejoni-Inc.-Secures-%2425-Million-in-Financing-to-Accelerate-the-Juveena-Hydrogel-System-Toward-FDA-Approval-and-Launch",
     },
     {
       title:
@@ -161,6 +164,7 @@ export const RX_STORY = {
       tag: "Commercial",
       company: "Tulavi Therapeutics",
       date: "15 Jun 2026",
+      url: "https://blog.orthoindy.com/2026/06/15/orthoindy-indiana-hand-to-shoulder-center-first-in-indiana-to-use-new-technology-during-combined-amputation-and-peripheral-nerve-procedure/",
     },
     {
       title:
@@ -169,6 +173,7 @@ export const RX_STORY = {
       tag: "Commercial",
       company: "Benthic Genomics",
       date: "15 Apr 2026",
+      url: "https://www.benthic.bio/post/benthic-genomics-adds-mako-to-the-benthic-analysis-platform-for-high-resolution-immune-region-analys",
     },
     {
       title: "Supira Gets FDA Green Light to Conduct Ventricular Assist Device Study",
@@ -176,6 +181,7 @@ export const RX_STORY = {
       tag: "Regulatory",
       company: "Supira Medical",
       date: "8 Apr 2026",
+      url: "https://www.massdevice.com/supira-fda-nod-ventricular-assist-study/",
     },
     {
       title: "Imperative Care initiates CLEAR-IT clinical study",
@@ -183,6 +189,7 @@ export const RX_STORY = {
       tag: "Clinical",
       company: "Imperative Care",
       date: "26 Mar 2026",
+      url: "https://vascularnews.com/imperative-care-initiates-clear-it-clinical-study/",
     },
     {
       title:
@@ -191,6 +198,7 @@ export const RX_STORY = {
       tag: "Clinical",
       company: "Kandu",
       date: "12 Feb 2026",
+      url: "https://www.prnewswire.com/news-releases/randomized-controlled-trial-demonstrated-positive-outcomes-for-fda-cleared-brain-computer-interface-ipsihand-system-in-chronic-stroke-rehabilitation-302685764.html",
     },
     {
       title:
@@ -199,6 +207,7 @@ export const RX_STORY = {
       tag: "Commercial",
       company: "Instylla",
       date: "28 Jan 2026",
+      url: "https://www.prnewswire.com/news-releases/instylla-initiates-commercial-launch-with-first-use-of-the-embrace-hydrogel-embolic-system-302671903.html",
     },
     {
       title:
@@ -207,6 +216,7 @@ export const RX_STORY = {
       tag: "Regulatory",
       company: "Rejoni",
       date: "13 Jan 2026",
+      url: "https://www.businesswire.com/news/home/20260113722822/en/FDA-Files-Rejonis-Juveena-Hydrogel-System-PMA-for-the-Prevention-of-Intrauterine-Adhesions",
     },
     {
       title:
@@ -215,6 +225,7 @@ export const RX_STORY = {
       tag: "Commercial",
       company: "Tulavi Therapeutics",
       date: "13 Jan 2026",
+      url: "https://www.prnewswire.com/news-releases/tulavi-therapeutics-receives-innovative-technology-contract-from-vizient-for-the-allay-hydrogel-cap-302659243.html",
     },
     {
       title:
@@ -223,6 +234,7 @@ export const RX_STORY = {
       tag: "Commercial",
       company: "Benthic Genomics",
       date: "10 Sept 2025",
+      url: "https://www.benthic.bio/post/anglerlaunch",
     },
   ] satisfies RxMilestone[],
 } as const;

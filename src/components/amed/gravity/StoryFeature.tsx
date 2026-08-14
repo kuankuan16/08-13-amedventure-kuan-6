@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { asset } from "@/lib/amed/content";
 import { RX_STORY } from "@/lib/amed/rx-content";
 import { B_STORY } from "@/lib/amed/b-content";
@@ -66,8 +65,10 @@ export function StoryFeature() {
       <div className="mt-10 grid grid-cols-1 gap-3.5 lg:grid-cols-12">
         {/* lead story */}
         <Reveal delay={0.1} className="lg:col-span-7">
-          <Link
-            href="/b/story"
+          <a
+            href={lead.url ?? "/b/story"}
+            target={lead.url ? "_blank" : undefined}
+            rel={lead.url ? "noreferrer" : undefined}
             className="group flex h-full flex-col rounded-[1.4rem] p-7 transition-colors md:p-9"
             style={{ background: PANEL }}
           >
@@ -102,15 +103,17 @@ export function StoryFeature() {
                 </span>
               </div>
             </div>
-          </Link>
+          </a>
         </Reveal>
 
         {/* secondaries */}
         <div className="flex flex-col gap-3.5 lg:col-span-5">
           {rest.map((m, i) => (
             <Reveal key={m.title} delay={0.16 + i * 0.08} className="flex-1">
-              <Link
-                href="/b/story"
+              <a
+                href={m.url ?? "/b/story"}
+                target={m.url ? "_blank" : undefined}
+                rel={m.url ? "noreferrer" : undefined}
                 className="group flex h-full flex-col rounded-[1.4rem] p-7 md:p-8"
                 style={{ background: PANEL }}
               >
@@ -133,7 +136,7 @@ export function StoryFeature() {
                     />
                   </div>
                 </div>
-              </Link>
+              </a>
             </Reveal>
           ))}
         </div>

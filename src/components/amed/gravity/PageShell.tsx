@@ -132,6 +132,7 @@ export function PageHero({
   palette,
   image,
   imageAlt,
+  secondary,
   word,
 }: {
   chip: string;
@@ -140,6 +141,8 @@ export function PageHero({
   palette?: PaletteKey;
   image: string;
   imageAlt: string;
+  /** optional wide photo under the copy block */
+  secondary?: string;
   /** the big category word, e.g. ABOUT */
   word: string;
 }) {
@@ -196,7 +199,7 @@ export function PageHero({
                 transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
               }}
             />
-            <div className="absolute inset-0" style={{ background: "rgba(90,92,96,0.2)" }} />
+            <div className="absolute inset-0" style={{ background: "rgba(90,92,96,0.4)" }} />
           </div>
         </div>
 
@@ -256,7 +259,70 @@ export function PageHero({
             </Reveal>
           </div>
         </div>
+        {secondary ? (
+          <MaskedPhoto
+            className="mt-16 md:mt-20"
+            ratio="1180 / 470"
+            src={secondary}
+            alt={imageAlt}
+          />
+        ) : null}
       </section>
     </>
+  );
+}
+
+/** Notched photo with the vertical mask reveal used across the site. */
+export function MaskedPhoto({
+  src,
+  alt,
+  ratio = "631 / 590",
+  className = "",
+}: {
+  src: string;
+  alt: string;
+  ratio?: string;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [shown, setShown] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (e) => {
+        if (e[0].isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return (
+    <div ref={ref} className={className}>
+      <div
+        className="rx-clip relative w-full overflow-hidden"
+        style={{
+          aspectRatio: ratio,
+          clipPath: shown ? undefined : "inset(100% 0% 0% 0%)",
+          transition: "clip-path 1.3s cubic-bezier(0.16,1,0.3,1)",
+        }}
+      >
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 46vw"
+          className="object-cover"
+          style={{
+            transform: shown ? "scale(1.05)" : "scale(1.24)",
+            transition: "transform 1.9s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        />
+      </div>
+    </div>
   );
 }

@@ -464,27 +464,40 @@ export function RxGlance({
    Focus — full dark rows (focus page) + compact cards (home)
    ------------------------------------------------------------------ */
 
-export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
+export function RxFocusRows({
+  withIntro = true,
+  tone = "dark",
+}: {
+  withIntro?: boolean;
+  /** "sky" swaps the dark panel for the light-blue one (/b) */
+  tone?: "dark" | "sky";
+}) {
+  const sky = tone === "sky";
+  const bg = sky ? "#c5d7f1" : "var(--rx-dark)";
+  const body = sky ? "rgba(20,19,26,0.66)" : "rgba(255,255,255,0.72)";
+  const ink = sky ? "#14131a" : "#fff";
+  const line = sky ? "rgba(20,19,26,0.14)" : "var(--rx-dark-line)";
+  const chipBg = sky ? "rgba(20,19,26,0.07)" : "rgba(255,255,255,0.08)";
   const [active, setActive] = useState(0);
   return (
-    <section style={{ background: "var(--rx-dark)", color: "rgba(255,255,255,0.72)" }}>
+    <section style={{ background: bg, color: body }}>
       <div
         className="rx-frame px-6 py-16 md:px-10 md:py-24"
-        style={{ borderColor: "var(--rx-dark-line)" }}
+        style={{ borderColor: line }}
       >
         {withIntro ? (
           <>
             <FadeUp>
               <span
                 className="rx-chip"
-                style={{ background: "rgba(255,255,255,0.08)", color: "#fff" }}
+                style={{ background: chipBg, color: ink }}
               >
                 {RX_FOCUS.chip}
               </span>
             </FadeUp>
             <div className="mt-6 flex flex-wrap items-end justify-between gap-8">
               <SlideIn className="rx-h2 max-w-[38rem]">
-                <span style={{ color: "#fff" }}>
+                <span style={{ color: ink }}>
                   {RX_FOCUS.title.map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -513,17 +526,17 @@ export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
                   onFocus={() => setActive(i)}
                   className="rx-row flex w-full items-center gap-6 py-7 text-left transition-opacity duration-300"
                   style={{
-                    borderTop: "1px solid var(--rx-dark-line)",
+                    borderTop: `1px solid ${line}`,
                     opacity: active === i ? 1 : 0.55,
                   }}
                 >
-                  <span className="text-sm font-bold" style={{ color: "var(--rx-accent)" }}>
+                  <span className="text-sm font-bold" style={{ color: sky ? "#0E7FA5" : "var(--rx-accent)" }}>
                     {row.index}
                   </span>
                   <span className="flex-1">
                     <span
                       className="rx-serif block text-2xl md:text-4xl"
-                      style={{ color: "#fff" }}
+                      style={{ color: ink }}
                     >
                       {row.title}
                     </span>
@@ -531,7 +544,7 @@ export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
                   </span>
                   <span
                     className="rx-circle shrink-0"
-                    style={{ borderColor: "var(--rx-dark-line)", color: "#fff" }}
+                    style={{ borderColor: line, color: ink }}
                     aria-hidden
                   >
                     <Arrow />
@@ -539,7 +552,7 @@ export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
                 </button>
               </FadeUp>
             ))}
-            <div style={{ borderTop: "1px solid var(--rx-dark-line)" }} />
+            <div style={{ borderTop: `1px solid ${line}` }} />
           </div>
 
           <div className="relative hidden overflow-hidden rounded-2xl lg:block">
@@ -556,7 +569,7 @@ export function RxFocusRows({ withIntro = true }: { withIntro?: boolean }) {
         </div>
       </div>
 
-      <div style={{ borderTop: "1px solid var(--rx-dark-line)" }}>
+      <div style={{ borderTop: `1px solid ${line}` }}>
         <div className="overflow-hidden py-8">
           <div className="marquee-track items-center gap-6" style={{ animationDuration: "36s" }}>
             {[0, 1].map((copy) => (
@@ -846,7 +859,9 @@ export function RxStoryList({
           {items.map((m) => (
             <a
               key={m.title}
-              href={RX_MAILTO}
+              href={m.url ?? RX_MAILTO}
+              target={m.url ? "_blank" : undefined}
+              rel={m.url ? "noreferrer" : undefined}
               className="rx-row group grid gap-3 py-6 transition-colors duration-300 md:grid-cols-[7rem_1fr_11rem_8rem_3rem] md:items-center md:gap-6"
               style={{ borderTop: "1px dashed var(--rx-line)" }}
             >
