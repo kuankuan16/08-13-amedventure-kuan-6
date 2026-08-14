@@ -7,6 +7,7 @@ import {
   MONO,
   SERIF,
   ACCENT,
+  WHITE_BG,
   Reveal,
   GravityHeader,
   GravityFooter,
@@ -595,12 +596,8 @@ export function GravityB() {
     };
   }, []);
 
-  /* ---- background gradients (AMED morph) ---- */
-  const gradients = [
-    "radial-gradient(circle at center, #ffffff 0%, #ecf8fc 35%, #bfe8f4 100%)",
-    "radial-gradient(circle at center, #ffffff 0%, #ecefff 38%, #c2d1ff 100%)",
-    "radial-gradient(circle at center, #ffffff 0%, #fff0f1 38%, #ffd1d5 100%)",
-  ];
+  /* ---- background: white throughout; the spheres carry the colour ---- */
+  const gradients = [WHITE_BG, WHITE_BG, WHITE_BG];
 
   const heroIn = (delay: number) =>
     ({
@@ -633,8 +630,7 @@ export function GravityB() {
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
           style={{
             gap: 26,
-            background:
-              "radial-gradient(circle at 50% 42%, #ffffff 0%, #eef8fb 45%, #d5eef7 100%)",
+            background: WHITE_BG,
             opacity: loaderLeaving ? 0 : 1,
             transition: "opacity 0.55s cubic-bezier(0.65,0,0.35,1)",
             pointerEvents: loaderLeaving ? "none" : "auto",

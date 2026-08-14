@@ -21,6 +21,12 @@ export type PaletteKey = "cyan" | "royal" | "rose";
 /** Buttons stay gradient-free (優雅摩登): solid ink on light, solid white on dark. */
 export const INK = "#111213";
 
+/** White ground across the whole proposal — the spheres carry all the colour.
+ *  A barely-there neutral vignette keeps the 3D field from floating on a
+ *  dead-flat field; it still reads as white. */
+export const WHITE_BG =
+  "radial-gradient(circle at center, #ffffff 0%, #ffffff 58%, #f6f7f8 100%)";
+
 export const PALETTES: Record<
   PaletteKey,
   { ball: string; accent: string; chip: string; soft: string; bg: string }
@@ -30,21 +36,21 @@ export const PALETTES: Record<
     accent: "#0E7FA5",
     chip: "rgba(14,127,165,0.8)",
     soft: "#EAF7FB",
-    bg: "radial-gradient(circle at center, #ffffff 0%, #ecf8fc 35%, #bfe8f4 100%)",
+    bg: WHITE_BG,
   },
   royal: {
     ball: "#2F69FF",
     accent: "#2447C7",
     chip: "rgba(47,105,255,0.85)",
     soft: "#ECEFFF",
-    bg: "radial-gradient(circle at center, #ffffff 0%, #ecefff 38%, #c2d1ff 100%)",
+    bg: WHITE_BG,
   },
   rose: {
     ball: "#FFC5C2",
     accent: "#D13A56",
     chip: "rgba(209,58,86,0.85)",
     soft: "#FFF5F4",
-    bg: "radial-gradient(circle at center, #ffffff 0%, #fff0f1 38%, #ffd1d5 100%)",
+    bg: WHITE_BG,
   },
 };
 

@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { RX_ABOUT, RX_FOCUS, RX_PHILOSOPHY, RX_PROCESS } from "@/lib/amed/rx-content";
-import { MONO, SERIF, PALETTES, Reveal, Glass } from "../shared";
-import { PageShell, PageHero } from "../PageShell";
+import Link from "next/link";
+import { RX_FOCUS } from "@/lib/amed/rx-content";
+import { B_ABOUT } from "@/lib/amed/b-content";
+import { MONO, SERIF, INK, PALETTES, Reveal, Glass, ChipLabel } from "../shared";
+import { PageShell, PageHero, SectionHead } from "../PageShell";
 
 const pal = PALETTES.cyan;
 
@@ -11,58 +13,83 @@ export function AboutB() {
   return (
     <PageShell palette="cyan" active="/b/about">
       <PageHero
-        chip={`01 — About · ${RX_ABOUT.chip}`}
-        title={RX_ABOUT.title}
-        lead={RX_ABOUT.body}
+        chip={B_ABOUT.chip}
+        title={B_ABOUT.title}
+        lead={B_ABOUT.lead}
         palette="cyan"
+        pageIndex="01"
       />
 
-      {/* firm highlights */}
-      <section className="px-6 pb-24 md:px-12 md:pb-32">
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
-          {RX_ABOUT.highlights.map((card, i) => (
-            <Reveal key={card.title} delay={i * 0.08}>
-              <Glass hover innerClassName="px-6 py-6">
+      {/* 01 — founding conviction statement */}
+      <section className="flex min-h-[80svh] items-center px-6 py-28 md:px-12 md:py-36">
+        <div className="grid w-full grid-cols-1 items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-8">
+            <Reveal>
+              <ChipLabel text="01 — Founding conviction" color={pal.chip} />
+            </Reveal>
+            <Reveal delay={0.12}>
+              <h2
+                className="mt-6 text-[2.4rem] leading-[1.0] tracking-tight sm:text-5xl md:text-[68px] md:leading-[0.98]"
+                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+              >
+                {B_ABOUT.statement.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </h2>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-4 lg:pb-3">
+            <Reveal delay={0.24}>
+              <p className="text-base leading-[1.6] text-neutral-700 md:text-[17px]">
+                {B_ABOUT.leadRest}
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 02 — principles */}
+      <section className="px-6 py-24 md:px-12 md:py-32">
+        <SectionHead index="02" label="What we believe in" title={["Four convictions,", "one standard."]} palette="cyan" />
+        <div className="mt-14 grid grid-cols-1 gap-3.5 md:grid-cols-2">
+          {B_ABOUT.principles.map((item, i) => (
+            <Reveal key={item.index} delay={i * 0.07}>
+              <Glass hover innerClassName="flex h-full flex-col p-7 md:p-9">
                 <div className="flex items-center justify-between">
-                  <span style={{ fontFamily: MONO, fontSize: 10 }}>0{i + 1}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11, color: pal.accent }}>
+                    {item.index}
+                  </span>
                   <span className="h-2 w-2 rounded-full" style={{ background: pal.accent }} />
                 </div>
-                <p className="mt-4 text-lg font-semibold" style={{ fontFamily: SERIF }}>
-                  {card.title}
-                </p>
-                <p className="mt-1.5 text-[13px] leading-[1.5] text-neutral-500">{card.desc}</p>
+                <h3
+                  className="mt-8 text-[26px] leading-[1.12] md:text-[32px]"
+                  style={{ fontFamily: SERIF, fontWeight: 500 }}
+                >
+                  {item.title.map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </h3>
+                <p className="mt-4 text-[15px] leading-[1.65] text-neutral-600">{item.desc}</p>
               </Glass>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* investment focus */}
-      <section className="px-6 pb-24 md:px-12 md:pb-32">
-        <Reveal>
-          <p
-            className="uppercase"
-            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.25em", color: pal.chip }}
-          >
-            [ 02 — Investment Focus ]
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            className="mt-6 max-w-3xl text-4xl leading-[1.02] tracking-tight md:text-6xl"
-            style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-          >
-            {RX_FOCUS.title[0]}
-            <br />
-            {RX_FOCUS.title[1]}
-          </h2>
-        </Reveal>
-        <Reveal delay={0.18}>
-          <p className="mt-6 max-w-xl text-base leading-[1.55] text-neutral-700 md:text-[17px]">
-            {RX_FOCUS.intro}
-          </p>
-        </Reveal>
-        <div className="mt-12 flex flex-col gap-3.5">
+      {/* 03 — investment focus */}
+      <section className="px-6 py-24 md:px-12 md:py-32">
+        <SectionHead
+          index="03"
+          label="Investment focus"
+          title={B_ABOUT.focusTitle}
+          lead={B_ABOUT.focusBody[0]}
+          palette="cyan"
+        />
+        <div className="mt-14 flex flex-col gap-3.5">
           {RX_FOCUS.rows.map((row, i) => (
             <Reveal key={row.index} delay={i * 0.06}>
               <Glass hover innerClassName="flex flex-col gap-6 p-6 md:flex-row md:items-center md:gap-10 md:p-7">
@@ -83,13 +110,13 @@ export function AboutB() {
                 </div>
                 <div className="min-w-0">
                   <h3
-                    className="text-2xl md:text-[28px]"
-                    style={{ fontFamily: SERIF, fontWeight: 500 }}
+                    className="text-2xl md:text-[30px]"
+                    style={{ fontFamily: SERIF, fontWeight: 400 }}
                   >
                     {row.title}
                   </h3>
-                  <p className="mt-2 max-w-2xl text-[15px] leading-[1.55] text-neutral-600">
-                    {row.detail}
+                  <p className="mt-2 max-w-2xl text-[15px] leading-[1.6] text-neutral-600">
+                    {row.desc}
                   </p>
                 </div>
               </Glass>
@@ -97,7 +124,7 @@ export function AboutB() {
           ))}
         </div>
         <Reveal delay={0.1}>
-          <div className="mt-10">
+          <div className="mt-12">
             <p
               className="uppercase text-neutral-400"
               style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em" }}
@@ -124,84 +151,59 @@ export function AboutB() {
         </Reveal>
       </section>
 
-      {/* philosophy */}
-      <section className="px-6 pb-24 md:px-12 md:pb-32">
-        <Reveal>
-          <p
-            className="uppercase"
-            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.25em", color: pal.chip }}
-          >
-            [ 03 — {RX_PHILOSOPHY.chip} ]
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            className="mt-6 text-4xl leading-[1.02] tracking-tight md:text-6xl"
-            style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-          >
-            {RX_PHILOSOPHY.title[0]}
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid grid-cols-1 gap-3.5 md:grid-cols-2">
-          {RX_PHILOSOPHY.items.map((item, i) => (
-            <Reveal key={item.index} delay={i * 0.07}>
-              <Glass hover innerClassName="flex h-full flex-col p-7 md:p-8">
-                <span style={{ fontFamily: MONO, fontSize: 11, color: pal.accent }}>
-                  {item.index}
-                </span>
-                <h3
-                  className="mt-5 text-2xl leading-snug md:text-[26px]"
-                  style={{ fontFamily: SERIF, fontWeight: 500 }}
-                >
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-[15px] leading-[1.6] text-neutral-600">{item.desc}</p>
-              </Glass>
+      {/* 04 — the team, pointing onward */}
+      <section className="flex min-h-[70svh] items-center px-6 py-24 md:px-12 md:py-32">
+        <div className="grid w-full grid-cols-1 items-end gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <Reveal>
+              <ChipLabel text="04 — The team" color={pal.chip} />
             </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* process */}
-      <section className="px-6 pb-32 md:px-12 md:pb-44">
-        <Reveal>
-          <p
-            className="uppercase"
-            style={{ fontFamily: MONO, fontSize: 11, letterSpacing: "0.25em", color: pal.chip }}
-          >
-            [ 04 — {RX_PROCESS.chip} ]
-          </p>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <h2
-            className="mt-6 text-4xl leading-[1.02] tracking-tight md:text-6xl"
-            style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-          >
-            {RX_PROCESS.title[0]}
-            <br />
-            {RX_PROCESS.title[1]}
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid grid-cols-1 gap-3.5 md:grid-cols-3">
-          {RX_PROCESS.steps.map((step, i) => (
-            <Reveal key={step.index} delay={i * 0.08}>
-              <Glass innerClassName="p-7 md:p-8">
+            <Reveal delay={0.12}>
+              <h2
+                className="mt-6 text-[2.4rem] leading-[1.0] tracking-tight sm:text-5xl md:text-[68px] md:leading-[0.98]"
+                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+              >
+                {B_ABOUT.teamTitle.map((line) => (
+                  <span key={line} className="block">
+                    {line}
+                  </span>
+                ))}
+              </h2>
+            </Reveal>
+          </div>
+          <div className="lg:col-span-5 lg:pb-3">
+            <Reveal delay={0.24}>
+              <p className="text-base leading-[1.55] text-neutral-700 md:text-[17px]">
+                {B_ABOUT.teamBody}
+              </p>
+              <Link
+                href="/b/team"
+                className="group mt-8 inline-flex items-center gap-3.5 rounded-full py-2 pl-6 pr-2"
+                style={{
+                  border: "1px solid rgba(255,255,255,0.7)",
+                  background: "rgba(255,255,255,0.42)",
+                  backdropFilter: "blur(18px)",
+                  WebkitBackdropFilter: "blur(18px)",
+                }}
+              >
+                <span className="text-[15px] font-medium">{B_ABOUT.teamCta}</span>
                 <span
-                  className="block text-5xl md:text-6xl"
-                  style={{ fontFamily: SERIF, fontWeight: 300, color: pal.accent }}
+                  className="flex h-9 w-9 items-center justify-center rounded-full text-white transition-transform group-hover:scale-105"
+                  style={{ background: INK }}
                 >
-                  {step.index}
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+                    <path
+                      d="M9 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </span>
-                <h3
-                  className="mt-6 text-2xl"
-                  style={{ fontFamily: SERIF, fontWeight: 500 }}
-                >
-                  {step.title}
-                </h3>
-                <p className="mt-3 text-[15px] leading-[1.6] text-neutral-600">{step.desc}</p>
-              </Glass>
+              </Link>
             </Reveal>
-          ))}
+          </div>
         </div>
       </section>
     </PageShell>

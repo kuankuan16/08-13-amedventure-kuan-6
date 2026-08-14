@@ -1,27 +1,52 @@
 "use client";
 
-import { RX_CONTACT_PAGE, RX_CTA, RX_FOOTER, RX_MAILTO } from "@/lib/amed/rx-content";
+import { RX_FOOTER, RX_MAILTO } from "@/lib/amed/rx-content";
+import { B_CONTACT } from "@/lib/amed/b-content";
 import { MONO, SERIF, INK, PALETTES, Reveal, Glass } from "../shared";
-import { PageShell, PageHero } from "../PageShell";
+import { PageShell, PageHero, SectionHead } from "../PageShell";
 
 const pal = PALETTES.rose;
+
+const DETAILS = [
+  {
+    label: B_CONTACT.officesLabel,
+    lines: [
+      { title: B_CONTACT.offices[0], sub: RX_FOOTER.addressTW },
+      { title: B_CONTACT.offices[1], sub: RX_FOOTER.addressUS },
+    ],
+  },
+  {
+    label: B_CONTACT.industryLabel,
+    lines: [
+      { title: B_CONTACT.industry[0], sub: "" },
+      { title: B_CONTACT.industry[1], sub: "" },
+    ],
+  },
+];
 
 export function ContactB() {
   return (
     <PageShell palette="rose" active="/b/contact" count={30}>
       <PageHero
-        chip={`06 — ${RX_CONTACT_PAGE.chip}`}
-        title={RX_CONTACT_PAGE.title}
-        lead={RX_CONTACT_PAGE.body}
+        chip={B_CONTACT.chip}
+        title={B_CONTACT.title}
+        lead={B_CONTACT.lead}
         palette="rose"
-        center
+        pageIndex="05"
       />
 
-      <section className="px-6 pb-32 text-center md:px-12 md:pb-44">
-        <Reveal delay={0.1}>
+      <section className="px-6 py-24 md:px-12 md:py-32">
+        <SectionHead
+          index="01"
+          label={B_CONTACT.pitchTitle}
+          title={["Send us your deck."]}
+          palette="rose"
+        />
+
+        <Reveal delay={0.16}>
           <a
             href={RX_MAILTO}
-            className="group inline-flex items-center gap-4 rounded-full py-2.5 pl-8 pr-2.5"
+            className="group mt-12 inline-flex items-center gap-4 rounded-full py-2.5 pl-8 pr-2.5"
             style={{
               background: "rgba(255,255,255,0.45)",
               backdropFilter: "blur(24px)",
@@ -30,7 +55,7 @@ export function ContactB() {
               boxShadow: "0 14px 40px -12px rgba(20,40,80,0.16)",
             }}
           >
-            <span className="text-lg font-medium md:text-xl">{RX_CONTACT_PAGE.email}</span>
+            <span className="text-lg font-medium md:text-xl">{B_CONTACT.email}</span>
             <span
               className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-transform group-hover:scale-105"
               style={{ background: INK }}
@@ -54,36 +79,35 @@ export function ContactB() {
             </span>
           </a>
         </Reveal>
-        <Reveal delay={0.2}>
-          <p
-            className="mt-5 uppercase text-neutral-400"
-            style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em" }}
-          >
-            {RX_CONTACT_PAGE.deckLabel}
-          </p>
-        </Reveal>
 
-        {/* offices */}
-        <div className="mx-auto mt-16 grid max-w-3xl grid-cols-1 gap-3.5 text-left sm:grid-cols-2">
-          {[
-            { city: RX_CTA.offices[0], address: RX_FOOTER.addressTW },
-            { city: RX_CTA.offices[1], address: RX_FOOTER.addressUS },
-          ].map((office, i) => (
-            <Reveal key={office.city} delay={0.15 + i * 0.08}>
-              <Glass hover innerClassName="flex h-full flex-col p-7">
+        {/* offices + industry */}
+        <div className="mt-20 grid grid-cols-1 gap-3.5 lg:grid-cols-2">
+          {DETAILS.map((block, bi) => (
+            <Reveal key={block.label} delay={bi * 0.08}>
+              <Glass hover innerClassName="flex h-full flex-col p-8 md:p-9">
                 <div className="flex items-center justify-between">
                   <span
                     className="uppercase text-neutral-400"
                     style={{ fontFamily: MONO, fontSize: 10, letterSpacing: "0.22em" }}
                   >
-                    {RX_CONTACT_PAGE.officesLabel} 0{i + 1}
+                    {block.label}
                   </span>
                   <span className="h-2 w-2 rounded-full" style={{ background: pal.accent }} />
                 </div>
-                <p className="mt-5 text-2xl" style={{ fontFamily: SERIF, fontWeight: 500 }}>
-                  {office.city}
-                </p>
-                <p className="mt-2 text-[14px] leading-[1.6] text-neutral-600">{office.address}</p>
+                <div className="mt-8 space-y-7">
+                  {block.lines.map((line) => (
+                    <div key={line.title}>
+                      <p className="text-2xl md:text-[28px]" style={{ fontFamily: SERIF, fontWeight: 500 }}>
+                        {line.title}
+                      </p>
+                      {line.sub ? (
+                        <p className="mt-2 max-w-sm text-[14px] leading-[1.6] text-neutral-600">
+                          {line.sub}
+                        </p>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
               </Glass>
             </Reveal>
           ))}
