@@ -202,7 +202,7 @@ export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
                     {PLATED_LOGOS.has(c.name) ? (
                       <span
                         className="mx-10 inline-flex items-center whitespace-nowrap font-bold tracking-tight"
-                        style={{ fontSize: 19, color: "#3f3f46" }}
+                        style={{ fontSize: 19, color: "#101b2c" }}
                       >
                         {c.name.replace(" Technologies", "")}
                       </span>
@@ -216,8 +216,12 @@ export function RxLogoBand({ fullBleed = false }: { fullBleed?: boolean }) {
                           alt={c.name}
                           fill
                           sizes="12vw"
-                          className="object-contain opacity-100 grayscale contrast-125"
-                          style={{ mixBlendMode: "multiply" }}
+                          className="object-contain"
+                          style={{
+                            mixBlendMode: "multiply",
+                            filter: "grayscale(1) contrast(1.4) brightness(0.42)",
+                            opacity: 0.94,
+                          }}
                         />
                       </span>
                     )}
@@ -477,8 +481,9 @@ export function RxFocusRows({
   const line = sky ? "rgba(20,19,26,0.14)" : "var(--rx-dark-line)";
   const chipBg = sky ? "rgba(20,19,26,0.07)" : "rgba(255,255,255,0.08)";
   const [active, setActive] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState<number | null>(null);
   return (
-    <section style={{ background: bg, color: body }}>
+    <section id="investment-focus" style={{ background: bg, color: body }}>
       <div
         className="rx-frame px-6 py-16 md:px-10 md:py-24"
         style={{ borderColor: line }}
@@ -503,7 +508,11 @@ export function RxFocusRows({
                   ))}
                 </span>
               </SlideIn>
-              <div className="flex max-w-[26rem] flex-col gap-4">
+              <div
+                className={`flex flex-col gap-4 ${
+                  sky ? "max-w-[32rem] text-[17px] leading-[1.65]" : "max-w-[26rem]"
+                }`}
+              >
                 {RX_FOCUS.body.map((para) => (
                   <FadeUp key={para.slice(0, 16)}>
                     <p>{para}</p>
@@ -514,8 +523,103 @@ export function RxFocusRows({
           </>
         ) : null}
 
-        <div>
-        <div className="overflow-hidden py-8">
+        <div
+          className={`grid gap-10 ${
+            sky ? "lg:grid-cols-[1fr_minmax(0,32rem)]" : "lg:grid-cols-[1fr_minmax(0,24rem)]"
+          } ${withIntro ? "mt-16" : ""}`}
+        >
+          <div>
+            {RX_FOCUS.rows.map((row, i) => (
+              <FadeUp key={row.index} delay={i * 0.06}>
+                <div>
+                  <button
+                    type="button"
+                    onMouseEnter={() => setActive(i)}
+                    onFocus={() => setActive(i)}
+                    onClick={() => {
+                      setActive(i);
+                      setMobileOpen((current) => (current === i ? null : i));
+                    }}
+                    aria-expanded={mobileOpen === i}
+                    aria-controls={`focus-mobile-panel-${i}`}
+                    className="group rx-row relative flex w-full items-center gap-6 overflow-hidden py-7 text-left transition-opacity duration-300"
+                    style={{
+                      background: "transparent",
+                      borderTop: `1px solid ${line}`,
+                      opacity: 1,
+                    }}
+                  >
+                    <span
+                      className="absolute inset-0 origin-left scale-x-100 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] lg:scale-x-0 lg:group-hover:scale-x-100 lg:group-focus-visible:scale-x-100"
+                      style={{ background: sky ? "#ffffff" : "rgba(255,255,255,0.07)" }}
+                      aria-hidden
+                    />
+                    <span className="relative z-10 text-sm font-bold" style={{ color: sky ? "#0E7FA5" : "var(--rx-accent)" }}>
+                      {row.index}
+                    </span>
+                    <span className="relative z-10 flex-1">
+                      <span
+                        className="rx-serif block text-2xl md:text-4xl"
+                        style={{ color: ink }}
+                      >
+                        {row.title}
+                      </span>
+                      <span className="mt-1 block text-sm md:text-base">{row.desc}</span>
+                    </span>
+                  </button>
+                  <div
+                    id={`focus-mobile-panel-${i}`}
+                    className="grid overflow-hidden lg:hidden"
+                    style={{
+                      gridTemplateRows: mobileOpen === i ? "1fr" : "0fr",
+                      opacity: mobileOpen === i ? 1 : 0,
+                      transition:
+                        "grid-template-rows 0.72s cubic-bezier(0.22,1,0.36,1), opacity 0.42s ease",
+                    }}
+                  >
+                    <div className="min-h-0">
+                      <div
+                        className="relative aspect-[16/10] overflow-hidden"
+                        style={{
+                          transform: mobileOpen === i ? "translateY(0)" : "translateY(-18px)",
+                          transition: "transform 0.72s cubic-bezier(0.22,1,0.36,1)",
+                        }}
+                      >
+                        <Image
+                          src={row.image}
+                          alt={row.title}
+                          fill
+                          sizes="(max-width: 1023px) calc(100vw - 3rem), 0px"
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+
+          <div className="relative hidden overflow-hidden rounded-2xl lg:block">
+            {RX_FOCUS.rows.map((row, i) => (
+              <div
+                key={row.index}
+                className="absolute inset-0 transition-opacity duration-700"
+                style={{ opacity: active === i ? 1 : 0 }}
+              >
+                <Image
+                  src={row.image}
+                  alt={row.title}
+                  fill
+                  sizes={sky ? "32rem" : "24rem"}
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative left-1/2 mt-16 w-screen -translate-x-1/2 overflow-hidden py-8 md:mt-24">
           <div className="marquee-track items-center gap-6" style={{ animationDuration: "36s" }}>
             {[0, 1].map((copy) => (
               <div key={copy} className="flex items-center gap-6 pr-6">
@@ -530,52 +634,6 @@ export function RxFocusRows({
                     </span>
                   </span>
                 ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-        <div className={`grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] ${withIntro ? "mt-16" : ""}`}>
-          <div>
-          {RX_FOCUS.rows.map((row, i) => (
-              <FadeUp key={row.index} delay={i * 0.06}>
-                <button
-                  type="button"
-                  onMouseEnter={() => setActive(i)}
-                  onFocus={() => setActive(i)}
-                  className="rx-row flex w-full items-center gap-6 py-7 text-left transition-opacity duration-300"
-                  style={{
-                    background: active === i ? (sky ? "#ffffff" : "rgba(255,255,255,0.07)") : "transparent",
-                    transition: "background 0.4s cubic-bezier(0.16,1,0.3,1)",
-                    borderTop: `1px solid ${line}`,
-                    opacity: 1,
-                  }}
-                >
-                  <span className="text-sm font-bold" style={{ color: sky ? "#0E7FA5" : "var(--rx-accent)" }}>
-                    {row.index}
-                  </span>
-                  <span className="flex-1">
-                    <span
-                      className="rx-serif block text-2xl md:text-4xl"
-                      style={{ color: ink }}
-                    >
-                      {row.title}
-                    </span>
-                    <span className="mt-1 block text-sm md:text-base">{row.desc}</span>
-                  </span>
-                </button>
-              </FadeUp>
-            ))}
-          </div>
-
-          <div className="relative hidden overflow-hidden rounded-2xl lg:block">
-            {RX_FOCUS.rows.map((row, i) => (
-              <div
-                key={row.index}
-                className="absolute inset-0 transition-opacity duration-700"
-                style={{ opacity: active === i ? 1 : 0 }}
-              >
-                <Image src={row.image} alt={row.title} fill sizes="24rem" className="object-cover" />
               </div>
             ))}
           </div>
@@ -1074,7 +1132,12 @@ export function RxPortfolioGrid({ featured = false }: { featured?: boolean }) {
                     alt={company.name}
                     fill
                     sizes="22vw"
-                    className="object-contain opacity-80 grayscale transition-[filter,opacity] duration-500 group-hover:opacity-100 group-hover:grayscale-0"
+                    className="object-contain transition-opacity duration-500 group-hover:opacity-100"
+                    style={{
+                      filter: "grayscale(1) contrast(1.4) brightness(0.42)",
+                      opacity: 0.94,
+                      mixBlendMode: "multiply",
+                    }}
                   />
                 ) : (
                   <span

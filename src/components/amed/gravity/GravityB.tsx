@@ -18,6 +18,7 @@ import {
   ScrollDial,
   GravityHeader,
   B_NAV_ALL,
+  CARD_TITLE,
   useSmoothScroll,
 } from "./shared";
 import { RxCta, RxFooter } from "@/components/amed/rx/ui";
@@ -34,18 +35,68 @@ import { PhilosophyStack } from "./PhilosophyStack";
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 
 /** Per-frame crop overrides where the default centre crop misses the subject. */
-const FRAME_POS: Record<string, string> = {};
+const FRAME_POS: Record<string, string> = {
+  "/amed/images/home-studio-vc-01-stone.png": "50% 50%",
+  "/amed/images/home-biomedical-mesh-detail-wide.png": "50% 50%",
+  "/amed/images/home-studio-vc-boardroom-asian-editorial.png": "50% 50%",
+  "/amed/images/home-center-vc-biomedical-strategy.png": "46% 50%",
+  "/amed/images/home-center-vc-clinical-profile.png": "50% 50%",
+  "/amed/images/home-center-vc-diligence-sunlight.png": "52% 50%",
+  "/amed/images/home-center-vc-sunlit-team-diligence.png": "50% 50%",
+  "/amed/images/home-center-vc-investor-profile-sunlit.png": "50% 50%",
+  "/amed/images/home-studio-medical-lavender.png": "50% 50%",
+  "/amed/images/home-studio-biomedical-mint-wide.png": "50% 50%",
+  "/amed/images/home-studio-neurovascular-brain-left-wide.png": "18% 50%",
+  "/amed/images/home-studio-device-lab.png": "52% 50%",
+  "/amed/images/home-studio-cardio.png": "50% 50%",
+  "/amed/images/home-studio-biomedical-blush.png": "50% 50%",
+};
+
+/** Keep faces below the rounded top edge in the compact crop. */
+const MOBILE_FRAME_POS: Record<string, string> = {
+  "/amed/images/home-studio-vc-01-stone.png": "50% 8%",
+  "/amed/images/home-studio-vc-01.png": "50% 8%",
+  "/amed/images/home-studio-vc-boardroom-asian-editorial.png": "50% 12%",
+  "/amed/images/home-center-vc-biomedical-strategy.png": "44% 18%",
+  "/amed/images/home-center-vc-clinical-profile.png": "44% 12%",
+  "/amed/images/home-center-vc-diligence-sunlight.png": "52% 10%",
+  "/amed/images/home-center-vc-sunlit-team-diligence.png": "46% 8%",
+  "/amed/images/home-center-vc-investor-profile-sunlit.png": "75% 8%",
+  "/amed/images/home-studio-medical-lavender.png": "50% 10%",
+  "/amed/images/home-studio-cardio.png": "50% 10%",
+  "/amed/images/home-studio-neurovascular-brain-left-wide.png": "18% 50%",
+};
+
+/** Local colour correction for the microscopy frame only. */
+const FRAME_FILTER: Record<string, string> = {
+  "/amed/images/home-studio-biomedical-mint-wide.png":
+    "saturate(0.58) contrast(0.96)",
+};
 
 const GRID_GAP = "35px";
 /** measured from the reference: centre frames 1465x820, outer frames 2216x820 */
 const FRAME_H = "101.2svh";
 const RATIO_CENTRE = "1465 / 820";
 const RATIO_OUTER = "2216 / 820";
-/** Three rows of medical-venture frames; the centre of row 2 is the hero. */
+/**
+ * Seven frames share one editorial system while keeping distinct background
+ * colours: venture capital ×2, medical ×1, neural macro ×1, surgery ×1,
+ * cardiovascular ×1 and biomedical macro ×1. The centre of row 2 is the VC hero.
+ */
 const HERO_GRID = [
-  ["/amed/images/macro-01.jpg", "/amed/images/macro-02.jpg"],
-  ["/amed/images/macro-03.jpg", "/amed/images/hero-b-01.jpg", "/amed/images/macro-04.jpg"],
-  ["/amed/images/macro-05.jpg", "/amed/images/macro-06.jpg"],
+  [
+    "/amed/images/home-biomedical-mesh-detail-wide.png",
+    "/amed/images/home-studio-neurovascular-brain-left-wide.png",
+  ],
+  [
+    "/amed/images/home-studio-device-lab.png",
+    "/amed/images/home-center-vc-investor-profile-sunlit.png",
+    "/amed/images/home-studio-cardio.png",
+  ],
+  [
+    "/amed/images/home-studio-biomedical-blush.png",
+    "/amed/images/home-studio-medical-lavender.png",
+  ],
 ];
 
 /* ---------------- main component ---------------------------------- */
@@ -93,9 +144,13 @@ export function GravityB() {
     const drift = Math.max(0, progress - 1.47) / g;
     if (wordBoxRef.current) {
       // descends while the field contracts, holds, then releases with the page
-      const descend = 54 + 18 * clamp01(progress / 1.48);
       const release = Math.max(0, progress - 2.04) * 100;
-      wordBoxRef.current.style.transform = `translateY(${(descend - release).toFixed(2)}vh)`;
+      if (window.innerWidth < 1024) {
+        wordBoxRef.current.style.transform = `translateY(${(-release).toFixed(2)}vh)`;
+      } else {
+        const descend = 54 + 18 * clamp01(progress / 1.48);
+        wordBoxRef.current.style.transform = `translateY(${(descend - release).toFixed(2)}vh)`;
+      }
     }
     rowRefs.current.forEach((row, r) => {
       if (!row) return;
@@ -156,7 +211,7 @@ export function GravityB() {
     }) as const;
 
   return (
-    <div className="rx-root" style={{ ...RX_WHITE, color: "#1a1a1a" }}>
+    <div className="rx-root overflow-x-clip" style={{ ...RX_WHITE, color: "#1a1a1a" }}>
       {/* background gradient */}
       <div
         style={{
@@ -267,7 +322,13 @@ export function GravityB() {
                       priority={r === 1 && c === 1}
                       sizes="100vw"
                       className="object-cover"
-                      style={{ objectPosition: FRAME_POS[src] ?? "50% 50%" }}
+                      style={{
+                        objectPosition:
+                          (compact ? MOBILE_FRAME_POS[src] : undefined) ??
+                          FRAME_POS[src] ??
+                          "50% 50%",
+                        filter: FRAME_FILTER[src],
+                      }}
                     />
 
                   </div>
@@ -276,13 +337,15 @@ export function GravityB() {
             ))}
           </div>
 
-          {/* a flat 20% veil across the whole hero viewport — it has to cover
-              the neighbouring frames too once the grid contracts */}
-          {/* 40% veil across the whole hero viewport */}
+          {/* A neutral contrast veil keeps the bright studio series coherent
+              while preserving legibility for the reversed header and wordmark. */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0"
-            style={{ background: "#b4b7bb", mixBlendMode: "multiply" }}
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(30,36,40,0.52) 0%, rgba(35,41,45,0.38) 48%, rgba(26,32,36,0.46) 100%)",
+            }}
           />
 
           {/* wordmark: one full-width line on desktop; stacked top and
@@ -290,7 +353,7 @@ export function GravityB() {
           <div
             className={
               compact
-                ? "pointer-events-none absolute inset-0 flex flex-col justify-between px-5 py-24"
+                ? "pointer-events-none absolute inset-0 flex flex-col items-start justify-center gap-2 px-5"
                 : "pointer-events-none absolute inset-x-0 flex items-baseline justify-between px-4 md:px-6"
             }
             ref={wordBoxRef}
@@ -302,7 +365,7 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: compact ? "clamp(2.6rem, 29vw, 8rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
+                fontSize: compact ? "clamp(3rem, 15vw, 5.5rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
@@ -320,7 +383,7 @@ export function GravityB() {
               style={{
                 fontFamily: SANS,
                 fontWeight: 900,
-                fontSize: compact ? "clamp(2.6rem, 29vw, 8rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
+                fontSize: compact ? "clamp(3rem, 15vw, 5.5rem)" : "clamp(1.9rem, 9.2vw, 12.5rem)",
                 lineHeight: 0.9,
                 letterSpacing: "-0.035em",
                 color: "#ffffff",
@@ -337,13 +400,13 @@ export function GravityB() {
             className="pointer-events-none absolute inset-x-0 flex justify-center px-6"
             style={{ bottom: "clamp(56px, 10vh, 120px)", ...heroIn(0.5) }}
           >
-            <ScrollDial light />
+            <ScrollDial light targetId="home-first-content" />
           </div>
         </div>
       </section>
 
       {/* 02 — the studio statement, centred (Studio Aton layout) */}
-      <section className="rx-frame relative z-10 flex items-center px-6 py-28 md:px-10 md:py-32">
+      <section id="home-first-content" className="rx-frame relative z-10 flex items-center px-6 py-28 md:px-10 md:py-32">
         <div className="mx-auto w-full max-w-[78rem] text-center">
           <Reveal>
             <p style={LABEL}>AMED Ventures ®</p>
@@ -351,7 +414,7 @@ export function GravityB() {
           <Reveal delay={0.12}>
             <p
               className="mt-5 text-[1.5rem] leading-[1.26] tracking-tight sm:text-[2rem] md:text-[2.7rem] md:leading-[1.22]"
-              style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+              style={{ ...CARD_TITLE, color: "#0a0a0a" }}
             >
               AMED Ventures ® — a MedTech venture firm investing across the United States and
               Taiwan. Backing the medical technologies that change what a clinician can actually

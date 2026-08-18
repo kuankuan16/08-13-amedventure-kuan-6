@@ -5,7 +5,7 @@ import Image from "next/image";
 import { asset } from "@/lib/amed/content";
 import { RX_PHILOSOPHY } from "@/lib/amed/rx-content";
 import { gsap, ScrollTrigger, useIsomorphicLayoutEffect } from "../motion";
-import { SERIF, LABEL, META, Reveal } from "./shared";
+import { CARD_TITLE, LABEL, META, Reveal } from "./shared";
 
 /* ------------------------------------------------------------------
    Investment Philosophy — the original photo + solid-panel cards,
@@ -15,9 +15,24 @@ import { SERIF, LABEL, META, Reveal } from "./shared";
    ------------------------------------------------------------------ */
 
 const CARDS = [
-  { photo: "/amed/images/philosophy-01.jpg", panel: "#e6edf8", ink: "#14131a", muted: "#494852" },
-  { photo: "/amed/images/philosophy-02.jpg", panel: "#ede5d3", ink: "#14131a", muted: "#5c554a" },
-  { photo: "/amed/images/philosophy-03.jpg", panel: "#e3eae0", ink: "#14131a", muted: "#4f584c" },
+  {
+    photo: "/amed/images/philosophy-01.jpg",
+    panel: "#e6edf8",
+    ink: "#14131a",
+    muted: "#494852",
+  },
+  {
+    photo: "/amed/images/philosophy-02.jpg",
+    panel: "#ede5d3",
+    ink: "#14131a",
+    muted: "#5c554a",
+  },
+  {
+    photo: "/amed/images/philosophy-03.jpg",
+    panel: "#e3eae0",
+    ink: "#14131a",
+    muted: "#4f584c",
+  },
   {
     photo: "/amed/images/philosophy-04.jpg",
     panel: "#282b34",
@@ -66,7 +81,7 @@ export function PhilosophyStack() {
       <Reveal delay={0.1}>
         <h2
           className="mt-6 text-[2.4rem] leading-[1.0] tracking-tight sm:text-5xl md:text-[58px] md:leading-[0.98]"
-          style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+          style={{ ...CARD_TITLE, color: "#0a0a0a" }}
         >
           {RX_PHILOSOPHY.title[0]}
         </h2>
@@ -92,19 +107,19 @@ export function PhilosophyStack() {
                   boxShadow: "0 -10px 34px -28px rgba(20,19,26,0.18)",
                 }}
               >
-                <div className="relative min-h-[16rem]">
+                <div className="relative aspect-square md:aspect-auto md:min-h-0">
                   <Image
                     src={asset(c.photo)}
                     alt={item.title}
                     fill
                     sizes="(min-width: 768px) 48vw, 100vw"
-                    className="object-cover"
+                    className="object-cover object-top md:object-center"
                   />
                 </div>
                 <div className="relative flex flex-col justify-center gap-8 p-10 md:p-14">
                   <p
                     className="text-[1.5rem] leading-[1.42] md:text-[1.75rem]"
-                    style={{ fontFamily: SERIF, fontWeight: 400, color: c.ink }}
+                    style={{ ...CARD_TITLE, fontWeight: 400, color: c.ink }}
                   >
                     {item.desc}
                   </p>

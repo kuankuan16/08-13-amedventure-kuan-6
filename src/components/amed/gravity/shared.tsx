@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { asset } from "@/lib/amed/content";
-import { RX_NAV, RX_MAILTO } from "@/lib/amed/rx-content";
+import { RX_NAV } from "@/lib/amed/rx-content";
 
 /* ------------------------------------------------------------------
    Shared design language for the Version B "Gravity" proposal:
@@ -180,6 +180,69 @@ export const META: React.CSSProperties = {
   color: "#71717a",
 };
 
+/** Shared text roles for Proposal B. Sizes that intentionally respond across
+ * breakpoints stay in classes; these objects lock family, weight and rhythm. */
+export const CARD_TITLE: React.CSSProperties = {
+  fontFamily: SERIF,
+  fontWeight: 500,
+  letterSpacing: "-0.03em",
+};
+
+export const BODY_TEXT: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 17,
+  lineHeight: 1.65,
+  color: "#52525b",
+};
+
+export const HERO_LEAD: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 20,
+  lineHeight: 1.55,
+  color: "#52525b",
+};
+
+export const SUPPORTING_TEXT: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 13.5,
+  lineHeight: 1.55,
+  color: "#71717a",
+};
+
+export const ROLE_TEXT: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 12,
+  fontWeight: 600,
+  lineHeight: 1.45,
+  letterSpacing: "0.035em",
+  color: "#71717a",
+};
+
+export const CONTROL_TEXT: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 14,
+  fontWeight: 500,
+  lineHeight: 1,
+};
+
+export const FIELD_LABEL: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 10,
+  fontWeight: 600,
+  letterSpacing: "0.18em",
+  textTransform: "uppercase",
+  color: "#71717a",
+};
+
+export const STORY_TAG: React.CSSProperties = {
+  fontFamily: SANS,
+  fontSize: 10,
+  fontWeight: 600,
+  letterSpacing: "0.1em",
+  textTransform: "uppercase",
+  color: "#5f6267",
+};
+
 /** Section/category label. */
 export function ChipLabel({ text, color }: { text: string; color?: string }) {
   return (
@@ -230,13 +293,16 @@ export function useSmoothScroll(onFrame?: (progress: number) => void) {
 }
 
 /** Scroll indicator: a down arrow inside a thin ring, over a mono label. */
-export function ScrollDial({ light = false }: { light?: boolean }) {
+export function ScrollDial({ light = false, targetId }: { light?: boolean; targetId?: string }) {
   const ink = light ? "rgba(255,255,255,0.88)" : "rgba(20,19,26,0.62)";
   const line = light ? "rgba(255,255,255,0.5)" : "rgba(20,19,26,0.25)";
   const toNextScreen = () => {
     // the wheel-lerp scroller owns window scroll, so hand it a target and let
     // it ease there rather than fighting it with smooth-behaviour
-    const target = Math.round(window.innerHeight);
+    const targetElement = targetId ? document.getElementById(targetId) : null;
+    const target = targetElement
+      ? Math.round(window.scrollY + targetElement.getBoundingClientRect().top)
+      : Math.round(window.innerHeight);
     const start = window.scrollY;
     const t0 = performance.now();
     const step = (now: number) => {
@@ -252,7 +318,7 @@ export function ScrollDial({ light = false }: { light?: boolean }) {
       type="button"
       onClick={toNextScreen}
       aria-label="Scroll to the next section"
-      className="pointer-events-auto flex flex-col items-center gap-3 outline-none"
+      className="pointer-events-auto flex cursor-pointer flex-col items-center gap-3 outline-none"
     >
       <span
         className="relative flex items-center justify-center overflow-hidden rounded-full"
@@ -324,7 +390,7 @@ export function PillButton({
       href={href}
       target={external ? "_blank" : undefined}
       rel={external ? "noreferrer" : undefined}
-      className={`group inline-flex items-center gap-4 rounded-full py-2 pl-7 pr-2 transition-colors duration-300 ${className}`}
+      className={`group/pill inline-flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 transition-colors duration-300 md:pl-6 ${className}`}
       style={{
         border: `1px solid ${dark ? "rgba(255,255,255,0.28)" : "rgba(20,19,26,0.16)"}`,
       }}
@@ -336,16 +402,16 @@ export function PillButton({
       }}
     >
       <span
-        className="text-[15px] font-medium transition-colors duration-300"
-        style={{ color: dark ? "#ffffff" : INK }}
+        className="transition-colors duration-300"
+        style={{ ...CONTROL_TEXT, color: dark ? "#ffffff" : INK }}
       >
-        <span className="group-hover:hidden">{label}</span>
-        <span className="hidden group-hover:inline" style={{ color: dark ? INK : "#ffffff" }}>
+        <span className="group-hover/pill:hidden">{label}</span>
+        <span className="hidden group-hover/pill:inline" style={{ color: dark ? INK : "#ffffff" }}>
           {label}
         </span>
       </span>
       <span
-        className="flex h-10 w-10 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-0.5"
+        className="flex h-8 w-8 items-center justify-center rounded-full transition-transform duration-300 group-hover/pill:translate-x-0.5"
         style={{ background: dark ? "#ffffff" : INK, color: dark ? INK : "#ffffff" }}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -359,6 +425,73 @@ export function PillButton({
         </svg>
       </span>
     </a>
+  );
+}
+
+/** Button counterpart to PillButton for in-page actions such as disclosures. */
+export function PillActionButton({
+  label,
+  onClick,
+  type = "button",
+  direction = "right",
+  expanded,
+  controls,
+  className = "",
+}: {
+  label: string;
+  onClick?: () => void;
+  type?: "button" | "submit";
+  direction?: "right" | "down" | "up";
+  expanded?: boolean;
+  controls?: string;
+  className?: string;
+}) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      aria-expanded={expanded}
+      aria-controls={controls}
+      className={`group/action inline-flex w-fit items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 transition-colors duration-300 md:pl-6 ${className}`}
+      style={{ border: "1px solid rgba(20,19,26,0.16)" }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = INK;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "transparent";
+      }}
+    >
+      <span className="transition-colors duration-300" style={{ ...CONTROL_TEXT, color: INK }}>
+        <span className="group-hover/action:hidden">{label}</span>
+        <span className="hidden text-white group-hover/action:inline">{label}</span>
+      </span>
+      <span
+        className={`flex h-8 w-8 items-center justify-center rounded-full text-white transition-transform duration-300 ${
+          direction === "right"
+            ? "group-hover/action:translate-x-0.5"
+            : direction === "down"
+              ? "group-hover/action:translate-y-0.5"
+              : "group-hover/action:-translate-y-0.5"
+        }`}
+        style={{ background: INK }}
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden>
+          <path
+            d={
+              direction === "right"
+                ? "M9 6l6 6-6 6"
+                : direction === "down"
+                  ? "M6 9l6 6 6-6"
+                  : "M6 15l6-6 6 6"
+            }
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+    </button>
   );
 }
 
@@ -381,6 +514,7 @@ export function GravityHeader({
   // and a hairline tracks reading progress.
   const [scrolled, setScrolled] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const onScroll = () => {
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -392,7 +526,31 @@ export function GravityHeader({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const reversed = onMedia && !scrolled;
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const closeOnDesktop = () => {
+      if (media.matches) setMenuOpen(false);
+    };
+    media.addEventListener("change", closeOnDesktop);
+    return () => media.removeEventListener("change", closeOnDesktop);
+  }, []);
+
+  const grounded = scrolled || menuOpen;
+  const reversed = onMedia && !grounded;
 
   return (
     <>
@@ -403,15 +561,15 @@ export function GravityHeader({
         href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700,900&display=swap"
       />
       <header
-        className={`pointer-events-none fixed inset-x-0 top-0 z-30 ${scrolled ? "" : "h-20 md:h-24"}`}
+        className={`pointer-events-none fixed inset-x-0 top-0 z-50 ${grounded ? "" : "h-20 md:h-24"}`}
         style={{
-          height: scrolled ? 72 : undefined,
+          height: grounded ? 72 : undefined,
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(-16px)",
-          background: scrolled ? "rgba(255,255,255,0.82)" : "transparent",
-          backdropFilter: scrolled ? "blur(18px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(18px)" : "none",
-          borderBottom: scrolled ? "1px solid rgba(20,19,26,0.07)" : "1px solid transparent",
+          background: grounded ? "rgba(255,255,255,0.92)" : "transparent",
+          backdropFilter: grounded ? "blur(18px)" : "none",
+          WebkitBackdropFilter: grounded ? "blur(18px)" : "none",
+          borderBottom: grounded ? "1px solid rgba(20,19,26,0.07)" : "1px solid transparent",
           transition:
             "opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1), background 0.5s ease, height 0.5s cubic-bezier(0.16,1,0.3,1), border-color 0.5s ease",
         }}
@@ -424,12 +582,12 @@ export function GravityHeader({
             width: "100%",
             background: BRAND_BLUE,
             transform: `scaleX(${progress})`,
-            opacity: scrolled ? 1 : 0,
+            opacity: scrolled && !menuOpen ? 1 : 0,
             transition: "opacity 0.4s ease",
           }}
         />
         <div className="rx-frame flex h-full items-center justify-between px-6 md:px-10">
-        <Link href="/b" className="pointer-events-auto">
+        <Link href="/b" className="pointer-events-auto" onClick={() => setMenuOpen(false)}>
           <Image
             src={asset(
               reversed ? "/amed/brand/amed-logo-dark.png" : "/amed/brand/amed-logo-light.png"
@@ -458,9 +616,9 @@ export function GravityHeader({
             </Link>
           ))}
         </nav>
-        <a
-          href={RX_MAILTO}
-          className="group pointer-events-auto flex items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 transition-colors duration-300 md:pl-6"
+        <Link
+          href="/b/contact"
+          className="group pointer-events-auto hidden items-center gap-3 rounded-full py-1.5 pl-5 pr-1.5 transition-colors duration-300 md:flex md:pl-6"
           onMouseEnter={(e) => {
             e.currentTarget.style.background = reversed ? "#ffffff" : INK;
           }}
@@ -477,7 +635,7 @@ export function GravityHeader({
             border: `1px solid ${reversed ? "rgba(255,255,255,0.45)" : "rgba(20,19,26,0.12)"}`,
           }}
         >
-          <span className="text-[13px] font-medium md:text-sm">
+          <span style={CONTROL_TEXT}>
             <span
               className="group-hover:hidden"
               style={{ color: reversed ? "#ffffff" : INK }}
@@ -508,9 +666,60 @@ export function GravityHeader({
               />
             </svg>
           </span>
-        </a>
+        </Link>
+        <button
+          type="button"
+          className="pointer-events-auto relative flex h-11 w-11 items-center justify-center rounded-full md:hidden"
+          style={{
+            color: reversed ? "#ffffff" : INK,
+            background: reversed ? "rgba(255,255,255,0.1)" : "rgba(255,255,255,0.62)",
+            border: `1px solid ${reversed ? "rgba(255,255,255,0.46)" : "rgba(20,19,26,0.14)"}`,
+            backdropFilter: "blur(18px)",
+            WebkitBackdropFilter: "blur(18px)",
+          }}
+          aria-label={menuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={menuOpen}
+          aria-controls="amed-mobile-navigation"
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          <span
+            className="absolute h-px w-[18px] bg-current transition-transform duration-300"
+            style={{ transform: menuOpen ? "rotate(45deg)" : "translateY(-4px)" }}
+          />
+          <span
+            className="absolute h-px w-[18px] bg-current transition-transform duration-300"
+            style={{ transform: menuOpen ? "rotate(-45deg)" : "translateY(4px)" }}
+          />
+        </button>
         </div>
       </header>
+      {menuOpen ? (
+        <div
+          id="amed-mobile-navigation"
+          className="fixed inset-0 z-40 flex flex-col bg-white px-6 pb-8 pt-28 md:hidden"
+        >
+          <nav aria-label="Mobile navigation" className="flex flex-1 flex-col justify-center">
+            {[...B_NAV, { label: "Contact", href: "/b/contact" }].map((item, index) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between border-b border-black/12 py-4 text-[2rem] leading-none tracking-[-0.035em]"
+                style={{
+                  fontFamily: SERIF,
+                  color: active === item.href ? BRAND_BLUE : INK,
+                }}
+              >
+                <span>{item.label}</span>
+                <span className="text-base" style={{ fontFamily: SANS }} aria-hidden>
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+              </Link>
+            ))}
+          </nav>
+          <p style={{ ...META, color: "#71717a" }}>AMED VENTURES · MEDTECH INVESTING</p>
+        </div>
+      ) : null}
     </>
   );
 }
