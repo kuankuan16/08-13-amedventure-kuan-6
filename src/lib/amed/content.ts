@@ -147,20 +147,20 @@ export const TEAM = {
   intro:
     "Our team brings decades of combined experience across investment, business development, and operational management, from large public companies to early-stage startups. We believe that with the right support, today's pioneering idea becomes tomorrow's global impact.",
   leadership: [
-    { name: "Michael Wang", role: "Chairman, Managing Partner", photo: asset("/amed/team/michael-wang.jpg") },
-    { name: "William Tai", role: "Managing Partner", photo: asset("/amed/team/william-tai.jpg") },
-    { name: "Joe Liu", role: "Managing Partner", photo: asset("/amed/team/joe-liu.jpg") },
+    { name: "Michael Wang", role: "Chairman, Managing Partner", photo: asset("/amed/team/michael-wang-warm-soft-jaw.png") },
+    { name: "William Tai", role: "Managing Partner", photo: asset("/amed/team/william-tai-warm-soft-jaw.png") },
+    { name: "Joe Liu", role: "Managing Partner", photo: asset("/amed/team/joe-liu-warm-soft-v2-jaw.png") },
   ] satisfies TeamMember[],
   advisors: [
-    { name: "Dr. TJ Liu", role: "Venture Advisor", photo: asset("/amed/team/tj-liu.jpg") },
+    { name: "Dr. TJ Liu", role: "Venture Advisor", photo: asset("/amed/team/tj-liu-warm-soft.png") },
     { name: "Dr. Kuan Chen", role: "Venture Advisor" },
-    { name: "Fred Shen", role: "Venture Advisor", photo: asset("/amed/team/fred-shen.jpg") },
+    { name: "Fred Shen", role: "Venture Advisor", photo: asset("/amed/team/fred-shen-warm-soft-v2.png") },
   ] satisfies TeamMember[],
   investment: [
     {
       name: "Michelle Tsai",
       role: "Senior Investment Manager",
-      photo: asset("/amed/team/michelle-tsai.jpg"),
+      photo: asset("/amed/team/michelle-tsai-warm.png"),
       bio: [
         "Michelle Tsai is a Senior Investment Manager at AMED Ventures, evaluating opportunities across interventional technologies and the growing intersection of hardware and AI in healthcare. She focuses on first-in-class innovations with strong clinical differentiation and has contributed to investments that attracted global medtech strategics and sovereign fund participation.",
         "Prior to joining AMED, she spent nearly a decade at Zuellig Pharma, a leading healthcare solutions provider in Asia. There, she grew a client base spanning global MNCs and biotech firms, doubling regional revenue through consistent double-digit annual growth.",
@@ -170,7 +170,7 @@ export const TEAM = {
     {
       name: "Jeremy Tseng, CFA",
       role: "Senior Investment Manager",
-      photo: asset("/amed/team/jeremy-tseng.jpg"),
+      photo: asset("/amed/team/jeremy-tseng-warm.png"),
       bio: [
         "At AMED Ventures, Jeremy evaluates investment and M&A opportunities across the medical device and MedTech CDMO sectors, and leads post-investment management for a portfolio of companies with a combined market valuation exceeding $2 billion.",
         "Prior to AMED, he drove M&A evaluation and strategic partnerships at Catcher Technology (TWSE: 2474), supporting the company's initiatives across the MedTech, semiconductor, and aerospace industries. Earlier, at Deloitte Financial Advisory, he advised on cross-border M&A and deal structuring.",
@@ -180,7 +180,7 @@ export const TEAM = {
     {
       name: "Bin Chou, Ph.D.",
       role: "Investment Manager",
-      photo: asset("/amed/team/bin-chou.jpg"),
+      photo: asset("/amed/team/bin-chou-warm-soft.png"),
       bio: [
         "Bin is an engineer-turned-investor, focusing on healthcare innovations including AI diagnostics, next-generation testing platforms, medical devices, and frontier biotech.",
         "Before investing, Bin spent over 15 years in diagnostics and medical devices, holding senior R&D and executive roles across POCT, IVD development, manufacturing, and global regulatory approvals including FDA, NMPA, and CE.",
@@ -190,7 +190,7 @@ export const TEAM = {
     {
       name: "Jonathan Feng",
       role: "Investment Manager",
-      photo: asset("/amed/team/jonathan-feng.jpg"),
+      photo: asset("/amed/team/jonathan-feng-warm-soft.png"),
       bio: [
         "Jonathan is an Investment Manager at AMED Ventures, evaluating MedTech investments across cardiovascular, orthopedics, urology, nerve repair, and other therapeutic areas. He focuses on clinically differentiated technologies addressing meaningful unmet needs and improving standards of care.",
         "Prior to AMED, Jonathan worked in corporate banking and later founded and scaled a consumer healthcare business, bringing experience across financial analysis, commercialization, and business growth.",
@@ -199,7 +199,7 @@ export const TEAM = {
     },
   ] satisfies TeamMember[],
   operations: [
-    { name: "Hank Huang", role: "Finance & Portfolio Management Manager", photo: asset("/amed/team/hank-huang.jpg") },
+    { name: "Hank Huang", role: "Finance & Portfolio Management Manager", photo: asset("/amed/team/hank-huang-warm-soft.png") },
     { name: "Michelle Wang", role: "Portfolio Strategy & Operations" },
   ] satisfies TeamMember[],
 } as const;
@@ -369,7 +369,7 @@ export const PORTFOLIO = {
     {
       name: "Wiltrom",
       url: "https://www.wiltrom.com.tw",
-      logo: asset("/amed/logos/wiltrom.png"),
+      logo: asset("/amed/logos/wiltrom-transparent.png"),
       sector: "Spine implants",
       location: "Zhubei, Taiwan",
       year: "2009",

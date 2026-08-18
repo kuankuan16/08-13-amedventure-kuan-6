@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
-  SERIF,
   SANS,
   RX_WHITE,
   type PaletteKey,
@@ -15,6 +14,9 @@ import {
   ScrollDial,
   LABEL,
   BRAND_BLUE,
+  BODY_TEXT,
+  CARD_TITLE,
+  HERO_LEAD,
 } from "./shared";
 import { RxCta, RxFooter } from "@/components/amed/rx/ui";
 
@@ -35,7 +37,7 @@ export function PageShell({
 }) {
   useSmoothScroll();
   return (
-    <div className="rx-root" style={RX_WHITE}>
+    <div className="rx-root overflow-x-clip" style={RX_WHITE}>
       <GravityHeader active={active} onMedia />
       <main className="relative z-10">{children}</main>
       <RxCta />
@@ -74,7 +76,7 @@ export function SectionHead({
       <Reveal delay={0.1}>
         <h2
           className="mt-6 max-w-[54rem] text-[2.4rem] leading-[1.02] tracking-tight sm:text-5xl md:text-[64px] md:leading-[0.98]"
-          style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+          style={{ ...CARD_TITLE, color: "#0a0a0a" }}
         >
           {title.map((line) => (
             <span key={line} className="block">
@@ -85,7 +87,7 @@ export function SectionHead({
       </Reveal>
       {lead ? (
         <Reveal delay={0.18}>
-          <p className="mt-7 max-w-[34rem] text-base leading-[1.6] text-neutral-700 md:text-[17px]">
+          <p className="mt-7 max-w-[34rem]" style={BODY_TEXT}>
             {lead}
           </p>
         </Reveal>
@@ -133,6 +135,9 @@ export function PageHero({
   palette,
   image,
   imageAlt,
+  imageClassName,
+  mobileImage,
+  mobileImageClassName,
   secondary,
   secondaryVideo,
   word,
@@ -143,6 +148,11 @@ export function PageHero({
   palette?: PaletteKey;
   image: string;
   imageAlt: string;
+  /** Per-page crop direction, especially for portrait mobile viewports. */
+  imageClassName?: string;
+  /** Optional dedicated portrait asset for compact screens. */
+  mobileImage?: string;
+  mobileImageClassName?: string;
   /** optional wide photo under the copy block */
   secondary?: string;
   /** optional looping clip that replaces the wide photo */
@@ -159,6 +169,57 @@ export function PageHero({
     const t = setTimeout(() => setShown(true), 90);
     return () => clearTimeout(t);
   }, []);
+
+  useEffect(() => {
+    if (!shown || window.scrollY > 8) return;
+
+    let cancelled = false;
+    let raf = 0;
+    const wordFinishMs =
+      (0.28 + Math.max(0, word.length - 1) * 0.045 + 0.95) * 1000;
+
+    const stop = () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      cancelAnimationFrame(raf);
+    };
+
+    const timer = window.setTimeout(() => {
+      const targetElement = document.getElementById("page-hero-content");
+      if (!targetElement || cancelled) return;
+
+      const start = window.scrollY;
+      const target = Math.round(
+        window.scrollY + targetElement.getBoundingClientRect().top,
+      );
+      const startedAt = performance.now();
+      const step = (now: number) => {
+        if (cancelled) return;
+        const k = Math.min(1, (now - startedAt) / 900);
+        const eased = 1 - Math.pow(1 - k, 3);
+        window.scrollTo(0, start + (target - start) * eased);
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    }, wordFinishMs + 1000);
+
+    const interactionEvents: (keyof WindowEventMap)[] = [
+      "wheel",
+      "touchstart",
+      "pointerdown",
+      "keydown",
+    ];
+    interactionEvents.forEach((eventName) =>
+      window.addEventListener(eventName, stop, { passive: true, once: true }),
+    );
+
+    return () => {
+      stop();
+      interactionEvents.forEach((eventName) =>
+        window.removeEventListener(eventName, stop),
+      );
+    };
+  }, [shown, word]);
 
   useEffect(() => {
     let raf = 0;
@@ -191,19 +252,54 @@ export function PageHero({
           }}
         >
           <div ref={mediaInnerRef} className="relative h-full w-full overflow-hidden">
-            <Image
-              src={image}
-              alt={imageAlt}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
+            {mobileImage ? (
+              <>
+                <Image
+                  src={mobileImage}
+                  alt={imageAlt}
+                  fill
+                  priority
+                  sizes="(max-width: 767px) 100vw, 1px"
+                  className={`object-cover md:hidden ${mobileImageClassName ?? "object-center"}`}
+                  style={{
+                    transform: shown ? "scale(1.04)" : "scale(1.18)",
+                    transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
+                  }}
+                />
+                <Image
+                  src={image}
+                  alt={imageAlt}
+                  fill
+                  priority
+                  sizes="(min-width: 768px) 100vw, 1px"
+                  className={`hidden object-cover md:block ${imageClassName ?? "object-center"}`}
+                  style={{
+                    transform: shown ? "scale(1.04)" : "scale(1.18)",
+                    transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
+                  }}
+                />
+              </>
+            ) : (
+              <Image
+                src={image}
+                alt={imageAlt}
+                fill
+                priority
+                sizes="100vw"
+                className={`object-cover ${imageClassName ?? "object-[50%_12%] md:object-center"}`}
+                style={{
+                  transform: shown ? "scale(1.04)" : "scale(1.18)",
+                  transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
+                }}
+              />
+            )}
+            <div
+              className="absolute inset-0"
               style={{
-                transform: shown ? "scale(1.04)" : "scale(1.18)",
-                transition: "transform 2.1s cubic-bezier(0.16,1,0.3,1)",
+                background:
+                  "linear-gradient(180deg, rgba(30,36,40,0.54) 0%, rgba(35,41,45,0.42) 48%, rgba(26,32,36,0.5) 100%)",
               }}
             />
-            <div className="absolute inset-0" style={{ background: "#b4b7bb", mixBlendMode: "multiply" }} />
           </div>
         </div>
 
@@ -226,37 +322,35 @@ export function PageHero({
 
         {/* baseline */}
         <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-8 md:pb-10">
-          <ScrollDial light />
+          <ScrollDial light targetId="page-hero-content" />
         </div>
       </section>
 
       {/* 02 — the copy lands on white */}
-      <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
-        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            <Reveal>
-              <p style={LABEL}>{chip}</p>
-            </Reveal>
-            <Reveal delay={0.12}>
-              <h2
-                className={`mt-7 tracking-tight text-[2.4rem] leading-[1.0] sm:text-5xl ${
-                  title.length >= 3 ? "md:text-[62px]" : "md:text-[70px]"
-                } md:leading-[0.98]`}
-                style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
-              >
-                {title.map((line) => (
-                  <span key={line} className="block">
-                    {line}
-                  </span>
-                ))}
-              </h2>
-            </Reveal>
-          </div>
-          <div className="lg:col-span-4">
-            <Reveal delay={0.24}>
-              <p className="max-w-[30rem] text-base leading-[1.65] md:text-[17px]">{lead}</p>
-            </Reveal>
-          </div>
+      <section id="page-hero-content" className="rx-frame px-6 py-24 md:px-10 md:py-32">
+        <Reveal>
+          <p style={LABEL}>{chip}</p>
+        </Reveal>
+        <div className="mt-7 grid items-start gap-9 md:grid-cols-[minmax(0,1.45fr)_minmax(18rem,0.55fr)] md:gap-16 lg:gap-24">
+          <Reveal delay={0.12}>
+            <h2
+              className={`tracking-tight text-[2.4rem] leading-[1.0] sm:text-5xl ${
+                title.length >= 3 ? "md:text-[62px]" : "md:text-[70px]"
+              } md:leading-[0.98]`}
+              style={{ ...CARD_TITLE, color: "#0a0a0a" }}
+            >
+              {title.map((line) => (
+                <span key={line} className="block">
+                  {line}
+                </span>
+              ))}
+            </h2>
+          </Reveal>
+          <Reveal delay={0.24}>
+            <p className="max-w-[32rem] md:pt-1" style={HERO_LEAD}>
+              {lead}
+            </p>
+          </Reveal>
         </div>
         {secondaryVideo ? (
           <div className="mt-16 overflow-hidden rounded-[1.4rem] md:mt-20">

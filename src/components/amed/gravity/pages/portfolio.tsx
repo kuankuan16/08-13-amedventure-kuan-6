@@ -4,7 +4,16 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { asset, PORTFOLIO, type PortfolioCompany } from "@/lib/amed/content";
 import { B_PORTFOLIO, B_COMPANY_NOTES } from "@/lib/amed/b-content";
-import { SERIF, INK, LABEL, META, PALETTES, Reveal } from "../shared";
+import {
+  CARD_TITLE,
+  CONTROL_TEXT,
+  INK,
+  LABEL,
+  META,
+  PALETTES,
+  Reveal,
+  SUPPORTING_TEXT,
+} from "../shared";
 import { PageShell, PageHero } from "../PageShell";
 
 const pal = PALETTES.rose;
@@ -85,8 +94,8 @@ function Dropdown({
         type="button"
         onClick={() => setOpen((v) => !v)}
         onBlur={() => window.setTimeout(() => setOpen(false), 140)}
-        className="flex items-center gap-3 rounded-full bg-white px-5 py-2.5 text-[13px] font-medium"
-        style={{ border: "1px solid rgba(20,19,26,0.12)", color: INK }}
+        className="flex items-center gap-3 rounded-full bg-white px-5 py-2.5"
+        style={{ ...CONTROL_TEXT, border: "1px solid rgba(20,19,26,0.12)", color: INK }}
       >
         <span style={{ ...META, color: "#8a8a93" }}>{label}</span>
         <span>{current.label}</span>
@@ -116,8 +125,9 @@ function Dropdown({
                 onChange(o.key);
                 setOpen(false);
               }}
-              className="block w-full px-5 py-2.5 text-left text-[13.5px] transition-colors hover:bg-black/5"
+              className="block w-full px-5 py-2.5 text-left transition-colors hover:bg-black/5"
               style={{
+                ...CONTROL_TEXT,
                 color: o.key === value ? INK : "#52525b",
                 fontWeight: o.key === value ? 600 : 400,
               }}
@@ -174,11 +184,18 @@ function CompanyCard({
               fill
               sizes="220px"
               className="object-contain"
-              style={{ mixBlendMode: "multiply" }}
+              style={{
+                mixBlendMode: "multiply",
+                filter: "grayscale(1) contrast(1.4) brightness(0.42)",
+                opacity: 0.94,
+              }}
             />
           </span>
         ) : (
-          <span className="text-2xl" style={{ fontFamily: SERIF, fontWeight: 500 }}>
+          <span
+            className="text-2xl"
+            style={{ ...CARD_TITLE, color: "#101b2c" }}
+          >
             {company.name.replace(" Technologies", "")}
           </span>
         )}
@@ -195,7 +212,7 @@ function CompanyCard({
         }}
       >
         <div className="flex items-start justify-between gap-4">
-          <p className="text-[1.3rem] leading-tight" style={{ fontFamily: SERIF, fontWeight: 500 }}>
+          <p className="text-[1.3rem] leading-tight" style={CARD_TITLE}>
             {company.name}
           </p>
           {company.url ? (
@@ -215,7 +232,7 @@ function CompanyCard({
             </span>
           ) : null}
         </div>
-        <p className="mt-3 text-[13.5px] leading-[1.55] text-neutral-700">
+        <p className="mt-3" style={{ ...SUPPORTING_TEXT, color: "#3f3f46" }}>
           {B_COMPANY_NOTES[company.name] ?? company.sector}
         </p>
         <p className="mt-auto pt-5" style={{ ...META, color: "rgba(20,19,26,0.6)" }}>
@@ -279,13 +296,16 @@ export function PortfolioB() {
         title={B_PORTFOLIO.title}
         lead={B_PORTFOLIO.lead}
         palette="rose"
-        image={asset("/amed/images/page-portfolio.jpg")}
+        image={asset("/amed/images/about-hero-selected-heart-clean.png")}
+        imageClassName="object-[58%_center] md:object-center"
+        mobileImage={asset("/amed/images/about-hero-selected-heart-mobile.png")}
+        mobileImageClassName="object-center"
         word="PORTFOLIO"
-        imageAlt="A founding team examining a device prototype at a workbench"
+        imageAlt="A medical innovator studying a transparent anatomical heart model in steel-blue backlight"
       />
 
       <div style={{ background: GROUND }}>
-        <section className="rx-frame px-6 py-24 md:px-10 md:py-32">
+        <section id="portfolio-list" className="rx-frame px-6 py-24 md:px-10 md:py-32">
 
           {/* filters */}
           <Reveal delay={0.12} className="relative z-30">
@@ -294,9 +314,11 @@ export function PortfolioB() {
               <Dropdown label="Region" options={REGIONS} value={region} onChange={setRegion} />
               <Dropdown label="Status" options={STATUS} value={status} onChange={setStatus} />
               <Dropdown label="Sort" options={SORTS} value={sort} onChange={setSort} />
-              <span className="ml-auto" style={{ ...META, color: "#8a8a93" }}>
-                {String(showActive ? companies.length : 0).padStart(2, "0")} companies
-              </span>
+              {focus !== "all" ? (
+                <span className="ml-auto" style={{ ...META, color: "#8a8a93" }}>
+                  {String(showActive ? companies.length : 0).padStart(2, "0")} companies
+                </span>
+              ) : null}
             </div>
           </Reveal>
 

@@ -49,11 +49,26 @@ export const B_ABOUT = {
   teamBody:
     "Our partners and advisors span device engineering, clinical practice and global manufacturing — operators across the whole MedTech value chain.",
   teamCta: "Meet the team",
+  portfolioIndex: {
+    chip: "MedTech investment index · active portfolio",
+    title: "A global portfolio built for lasting growth.",
+    scope: "North America + Asia",
+    scopeLabel: "Global portfolio reach",
+    focusCount: "Focus areas",
+    stage: "Early → Growth",
+    stageLabel: "Investment stage coverage",
+    timelineLabel: "Active portfolio timeline",
+    trajectoryLabel: "Cumulative selection",
+    notes: [
+      "Count reflects the active companies listed in the AMED website preparation document.",
+      "Timeline uses the listed investment years and excludes four exited investments.",
+    ],
+  },
 } as const;
 
 export const B_PORTFOLIO = {
   chip: "Selected investments",
-  title: ["Every company we back represents", "lives that will be touched."],
+  title: ["Every company we back", "represents lives that", "will be touched."],
   lead: "AMED Ventures invests in medical technology and healthcare companies across cardiovascular, neurovascular, surgical, vision, diagnostics and manufacturing.",
   leadRest:
     "Backing teams in Taiwan and the United States developing solutions with the potential to improve patient outcomes and healthcare delivery.",
@@ -129,4 +144,20 @@ export const B_CONTACT = {
   emailLabel: "Email",
   email: "info@amedventures.com",
   pitchTitle: "Pitch your company",
+  fields: {
+    name: "Name",
+    company: "Company",
+    email: "Email",
+    phone: "Phone",
+    website: "Website or deck",
+    headquarters: "Headquarters",
+    focus: "Focus area",
+    stage: "Stage",
+    message: "What are you building, and what does this round unlock?",
+  },
+  countryCodes: ["+886", "+1", "+81", "+82", "+86", "+852", "+65", "+44", "+61", "+49"],
+  fundingStages: ["Pre-seed", "Seed", "Series A", "Series B", "Series C or later", "Not raising yet"],
+  sendLabel: "Send introduction",
+  success:
+    "Thank you — this proposal build does not store submissions yet. Connect a form endpoint before launch.",
 } as const;

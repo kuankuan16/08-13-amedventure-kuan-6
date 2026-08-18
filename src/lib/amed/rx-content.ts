@@ -52,8 +52,8 @@ export const RX_ABOUT = {
   chip: "A standard worth building toward",
   title: ["Breakthroughs matter", "when patients feel", "the difference."],
   body: "We invest in the long work between a promising idea and trusted care — where evidence, execution and endurance turn possibility into practice.",
-  image: asset("/amed/images/firm-studio.jpg"),
-  imageAlt: "A team around an oak table examining a device prototype",
+  image: asset("/amed/images/about-vc-operating-partnership-warm-user.png"),
+  imageAlt: "An East Asian venture partner and a medical-device founder reviewing a cardiovascular prototype in warm sunlight",
   /** Qualitative firm highlights (client PDF) — numbers deliberately not emphasized. */
   highlights: [
     {
@@ -93,7 +93,7 @@ export const RX_FOCUS = {
       desc: "Stroke and neurovascular platforms across the continuum of care",
       detail:
         "Stroke and neurovascular platforms across the continuum of care — from intervention to recovery. We back teams turning technical insight into solutions that can earn trust in real care settings.",
-      image: asset("/amed/images/focus-01.jpg"),
+      image: asset("/amed/images/focus-neurovascular-bluewhite.png"),
     },
     {
       index: "02",
@@ -101,7 +101,7 @@ export const RX_FOCUS = {
       desc: "Structural heart, circulatory support and vascular intervention",
       detail:
         "Structural heart, circulatory support and vascular intervention — innovative solutions with the potential to improve patient outcomes and healthcare delivery.",
-      image: asset("/amed/images/focus-02.jpg"),
+      image: asset("/amed/images/focus-cardiovascular-bluewhite.png"),
     },
     {
       index: "03",
@@ -109,7 +109,7 @@ export const RX_FOCUS = {
       desc: "Biomaterials, implants and devices for the operating room",
       detail:
         "Biomaterials, implants and devices for the operating room — the long work between a promising idea and trusted care, where evidence, execution and endurance turn possibility into practice.",
-      image: asset("/amed/images/focus-03.jpg"),
+      image: asset("/amed/images/focus-surgical-bluewhite.png"),
     },
     {
       index: "04",
@@ -117,7 +117,7 @@ export const RX_FOCUS = {
       desc: "Software and connected care that extends treatment beyond the hospital",
       detail:
         "Software and connected care that extends treatment beyond the hospital — supporting patients and clinicians across Asia and the United States.",
-      image: asset("/amed/images/focus-04.jpg"),
+      image: asset("/amed/images/focus-digital-health-bluewhite.png"),
     },
   ],
   areasLabel: "Areas may include",
@@ -235,6 +235,173 @@ export const RX_STORY = {
       company: "Benthic Genomics",
       date: "10 Sept 2025",
       url: "https://www.benthic.bio/post/anglerlaunch",
+    },
+    {
+      title: "Adona Medical Completes Enrollment in First-in-Human Interatrial Shunt Trial",
+      source: "massdevice.com",
+      tag: "Clinical",
+      company: "Adona Medical",
+      date: "17 Jun 2025",
+      url: "https://www.massdevice.com/adona-completes-enrollment-interatrial-shunt-trial/",
+    },
+    {
+      title:
+        "FDA Grants Atia Vision Approval to Begin US Clinical Trial of OmniVu Lens System in Patients with Cataracts",
+      source: "businesswire.com",
+      tag: "Regulatory",
+      company: "Atia Vision",
+      date: "20 May 2025",
+      url: "https://www.businesswire.com/news/home/20250520015920/en/FDA-Grants-Atia-Vision-Approval-to-Begin-US-Clinical-Trial-of-OmniVu-Lens-System-in-Patients-with-Cataracts",
+    },
+    {
+      title: "Kandu Health, Neurolutions Merge Into BCI Company Targeting Stroke Care",
+      source: "massdevice.com",
+      tag: "Commercial",
+      company: "Kandu",
+      date: "8 Apr 2025",
+      url: "https://www.massdevice.com/kandu-health-neurolutions-merge-bci-stroke/",
+    },
+    {
+      title: "Ostial Corp. Rebrands as Verge Medical, Acquires New Technology",
+      source: "dicardiology.com",
+      tag: "Commercial",
+      company: "Verge Medical",
+      date: "18 Mar 2025",
+      url: "https://www.dicardiology.com/content/ostial-corp-rebrands-verge-medical-acquires-new-technology",
+    },
+    {
+      title:
+        "Instylla Completes Submission of Premarket Approval Application for Embrace™ Hydrogel Embolic System",
+      source: "prnewswire.com",
+      tag: "Regulatory",
+      company: "Instylla",
+      date: "11 Mar 2025",
+      url: "https://www.prnewswire.com/news-releases/instylla-completes-submission-of-premarket-approval-application-for-embrace-hydrogel-embolic-system-302397602.html",
+    },
+    {
+      title:
+        "Rejoni Completes Patient Enrollment in Pivotal Clinical Study of the Juveena Hydrogel System",
+      source: "businesswire.com",
+      tag: "Clinical",
+      company: "Rejoni",
+      date: "4 Feb 2025",
+      url: "https://www.businesswire.com/news/home/20250204916499/en/Rejoni-completes-patient-enrollment-in-pivotal-clinical-study-of-a-Novel-Treatment-for-the-Prevention-of-Intrauterine-Adhesions-the-Juveena-Hydrogel-System",
+    },
+    {
+      title: "Tioga Cardiovascular Completes First-in-Human Mitral Valve Replacement Cases",
+      source: "massdevice.com",
+      tag: "Clinical",
+      company: "Tioga Cardiovascular",
+      date: "23 Oct 2024",
+      url: "https://www.massdevice.com/shifameds-tioga-cardiovascular-has-first-human-cases-with-mitral-valve-replacement/",
+    },
+    {
+      title:
+        "Adona Medical, a Shifamed Portfolio Company, Raises $33.5 Million in Series C Financing",
+      source: "prnewswire.com",
+      tag: "Financing",
+      company: "Adona Medical",
+      date: "10 Jul 2024",
+      url: "https://www.prnewswire.com/news-releases/adona-medical-a-shifamed-portfolio-company-raises-33-5-million-in-series-c-financing-302192673.html",
+    },
+    {
+      title: "Akura Medical Secures $35M to Pursue FDA Clearance for Thrombectomy Device",
+      source: "medtechdive.com",
+      tag: "Financing",
+      company: "Akura Medical",
+      date: "4 Oct 2023",
+      url: "https://www.medtechdive.com/news/akura-medical-35m-510k-thrombectomy/695609/",
+    },
+    {
+      title:
+        "Sealonix, Inc. Closes $20 Million Financing to Develop Sealant Products for Abdominopelvic and Orthopedic Procedures",
+      source: "prnewswire.com",
+      tag: "Financing",
+      company: "Sealonix",
+      date: "12 May 2023",
+      url: "https://www.prnewswire.com/news-releases/sealonix-inc-closes-20-million-financing-to-develop-sealant-products-for-abdominopelvic-and-orthopedic-procedures-301822963.html",
+    },
+    {
+      title: "康聚醫學科技 全臺唯一醫療級金屬線材廠",
+      source: "news.gbimonthly.com",
+      tag: "Commercial",
+      company: "KT Medical",
+      date: "30 Sept 2022",
+      url: "https://news.gbimonthly.com/tw/magazine/article_show.php?num=53410",
+    },
+    {
+      title: "康聚醫學科技進軍心導管醫材",
+      source: "ctee.com.tw",
+      tag: "Commercial",
+      company: "KT Medical",
+      date: "9 Nov 2021",
+      url: "https://www.ctee.com.tw/news/20211110701337-439901",
+    },
+    {
+      title:
+        "Adjustable Interatrial Shunt for Heart Failure Shows Promise in First-in-Human Trial",
+      source: "cardiovascularbusiness.com",
+      tag: "Clinical",
+      company: "Adona Medical",
+      date: "",
+      url: "https://cardiovascularbusiness.com/topics/clinical/heart-failure/adjustable-interatrial-shunt-heart-failure-shows-promise-first-human-trial",
+    },
+    {
+      title: "Akura Begins Pivotal Trial of Katana Thrombectomy System in Pulmonary Embolism",
+      source: "evtoday.com",
+      tag: "Clinical",
+      company: "Akura Medical",
+      date: "",
+      url: "https://evtoday.com/news/akura-begins-pivotal-trial-of-katana-thrombectomy-system-in-pulmonary-embolism",
+    },
+    {
+      title: "Akura Raises Financing for Thrombectomy System and Quantification Software",
+      source: "evtoday.com",
+      tag: "Financing",
+      company: "Akura Medical",
+      date: "",
+      url: "https://evtoday.com/news/akura-raises-financing-for-thrombectomy-system-and-quantification-software-1",
+    },
+    {
+      title: "Imperative Care Launches Ikon 24",
+      source: "finance.yahoo.com",
+      tag: "Commercial",
+      company: "Imperative Care",
+      date: "",
+      url: "https://finance.yahoo.com/healthcare/articles/imperative-care-launches-ikon-24-201500656.html",
+    },
+    {
+      title: "Imperative Care Nets $100M Financing",
+      source: "fiercebiotech.com",
+      tag: "Financing",
+      company: "Imperative Care",
+      date: "",
+      url: "https://www.fiercebiotech.com/medtech/stroke-tech-developer-imperative-care-nets-100m-financing",
+    },
+    {
+      title:
+        "Novo Holdings co-leads $120 million Series E Financing of Supira Medical to Advance Percutaneous Ventricular Assist Device Technology",
+      source: "novoholdings.dk",
+      tag: "Financing",
+      company: "Supira Medical",
+      date: "",
+      url: "https://novoholdings.dk/news/novo-holdings-co-leads-120-million-series-e-financing-of-supira-medical-to-advance-percutaneous-ventricular-assist-device-technology",
+    },
+    {
+      title: "EuroPCR 2026 Presentation",
+      source: "europcr2026.europa-inviteo.com",
+      tag: "Clinical",
+      company: "Tioga Cardiovascular",
+      date: "",
+      url: "https://europcr2026.europa-inviteo.com/gws/index.php?langue=en&onglet=33&paramProjet=102151",
+    },
+    {
+      title: "FDA Clears Surgical Hydrogel Nerve Cap for Preventing Phantom Limb Pain",
+      source: "fiercebiotech.com",
+      tag: "Regulatory",
+      company: "Tulavi Therapeutics",
+      date: "",
+      url: "https://www.fiercebiotech.com/medtech/fda-clears-surgical-hydrogel-nerve-cap-preventing-phantom-limb-pain-amputees",
     },
   ] satisfies RxMilestone[],
 } as const;

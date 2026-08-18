@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
   basePath: isExport ? "/amed-preview" : "",
   images: { unoptimized: isExport },
   allowedDevOrigins: ["192.168.0.148"],
+  devIndicators: false,
 };
 
 export default nextConfig;

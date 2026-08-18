@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { B_ABOUT } from "@/lib/amed/b-content";
-import { SERIF, LABEL } from "./shared";
+import { BODY_TEXT, CARD_TITLE, LABEL } from "./shared";
 
 /* ------------------------------------------------------------------
    The four convictions: they enter as a descending staircase and pull
@@ -44,7 +44,7 @@ export function PrinciplesRow() {
   }, []);
 
   return (
-    <section className="rx-frame px-6 pb-16 md:px-10 md:pb-24">
+    <section id="about-principles" className="rx-frame scroll-mt-20 px-6 pb-16 md:px-10 md:pb-24">
       <div ref={root} className="border-t border-black/10 pt-14">
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
           {B_ABOUT.principles.map((item, i) => (
@@ -59,7 +59,7 @@ export function PrinciplesRow() {
               <div className="flex items-start justify-between gap-4">
                 <h3
                   className="text-[1.3rem] leading-[1.15] md:text-[1.45rem]"
-                  style={{ fontFamily: SERIF, fontWeight: 500, color: "#0a0a0a" }}
+                  style={{ ...CARD_TITLE, color: "#0a0a0a" }}
                 >
                   {item.title.map((line) => (
                     <span key={line} className="block">
@@ -71,7 +71,7 @@ export function PrinciplesRow() {
                   {item.index}
                 </span>
               </div>
-              <p className="text-[14.5px] leading-[1.6] text-neutral-600">{item.desc}</p>
+              <p style={BODY_TEXT}>{item.desc}</p>
             </div>
           ))}
         </div>
